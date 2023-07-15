@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
+import { ReduxProvider } from '../components'
 
 export const metadata: Metadata = {
   title: 'TYA MAINT',
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <ReduxProvider>
+        <body className={inter.className}>{children}</body>
+      </ReduxProvider>
     </html>
   )
 }
