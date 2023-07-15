@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: Request){
-      return NextResponse.json({ message: 'reCAPTCHA verification successful' })
+export async function GET(req: NextRequest){
+    return NextResponse.json({ message: 'reCAPTCHA verification successful' })
 }
