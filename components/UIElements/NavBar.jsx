@@ -57,7 +57,7 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[25%] h-full overflow-auto p-8 bg-sky-700 rounded-tr-2xl rounded-br-2xl flex-col justify-center items-center'>
+    <nav className='w-[25%] h-full overflow-auto p-8 bg-sky-700 rounded-tr-2xl shadow backdrop-blur-[20px] rounded-br-2xl flex-col justify-center items-center'>
         <div className='pb-1 border-b-2 border-sky-500 justify-center items-center gap-2.5 inline-flex'>
           <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
         </div>
