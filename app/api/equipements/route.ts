@@ -3,9 +3,9 @@ import prismadb from '../../../lib/prismadb'
 
 export async function GET(req: Request) {
     try {
-      const users = await prismadb.user.findMany();
+      const equipements = await prismadb.equipement.findMany();
 
-      return NextResponse.json({ users: users }, { status: 200 });
+      return NextResponse.json({ equipements: equipements }, { status: 200 });
 
     } catch (error) {
       console.log(error);

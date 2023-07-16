@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import prismadb from '../../../lib/prismadb'
+import prismadb from '../../../../../lib/prismadb'
 
 export async function GET(req: Request) {
     try {
-      const users = await prismadb.user.findMany();
+      const pieces = await prismadb.piece.findMany();
 
-      return NextResponse.json({ users: users }, { status: 200 });
+      return NextResponse.json({ pieces: pieces }, { status: 200 });
 
     } catch (error) {
       console.log(error);

@@ -23,9 +23,10 @@ model Equipement {
   code             String        @unique
   nom              String
   marque_fabricant String
+  image            String        @default("")
   description      String
   localistation    String
-  numero_serie     String
+  numero_serie     String        @unique
   modele           String
   etat             String
   SousSysteme      SousSysteme[]
@@ -34,8 +35,9 @@ model Equipement {
 model SousSysteme {
   id               Int        @id @default(autoincrement())
   nom              String
-  numero_serie     String
+  numero_serie     String     @unique
   marque_fabricant String
+  image            String     @default("")
   description      String
   modele           String
   equipement       Equipement @relation(fields: [equipement_id], references: [id])
@@ -47,8 +49,9 @@ model SousSysteme {
 model Piece {
   id               Int           @id @default(autoincrement())
   nom              String
-  numero_serie     String
+  numero_serie     String        @unique
   marque_fabricant String
+  image            String        @default("")
   description      String
   modele           String
   stock            Int
@@ -61,9 +64,8 @@ model Piece {
 model Transaction {
   id               Int      @id @default(autoincrement())
   quantite         Int      @default(1)
-  date_transaction DateTime
+  date_transaction DateTime @default(now())
   type_transaction String
-
   piece    Piece @relation(fields: [piece_id], references: [id])
   piece_id Int
 }
