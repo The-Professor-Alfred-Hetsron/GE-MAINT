@@ -57,11 +57,11 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[25%] h-full overflow-auto p-8 bg-sky-700 rounded-tr-2xl shadow backdrop-blur-[20px] rounded-br-2xl flex-col justify-center items-center'>
-        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center gap-2.5 inline-flex'>
+    <nav className='w-[25%] sticky top-0 h-full overflow-auto p-4 bg-sky-700 rounded-tr-2xl shadow backdrop-blur-[20px] rounded-br-2xl flex-col justify-center items-center'>
+        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
           <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
         </div>
-        <div className='w-full py-4 flex-col justify-evenly items-center gap-5 inline-flex'>
+        <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
           navLinks.map((link, index)=>{
             const isActive = pathname.startsWith(link.href)
