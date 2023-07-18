@@ -68,7 +68,7 @@ export default function Panne ({params}:{params: { panne: string }}) {
                 <div className="w-full flex flex-col">
                     <div className="w-full pb-2 border-b border-slate-300 justify-start items-center gap-2.5 inline-flex">
                         <div className="w-full gap-2 flex flex-row justify-start items-baseline">
-                            <span className="text-black text-[24px] font-normal">Pannes </span>
+                            <span className="text-black text-[24px] font-normal">Protocole Préventif </span>
                             <span className="w-8 h-8 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{protocoleList.length}</span>
                         </div>
                         <AddBtn width={400} placeholder="Nouveau Protocole" addFunction={openAddProtocolModal}/>
