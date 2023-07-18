@@ -1,6 +1,7 @@
 'use client'
 
 import Image from "next/image"
+import { useRouter, usePathname } from 'next/navigation'
 import DeleteBtn from '../../../../../components/UIElements/DeleteBtn'
 import AddBtn from "../../../../../components/UIElements/AddBtn"
 import SubsysPieceCard from '../../../../../components/UIElements/SubsysPieceCard'
@@ -53,6 +54,15 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
     const openAddModal = () => {
         console.log("Open modal")
     }
+
+    const router = useRouter()
+    const pathname = usePathname()
+
+    const routeToDetails = (index:number) => {
+        const subSys = equipmentDetail.sousSystem[index]
+        router.push(`${pathname}/${subSys.nom.replace(" ", "-")}`)
+    }
+
     
     return(
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 inline-flex">
@@ -117,6 +127,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
                                 return <SubsysPieceCard
                                     key={index}
                                     sysPieceInfo = {system}
+                                    routeToDetails = {() => routeToDetails(index)}
                                 />
                             })
                         }

@@ -26,7 +26,7 @@ function EquipmentCard(props) {
             <span className='text-xs font-normal'>{equipmentInfo.sousSystem} Sous systèmes</span>
           </button>
           <div className='flex justify-center items-center'>
-            <button>
+            <button onClick={()=>props.deleteEquip()}>
               <RiDeleteBin6Line size={24} color='#EA4335'/>
             </button>
           </div>

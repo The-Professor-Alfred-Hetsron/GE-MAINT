@@ -45,8 +45,12 @@ export default function Equipments () {
         }
     }
 
-    const openAddModal = () => {
-        console.log("Open modal")
+    const openAddEquipModal = () => {
+        console.log("Open add Equip modal")
+    }
+
+    const deleteEquip = (index:number) => {
+        console.log("Delete equip "+index)
     }
     return(
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 inline-flex">
@@ -58,7 +62,7 @@ export default function Equipments () {
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
                     <InputSearchField setNewSearchValue={updateEquipList} placeholder="Rechercher un équipement"/>
-                    <AddBtn placeholder="Nouveau" addFunction={openAddModal}/>
+                    <AddBtn placeholder="Nouveau" addFunction={openAddEquipModal}/>
                 </div>
 
                 <div className="w-full h-full p-2 bg-white justify-start items-start overflow-auto">
@@ -66,9 +70,10 @@ export default function Equipments () {
                         {
                             displayEquipList.map((equipement, index)=> {
                                 return <EquipmentCard
-                                            key={index}
-                                            equipmentInfo = {equipement}
-                                        />
+                                    key={index}
+                                    equipmentInfo = {equipement}
+                                    deleteEquip = {()=>deleteEquip(index)}
+                                />
                             })
                         }
                     </div>
