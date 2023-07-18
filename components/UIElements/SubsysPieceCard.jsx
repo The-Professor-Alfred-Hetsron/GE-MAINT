@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation'
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 function SubsysPieceCard(props) {
@@ -22,7 +21,7 @@ function SubsysPieceCard(props) {
                 : null}
             </button>
             <div className='flex justify-center items-center'>
-                <button>
+                <button onClick={()=>props.deleteAction()}>
                     <RiDeleteBin6Line size={20} color='#EA4335'/>
                 </button>
             </div>

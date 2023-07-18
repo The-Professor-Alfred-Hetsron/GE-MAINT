@@ -19,7 +19,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
         image: "/assets/img/index-generator.png",
         sousSystem: [
             {
-                nom: "Nom Module1",
+                nom: "Nom SousSystème1",
                 marque: "Marque Fabricant",
                 numSerie: "5G4D5F1D",
                 modele: "Equip5G4D5F1D",
@@ -28,7 +28,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
                 image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
             },
             {
-                nom: "Nom Module2",
+                nom: "Nom SousSystème2",
                 marque: "Marque Fabricant",
                 numSerie: "5G4D5F1D",
                 modele: "Equip5G4D5F1D",
@@ -37,7 +37,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
                 image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
             },
             {
-                nom: "Nom Module3",
+                nom: "Nom SousSystème3",
                 marque: "Marque Fabricant",
                 numSerie: "5G4D5F1D",
                 modele: "Equip5G4D5F1D",

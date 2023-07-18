@@ -91,7 +91,17 @@ export default function Equipment ({params}:{params: { sousSysteme: string }}) {
 
     const routeToPiece = (index: number) => {
         const selectedPiece = pieceList[index]
-        router.push(`${pathname}/${selectedPiece.nom.replace(" ","-")}`)
+        router.push(`${pathname}/pieces/${selectedPiece.nom.replace(" ","-")}`)
+    }
+    // 656 36 29 73 
+
+    const deletePiece = (index: number) => {
+        console.log("deletePiece "+index)
+    }
+
+    const routeToPanne = (index: number) => {
+        const selectedPanne = panneList[index]
+        router.push(`${pathname}/pannes/${selectedPanne.nom.replace(" ","-")}`)
     }
 
     const deletePanne = (index:number) => {
@@ -155,6 +165,8 @@ export default function Equipment ({params}:{params: { sousSysteme: string }}) {
                                 return <SubsysPieceCard
                                     key={index}
                                     sysPieceInfo = {system}
+                                    routeToDetails = {()=>routeToPiece(index)}
+                                    deleteAction = {()=>deletePiece(index)}
                                 />
                             })
                         }
@@ -195,7 +207,7 @@ export default function Equipment ({params}:{params: { sousSysteme: string }}) {
                                         </div>
                                         <td className="w-[250px] text-center">{panne.gravite}</td>
                                         <td className="w-full flex gap-1 justify-end items-start flex-wrap">
-                                            <button onClick={()=>routeToPiece(index)} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
+                                            <button onClick={()=>routeToPanne(index)} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
                                                 <AiFillEye size={20}/>
                                                 <span>Details</span>
                                             </button>
