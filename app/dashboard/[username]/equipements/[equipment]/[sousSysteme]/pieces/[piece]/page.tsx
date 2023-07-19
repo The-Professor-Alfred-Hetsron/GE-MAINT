@@ -27,7 +27,7 @@ export default function Piece ({params}:{params: { piece: string }}) {
     }
 
     return(
-        <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 inline-flex">
+        <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-2xl font-semibold uppercase leading-[52.11px]">{equipmentName.replace("-"," ")}</Link>
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`} className="text-[#0B5DA7] text-2xl font-semibold uppercase leading-[52.11px]"> - {subSysName.replace("-"," ")}</Link>
