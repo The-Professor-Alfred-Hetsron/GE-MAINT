@@ -12,7 +12,7 @@ function InputField(props) {
 
   return (
     <div className="inputBox">
-        <input className='focus:invalid:border-[#EA4335] focus:invalid:text-[#EA4335]' required type={props.label === "Email" ? "email" : "text"} onChange={(e)=>setInputValue(e.target.value.trimEnd())}/>
+        <input required type={props.label === "Email" ? "email" : "text"} onChange={(e)=>setInputValue(e.target.value.trimEnd())}/>
         <span>{props.label}</span>
     </div>
   )
