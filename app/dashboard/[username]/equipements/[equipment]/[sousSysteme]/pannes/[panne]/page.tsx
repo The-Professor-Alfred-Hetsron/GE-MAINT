@@ -20,7 +20,21 @@ export default function Panne ({params}:{params: { panne: string }}) {
     }
 
     const protocoleList = [
-        " ", " "
+        {
+            description: "la description, voici ce qu’il faut faire"
+        },
+        {
+            description: "la description, voici ce qu’il faut faire"
+        },
+        {
+            description: "la description, voici ce qu’il faut faire"
+        },
+        {
+            description: "la description, voici ce qu’il faut faire"
+        },
+        {
+            description: "la description, voici ce qu’il faut faire"
+        }
     ]
 
     const openAddProtocolModal = () => {
@@ -28,11 +42,11 @@ export default function Panne ({params}:{params: { panne: string }}) {
     }
 
     const viewProtocoleDetails = (index:number) => {
-
+        console.log("View Protocole "+index)
     }
 
     const deleteSelectedProtocole = (index:number) => {
-
+        console.log("Delete Protocole "+index)
     }
 
     const deletePanne = () => {
@@ -47,7 +61,7 @@ export default function Panne ({params}:{params: { panne: string }}) {
             </div>
 
             <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
-                <div className="w-full px-4 flex-col justify-start items-start gap-2 inline-flex">
+                <div className="w-full flex-col justify-start items-start gap-2 inline-flex">
                     <div className="flex-col justify-start items-start inline-flex">
                         <span className="text-black text-[26px] font-semibold uppercase">{panne.nom}</span>
                         <div className="justify-start items-baseline gap-[4px] inline-flex">
@@ -71,7 +85,7 @@ export default function Panne ({params}:{params: { panne: string }}) {
                             <span className="text-black text-[24px] font-normal">Protocole Préventif </span>
                             <span className="w-8 h-8 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{protocoleList.length}</span>
                         </div>
-                        <AddBtn width={400} placeholder="Nouveau Protocole" addFunction={openAddProtocolModal}/>
+                        <AddBtn width={450} placeholder="Nouveau Protocole" addFunction={openAddProtocolModal}/>
                     </div>
 
                     <div className="inline-flex gap-4 py-2 justify-start items-start flex-wrap overflow-auto">
@@ -88,7 +102,7 @@ export default function Panne ({params}:{params: { panne: string }}) {
                                 protocoleList.map((protocole, index) => {
                                     return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                         <td className="w-[150px]">{index+1}</td>
-                                        <td className="w-full">Protocoles</td>
+                                        <td className="w-full">{protocole.description}</td>
                                         <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                             <button onClick={()=>viewProtocoleDetails(index)} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
                                                 <AiFillEye size={20}/>

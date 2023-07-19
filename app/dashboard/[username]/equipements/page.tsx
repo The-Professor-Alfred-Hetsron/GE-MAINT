@@ -34,7 +34,7 @@ export default function Equipments () {
 
     const [ displayEquipList, setDisplayEquipList ] = useState(apiEquipmentList)
 
-    const updateEquipList = (value: string) => {
+    const sortEquipList = (value: string) => {
         if(value !== ""){
             setDisplayEquipList(apiEquipmentList.filter((equip)=>{
                 return equip.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
@@ -61,7 +61,7 @@ export default function Equipments () {
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={updateEquipList} placeholder="Rechercher un équipement"/>
+                    <InputSearchField setNewSearchValue={sortEquipList} placeholder="Rechercher un équipement"/>
                     <AddBtn placeholder="Nouveau" addFunction={openAddEquipModal}/>
                 </div>
 
