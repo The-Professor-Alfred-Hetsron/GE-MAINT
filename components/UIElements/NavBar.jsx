@@ -69,10 +69,10 @@ function NavBar(props) {
                 <Link
                   key={index}
                   href={link.href}
-                  className={isActive ? "w-full p-4 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "w-full p-4 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
+                  className={isActive ? "w-full p-4 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "group hover:bg-white w-full p-4 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
                 >
-                  <span className={isActive ? "text-sky-700" : "text-white"}>{link.icon}</span>
-                  <span className={isActive ? "text-sky-700 text-xl font-semibold" : "text-white text-xl font-semibold"}>{link.name}</span>
+                  <span className={isActive ? "text-sky-700" : "text-white group-hover:text-sky-700"}>{link.icon}</span>
+                  <span className={isActive ? "text-sky-700 text-xl font-semibold" : "text-white text-xl font-semibold group-hover:text-sky-700"}>{link.name}</span>
                 </Link>
             )
           })
