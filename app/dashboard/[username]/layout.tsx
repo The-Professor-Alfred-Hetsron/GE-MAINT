@@ -2,7 +2,7 @@ import NavBar from '../../../components/UIElements/NavBar'
 import Header from '../../../components/UIElements/Header'
 
 
-export default function RootLayout(
+export default function DashboardLayout(
     { 
         children,
         params 

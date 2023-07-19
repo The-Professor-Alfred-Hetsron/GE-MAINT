@@ -38,7 +38,7 @@ function NavBar(props) {
     {
       name: "Stocks des pièces de rechange",
       icon: <AiOutlineAppstoreAdd size={24}/>,
-      href: `${baseUrl}/stocks`,
+      href: `${baseUrl}/stocks/listes`,
     },
     {
       name: "Alarmes",
