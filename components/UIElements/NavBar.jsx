@@ -39,6 +39,7 @@ function NavBar(props) {
       name: "Stocks des pièces de rechange",
       icon: <AiOutlineAppstoreAdd size={24}/>,
       href: `${baseUrl}/stocks/listes`,
+      href2: `${baseUrl}/stocks/transactions`
     },
     {
       name: "Alarmes",
@@ -57,14 +58,14 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[25%] sticky top-0 h-full overflow-auto p-4 bg-sky-700 rounded-tr-2xl shadow backdrop-blur-[20px] rounded-br-2xl flex-col justify-center items-center'>
+    <nav className='w-[25%] z-10 sticky top-0 h-full overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
         <div className='pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
           <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
         </div>
         <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
           navLinks.map((link, index)=>{
-            const isActive = pathname.startsWith(link.href)
+            const isActive = link.href2? (pathname.startsWith(link.href) || pathname.startsWith(link.href2)) : pathname.startsWith(link.href)
             return (
                 <Link
                   key={index}
