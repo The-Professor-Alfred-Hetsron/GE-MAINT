@@ -11,21 +11,23 @@ export default function DashboardLayout(
     }
 ){
     const pathname = usePathname()
+    const username = pathname.split('/')[pathname.split('/').indexOf("dashboard")+1]
 
     const tabLinks = [
         {
             name:"Liste des Pièces de Rechange",
-            href: pathname + '/listes',
+            href: `/dashboard/${username}/stocks/listes`,
             tabId: "listes"
         },
         {
             name:"Transaction des Pièces",
-            href: pathname + '/transactions',
+            href: `/dashboard/${username}/stocks/transactions`,
             tabId: "transactions"
         }
     ]
+
     return (
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex-col gap-2 flex justify-center items-center">
             {/* Le tab bar est ci-dessous */}
             <div className="w-full p-1 bg-white rounded-xl shadow backdrop-blur-[20px] justify-between items-center gap-2 flex">
                 {
@@ -43,8 +45,8 @@ export default function DashboardLayout(
             </div>
 
             {/* Le Corps des stocks sont ci-dessous */}
-            <div className="">
-
+            <div className="w-full flex justify-center items-center">
+                {children}
             </div>
         </div>
     )

@@ -18,6 +18,8 @@ export default function Piece ({params}:{params: { piece: string }}) {
         numSerie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
+        qteStock: 10,
+        qteMin: 2,
         description: "Le Meilleur Sous Système au monde",
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     }  
@@ -57,6 +59,14 @@ export default function Piece ({params}:{params: { piece: string }}) {
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Localisation: </span>
                                 <span className="text-black text-[20px] font-semibold uppercase">{piece.localisation}</span>
+                            </div>
+                            <div className="justify-start items-center gap-[4px] inline-flex">
+                                <span className="text-black text-[18px] font-normal leading-loose">Quantité en Stock: </span>
+                                <span className="text-black text-[20px] font-semibold uppercase">{piece.qteStock}</span>
+                            </div>
+                            <div className="justify-start items-center gap-[4px] inline-flex">
+                                <span className="text-black text-[18px] font-normal leading-loose">Quantité Minimale:: </span>
+                                <span className="text-black text-[20px] font-semibold uppercase">{piece.qteMin}</span>
                             </div>
                             <div className="justify-start items-baseline gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Description: </span>
