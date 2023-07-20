@@ -65,7 +65,7 @@ export default function Piece ({params}:{params: { piece: string }}) {
                                 <span className="text-black text-[20px] font-semibold uppercase">{piece.qteStock}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
-                                <span className="text-black text-[18px] font-normal leading-loose">Quantité Minimale:: </span>
+                                <span className="text-black text-[18px] font-normal leading-loose">Quantité Minimale: </span>
                                 <span className="text-black text-[20px] font-semibold uppercase">{piece.qteMin}</span>
                             </div>
                             <div className="justify-start items-baseline gap-[4px] inline-flex">
