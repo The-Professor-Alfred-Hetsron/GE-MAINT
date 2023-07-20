@@ -57,7 +57,7 @@ export default function Panne ({params}:{params: { panne: string }}) {
             <div className="w-full justify-start items-center inline-flex gap-1">
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">{equipmentName.replace("-"," ")}</Link>
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`} className="text-[#0B5DA7] text-[24px] font-semibold uppercase"> - {subSysName.replace("-"," ")}</Link>
-                <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]"> - Pannes</span>
+                <span className="text-zinc-800 text-[24px] font-semibold uppercase"> - Pannes</span>
             </div>
 
             <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
