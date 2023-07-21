@@ -4,31 +4,31 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { GrClose } from "react-icons/gr";
 
-function Modal(props, {children}) {
-  const [ isModalVisible, setModalVisibility ] = useState(props.isVisible)
-  const [ isDeleteModalVisible, setDeleteModalVisibility ] = useState(props.isDeleteModalVisible)
+function Modal(props) {
+  const [ isModalVisible, setModalVisibility ] = useState(props.isVisible?props.isVisible: false)
+  const [ isDeleteModalVisible, setDeleteModalVisibility ] = useState(props.isDeleteModalVisible? props.isDeleteModalVisible: false)
   
   useEffect(()=> {
-    setModalVisibility(props.isVisible)
-    setDeleteModalVisibility(props.isDeleteModalVisible)
+    setModalVisibility(props.isVisible? props.isVisible: false)
+    setDeleteModalVisibility(props.isDeleteModalVisible? props.isDeleteModalVisible: false)
   }, [props])
   return (
     <>
       {isModalVisible ?
         <>
-          <div className='p-10 fixed left-0 top-0 right-0 bottom-0 z-[9999] rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex justify-center items-center overflow-y-auto'>
+          <div className='w-full fixed p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
             {/* modal container */}
-            <div className="p-8 bg-white rounded-2xl shadow flex flex-col gap-4 justify-center items-center" style={{width:props.modalWidth}}>
+            <form className="p-8 bg-stone-50 rounded-2xl shadow flex flex-col gap-4 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
               {/* modal header */} 
               <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-center items-center'>
                 <span className='w-full text-center capitalize'>{props.modalTitle}</span>
-                <button onClick={()=>props.closeModal()} className='text-black hover:text-red-600'>
+                <button onClick={()=>props.closeModalAction()} className='text-black hover:text-red-600'>
                   <GrClose size={24}/>
                 </button>
               </div>
 
               {/* modal body */}
-              <div className='w-full flex justify-center items-center'>
+              <div className='w-full flex flex-col gap-4 justify-center items-center'>
 
                 {isDeleteModalVisible ?
                   <div className='w-full flex flex-col gap-4 justify-center items-center'>
@@ -44,11 +44,20 @@ function Modal(props, {children}) {
                         OUI, LE SUPPRIMER
                       </button>
                     </div>
-                  </div> :null}
-
-                {children}
+                  </div> :
+                  <>
+                    {props.children}
+                    <div className="w-full flex flex-row gap-4 justify-end items-center">
+                        <button onClick={()=>props.closeModalAction()} className='p-4 bg-red-500 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
+                            Annuler
+                        </button>
+                        <button type='submit' className='p-4 bg-sky-700 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
+                            {props.addBtnLabel}
+                        </button>
+                    </div>
+                  </>}
               </div>
-            </div>
+            </form>
           </div>
         </>
       : null}
