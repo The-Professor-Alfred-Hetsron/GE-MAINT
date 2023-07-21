@@ -36,7 +36,7 @@ export default function Login () {
                     console.log(user)
                     dispatch(login(user))
                     if(name && email && matricule){
-                        router.push(`/dashboard/${name.trimEnd().replace(" ", "-")}/accueil`)
+                        router.push(`/dashboard/${name.trimEnd().split(" ").join("-")}/accueil`)
                     }
                 }
                 else{
