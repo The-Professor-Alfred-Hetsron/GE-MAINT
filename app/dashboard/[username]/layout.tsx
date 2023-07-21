@@ -1,6 +1,8 @@
+'use client'
+
 import NavBar from '../../../components/UIElements/NavBar'
 import Header from '../../../components/UIElements/Header'
-
+import { useAppSelector } from "@/redux/hooks";
 
 export default function RootLayout(
     { 
@@ -12,6 +14,8 @@ export default function RootLayout(
     }
 ){
     const userType = "Responsable"
+    //const authentication = useAppSelector((state) => state.authentication)
+    //console.log(authentication)
     return (
         <div className="w-screen h-screen bg-stone-50 flex justify-center items-center">
             <div className="w-full h-full flex overflow-auto justify-center items-center">

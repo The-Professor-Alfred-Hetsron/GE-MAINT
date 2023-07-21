@@ -2,11 +2,14 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { useAppSelector } from "@/redux/hooks";
+
 
 function Header(props) {
   const username = props.username? props.username.replace("-", " ") : "Nom Prenom"
-  const userInitials = `${username.toUpperCase().split(" ")[0][0]} ${username.toUpperCase().split(" ")[1][0]}`
-
+  const userInitials = `${username.toUpperCase().split(" ")[0][0]} ${username.toUpperCase().split(" ").length > 1 ? username.toUpperCase().split(" ")[1][0] : 'U'}`
+  
+  
   return (
     <div className='w-full rounded-2xl shadow-lg backdrop-blur-[20px] flex-col justify-start items-start'>
   
