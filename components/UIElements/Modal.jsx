@@ -51,7 +51,7 @@ function Modal(props) {
                         <button onClick={()=>props.closeModalAction()} className='p-4 bg-red-500 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
                             Annuler
                         </button>
-                        <button type='submit' className='p-4 bg-sky-700 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
+                        <button onClick={()=>props.addNewAction()} type='submit' className='p-4 bg-sky-700 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
                             {props.addBtnLabel}
                         </button>
                     </div>

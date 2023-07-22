@@ -9,11 +9,13 @@ import Modal from '@/components/UIElements/Modal'
 import Image from 'next/image'
 import { BsUpload } from "react-icons/bs";
 
-import { useState } from "react";
-import IFile from '@/types/ImageFile'
+import { useState, useEffect } from "react";
+import EquipmentType from '@/types/equipment'
+
+// import IFile from '@/types/ImageFile'
 
 export default function Equipments () {
-    const apiEquipmentList: {
+    let apiEquipmentList: {
         nom: String,
         code: String,
         sousSystem: Number,
@@ -40,6 +42,9 @@ export default function Equipments () {
     ]
 
     const [ displayEquipList, setDisplayEquipList ] = useState(apiEquipmentList)
+    const [ equipComponentList, setEquipComponentList ] = useState<Array<React.JSX.Element>>([])
+
+
     const [ isModalVisible, setModalVisibility ] = useState<boolean>(false)
     const [ isDeleteModalVisible, setDeleteModalVisibility ] = useState<boolean>(false)
     const [ selectedEquipment, setSelectedEquipment ] = useState<String>("")
@@ -47,8 +52,8 @@ export default function Equipments () {
     const [ equipImage, setEquipImage ] = useState<File>()
     const [ previewImage, setPreviewImage ] = useState<string>("");
     const [ progress, setProgress ] = useState<number>(0);
-    const [ message, setMessage ] = useState<string>("");
-    const [imageInfos, setImageInfos] = useState<Array<IFile>>([]);
+    // const [ message, setMessage ] = useState<string>("");
+    // const [imageInfos, setImageInfos] = useState<Array<IFile>>([]);
 
     const [ code, setCode ] = useState<string>("")
     const [ nom, setNom ] = useState<string>("")
@@ -59,6 +64,9 @@ export default function Equipments () {
     const [ etat, setEtat ] = useState<string>("")
     const [ description, setDescription ] = useState<string>("")
 
+    const [ newEqup, setNewEquip ] = useState<EquipmentType>()
+    const [ isFormValid, setFormValidity ] = useState<boolean>(false)
+
     const sortEquipList = (value: string) => {
         if(value !== ""){
             setDisplayEquipList(apiEquipmentList.filter((equip)=>{
@@ -68,6 +76,19 @@ export default function Equipments () {
         else{
             setDisplayEquipList(apiEquipmentList)
         }
+    }
+    
+    const initialiseParams = () => {
+        // setCode("")
+        // setNom("")
+        // setMarque("")
+        // setModele("")
+        // setNumSerie("")
+        // setLocalisation("")
+        // setEtat("")
+        // setDescription("")
+        // setPreviewImage("")
+        setFormValidity(false)
     }
     
     const openDeleteModal = (index: number) => {
@@ -87,6 +108,7 @@ export default function Equipments () {
         setModalVisibility(false)
         setDeleteModalVisibility(false)
         setSelectedEquipment("")
+        initialiseParams()
     }
 
     const deleteEquipment = () => {
@@ -94,7 +116,51 @@ export default function Equipments () {
         setModalVisibility(false)
     }
 
+    const addNewEquipment = () => {
+        if(isFormValid){
+            const tempEquip = {
+                nom: nom,
+                code: code,
+                sousSystem: 0,
+                image: previewImage
+            }
+            const newEquipment = {
+                code: code,
+                nom: nom,
+                marque: marque,
+                modele: modele,
+                numSerie: numSerie,
+                localisation: localisation,
+                etat: etat,
+                description: description,
+                image: previewImage
+            }
+            let tempEquipList = [...displayEquipList, tempEquip]
+            setDisplayEquipList([])
+            setEquipComponentList([])
+            // setDisplayEquipList([...displayEquipList, tempEquip])
+            setDisplayEquipList(tempEquipList)
+            setNewEquip(newEquipment)
+            closeModal()
+        }
+    }
 
+    useEffect(()=> {
+        let tempEquipCompoList = displayEquipList.map((equipement, index)=> {
+            return <EquipmentCard
+                key={index}
+                equipmentInfo = {equipement}
+                deleteEquip = {()=>openDeleteModal(index)}
+            />
+        })
+        setEquipComponentList(tempEquipCompoList)
+    }, [displayEquipList])
+
+    useEffect(()=>{
+        if(code!=="" && nom!=="" && marque!=="" && modele!=="" && numSerie!=="" && localisation!=="" && etat!=="" && description!=="" && previewImage!=="") {
+            setFormValidity(true)
+        }
+    }, [code, nom, marque, modele, numSerie, localisation, etat, description, previewImage])
 
     return(
         <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -111,15 +177,7 @@ export default function Equipments () {
 
                 <div className="w-full h-full p-2 bg-white justify-start items-start overflow-auto">
                     <div className="w-full gap-4 flex flex-wrap">
-                        {
-                            displayEquipList.map((equipement, index)=> {
-                                return <EquipmentCard
-                                    key={index}
-                                    equipmentInfo = {equipement}
-                                    deleteEquip = {()=>openDeleteModal(index)}
-                                />
-                            })
-                        }
+                        {equipComponentList}
                     </div>
                 </div>
             </div>
@@ -143,6 +201,7 @@ export default function Equipments () {
                     modalWidth = {'80%'}
                     closeModalAction = {closeModal}
                     addBtnLabel="Ajouter"
+                    addNewAction = {addNewEquipment}
                 >
                     <div className="w-full flex flex-row justify-center gap-8">
                         <div className="w-full flex flex-col justify-start gap-4">

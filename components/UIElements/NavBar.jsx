@@ -59,8 +59,8 @@ function NavBar(props) {
   ]
   return (
     <nav className='w-[25%] z-10 sticky top-0 h-full overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
-        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
-          <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
+        <div className='w-full pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
+          <span className='w-full text-center text-white text-[60px] font-semibold tracking-wide'>TYA MAINT</span>
         </div>
         <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
