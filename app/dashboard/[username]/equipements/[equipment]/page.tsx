@@ -71,14 +71,14 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
     // Equipment Information Start
     const [ imageEquip, setImageEquip ] = useState<string | ArrayBuffer | undefined>(apiEquipmentDetails.image)
     const [ previewImageEquip, setPreviewImageEquip ] = useState<string | ArrayBuffer | undefined>(apiEquipmentDetails.image)
-    const [ codeEquip, setCodeEquip ] = useState<string>("")
-    const [ nomEquip, setNomEquip ] = useState<string>("")
-    const [ marqueEquip, setMarqueEquip ] = useState<string>("")
-    const [ modeleEquip, setModeleEquip ] = useState<string>("")
-    const [ numSerieEquip, setNumSerieEquip ] = useState<string>("")
-    const [ localisationEquip, setLocalisationEquip ] = useState<string>("")
-    const [ etatEquip, setEtatEquip ] = useState<string>("")
-    const [ descriptionEquip, setDescriptionEquip ] = useState<string>("")
+    const [ codeEquip, setCodeEquip ] = useState<string>(apiEquipmentDetails.code)
+    const [ nomEquip, setNomEquip ] = useState<string>(apiEquipmentDetails.nom)
+    const [ marqueEquip, setMarqueEquip ] = useState<string>(apiEquipmentDetails.marque)
+    const [ modeleEquip, setModeleEquip ] = useState<string>(apiEquipmentDetails.modele)
+    const [ numSerieEquip, setNumSerieEquip ] = useState<string>(apiEquipmentDetails.numSerie)
+    const [ localisationEquip, setLocalisationEquip ] = useState<string>(apiEquipmentDetails.localisation)
+    const [ etatEquip, setEtatEquip ] = useState<string>(apiEquipmentDetails.etat)
+    const [ descriptionEquip, setDescriptionEquip ] = useState<string>(apiEquipmentDetails.description)
     // Equipment Information End
 
     // Sub System Information Start
