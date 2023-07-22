@@ -134,6 +134,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const deleteEquipment = () => {
         console.log("Deleting Equipment From the Database through API calls")
         closeModal()
+        router.push(`/dashboard/${params.username}/equipements`)
     }
 
     const updateEquipment = () => {
