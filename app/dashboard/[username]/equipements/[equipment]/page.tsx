@@ -16,7 +16,7 @@ import SubSystemType from "@/types/subSystem"
 import EquipmentType from "@/types/equipment"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 
-export default function Equipment ({params}:{params: { equipment: string }}) {
+export default function Equipment ({params}:{params: {username:string,  equipment: string }}) {
     const router = useRouter()
     const pathname = usePathname()
     
@@ -150,7 +150,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
                 image: imageEquip? imageEquip : ""
             }
             setApiEquipmentDetails(tempEquip)
-            closeModal()
+            router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
         }
         
     }
@@ -233,7 +233,7 @@ export default function Equipment ({params}:{params: { equipment: string }}) {
                     </div>
                     <div className="w-full px-4 flex-col justify-start items-start gap-2 inline-flex">
                         <div className="flex-col justify-start items-start inline-flex">
-                            <span className="text-black text-[26px] font-semibold uppercase">{apiEquipmentDetails.nom}</span>
+                            <span className="text-black text-[26px] font-semibold uppercase">{params.equipment.replace("-"," ")}</span>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Code: </span>
                                 <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.code}</span>
