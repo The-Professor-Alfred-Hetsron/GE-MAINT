@@ -14,6 +14,13 @@ import EquipmentType from '@/types/equipment'
 
 // import IFile from '@/types/ImageFile'
 
+interface tempEquipmentType {
+    nom: string,
+    code: string,
+    sousSystem: number,
+    image: string | ArrayBuffer | undefined
+}
+
 export default function Equipments () {
     let apiEquipmentList: {
         nom: String,
@@ -41,19 +48,34 @@ export default function Equipments () {
         }
     ]
 
-    const [ displayEquipList, setDisplayEquipList ] = useState(apiEquipmentList)
-    const [ equipComponentList, setEquipComponentList ] = useState<Array<React.JSX.Element>>([])
-
+    const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>([
+        {
+            nom: "Nom Equipement1",
+            code: "5G4D5F1D",
+            sousSystem: 10,
+            image: "/assets/img/index-generator.png"
+        },
+        {
+            nom: "Nom Equipement2",
+            code: "5G4D5F1D",
+            sousSystem: 10,
+            image: "/assets/img/index-generator.png"
+        },
+        {
+            nom: "Nom Equipement3",
+            code: "5G4D5F1D",
+            sousSystem: 10,
+            image: "/assets/img/index-generator.png"
+        }
+    ])
+    const [ displayEquipList, setDisplayEquipList ] = useState<Array<tempEquipmentType>>(apiEquipList)
 
     const [ isModalVisible, setModalVisibility ] = useState<boolean>(false)
     const [ isDeleteModalVisible, setDeleteModalVisibility ] = useState<boolean>(false)
-    const [ selectedEquipment, setSelectedEquipment ] = useState<String>("")
+    const [ selectedEquipment, setSelectedEquipment ] = useState<number>(0)
     
-    const [ equipImage, setEquipImage ] = useState<File>()
+    const [ equipImage, setEquipImage ] = useState<string | ArrayBuffer | undefined>()
     const [ previewImage, setPreviewImage ] = useState<string>("");
-    const [ progress, setProgress ] = useState<number>(0);
-    // const [ message, setMessage ] = useState<string>("");
-    // const [imageInfos, setImageInfos] = useState<Array<IFile>>([]);
 
     const [ code, setCode ] = useState<string>("")
     const [ nom, setNom ] = useState<string>("")
@@ -64,66 +86,81 @@ export default function Equipments () {
     const [ etat, setEtat ] = useState<string>("")
     const [ description, setDescription ] = useState<string>("")
 
-    const [ newEqup, setNewEquip ] = useState<EquipmentType>()
+    const [ newEqup, setNewEquip ] = useState<EquipmentType | undefined>()
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
-
-    const sortEquipList = (value: string) => {
-        if(value !== ""){
-            setDisplayEquipList(apiEquipmentList.filter((equip)=>{
-                return equip.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
-            }))
-        }
-        else{
-            setDisplayEquipList(apiEquipmentList)
-        }
-    }
     
     const initialiseParams = () => {
-        // setCode("")
-        // setNom("")
-        // setMarque("")
-        // setModele("")
-        // setNumSerie("")
-        // setLocalisation("")
-        // setEtat("")
-        // setDescription("")
-        // setPreviewImage("")
+        setCode("")
+        setNom("")
+        setMarque("")
+        setModele("")
+        setNumSerie("")
+        setLocalisation("")
+        setEtat("")
+        setDescription("")
+        setPreviewImage("")
         setFormValidity(false)
     }
     
-    const openDeleteModal = (index: number) => {
-        setModalVisibility(true)
-        setDeleteModalVisibility(true)
-        setSelectedEquipment(displayEquipList[index].nom)
-    }
-
     const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files as FileList;
-        setEquipImage(selectedFiles?.[0]);
+        const data = new FileReader()
+        data.addEventListener("load", () =>{
+            setEquipImage(data.result? data.result: undefined)
+        })
+        data.readAsDataURL(selectedFiles?.[0])
         setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
-        setProgress(0);
     }
-
+    
     const closeModal = () => {
         setModalVisibility(false)
         setDeleteModalVisibility(false)
-        setSelectedEquipment("")
+        setSelectedEquipment(0)
         initialiseParams()
     }
 
-    const deleteEquipment = () => {
-        setDeleteModalVisibility(false)
-        setModalVisibility(false)
+    const openDeleteModal = (index: number) => {
+        setModalVisibility(true)
+        setDeleteModalVisibility(true)
+        setSelectedEquipment(index)
     }
 
-    const addNewEquipment = () => {
-        if(isFormValid){
-            const tempEquip = {
-                nom: nom,
-                code: code,
-                sousSystem: 0,
-                image: previewImage
+    const deleteEquipment = () => {
+        let tempApiEquipList = [...apiEquipList]
+        tempApiEquipList.splice(selectedEquipment,1)
+        setApiEquipList(tempApiEquipList)
+        setDeleteModalVisibility(false)
+        setModalVisibility(false)
+        setSelectedEquipment(0)
+    }
+
+    const sortEquipList = (value: string) => {
+        if(value !== ""){
+            let tempDisplayEquip = [...apiEquipList]
+            tempDisplayEquip = apiEquipList.filter((equip)=>{
+                return equip.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
+            })
+            if(tempDisplayEquip.length > 0) {
+                setDisplayEquipList(tempDisplayEquip)
             }
+        }
+        else{
+            setDisplayEquipList(apiEquipList)
+        }
+    }
+    
+    const [ equipComponentList, setEquipComponentList ] = useState<Array<React.JSX.Element>>(displayEquipList.map((equipement, index)=> {
+        return <EquipmentCard
+            key={index}
+            equipmentInfo = {equipement}
+            deleteEquip = {()=>openDeleteModal(index)}
+        />
+    }))
+
+    const addNewEquipment = () => {
+        if(isFormValid)
+            {
+            setEquipComponentList([])
             const newEquipment = {
                 code: code,
                 nom: nom,
@@ -133,27 +170,33 @@ export default function Equipments () {
                 localisation: localisation,
                 etat: etat,
                 description: description,
-                image: previewImage
+                image: equipImage? equipImage : ""
             }
-            let tempEquipList = [...displayEquipList, tempEquip]
-            setDisplayEquipList([])
-            setEquipComponentList([])
-            // setDisplayEquipList([...displayEquipList, tempEquip])
-            setDisplayEquipList(tempEquipList)
+            const tempEquip = {
+                nom: nom,
+                code: code,
+                sousSystem: 0,
+                image: equipImage? equipImage : "/assets/img/dashboard/equipements/equip1.png"
+            }
+            setApiEquipList([...displayEquipList, tempEquip])
             setNewEquip(newEquipment)
             closeModal()
         }
     }
 
     useEffect(()=> {
-        let tempEquipCompoList = displayEquipList.map((equipement, index)=> {
+        setDisplayEquipList(apiEquipList)
+    }, [apiEquipList])
+
+    useEffect(()=> {
+        setEquipComponentList(displayEquipList.map((equipement, index)=> {
             return <EquipmentCard
                 key={index}
                 equipmentInfo = {equipement}
                 deleteEquip = {()=>openDeleteModal(index)}
             />
-        })
-        setEquipComponentList(tempEquipCompoList)
+        }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayEquipList])
 
     useEffect(()=>{

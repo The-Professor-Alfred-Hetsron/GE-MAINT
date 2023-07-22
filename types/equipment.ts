@@ -1,3 +1,4 @@
+
 export default interface EquipmentType {
     code: string,
     nom: string,
@@ -7,5 +8,5 @@ export default interface EquipmentType {
     localisation: string,
     etat: string,
     description: string,
-    image: string
+    image: string | ArrayBuffer | undefined
   }
