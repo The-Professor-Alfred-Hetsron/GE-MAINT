@@ -61,7 +61,7 @@ export default function Equipments () {
     const [ etat, setEtat ] = useState<string>("")
     const [ description, setDescription ] = useState<string>("")
 
-    const [ newEqup, setNewEquip ] = useState<EquipmentType | undefined>()
+    const [ newEquip, setNewEquip ] = useState<EquipmentType | undefined>()
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
     
     const initialiseParams = () => {
@@ -74,6 +74,7 @@ export default function Equipments () {
         setEtat("")
         setDescription("")
         setPreviewImage("")
+        setEquipImage("")
         setFormValidity(false)
     }
     
@@ -104,9 +105,7 @@ export default function Equipments () {
         let tempApiEquipList = [...apiEquipList]
         tempApiEquipList.splice(selectedEquipment,1)
         setApiEquipList(tempApiEquipList)
-        setDeleteModalVisibility(false)
-        setModalVisibility(false)
-        setSelectedEquipment(0)
+        closeModal()
     }
 
     const sortEquipList = (value: string) => {
@@ -133,8 +132,7 @@ export default function Equipments () {
     }))
 
     const addNewEquipment = () => {
-        if(isFormValid)
-            {
+        if(isFormValid){
             setEquipComponentList([])
             const newEquipment = {
                 code: code,
@@ -181,15 +179,15 @@ export default function Equipments () {
     }, [code, nom, marque, modele, numSerie, localisation, etat, description, previewImage])
 
     return(
-        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Catalogue d’équipements</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{displayEquipList.length}</span>
             </div>
 
-            <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
+            <div className="w-full h-full overflow-y-auto p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={sortEquipList} placeholder="Rechercher un équipement"/>
+                    <InputSearchField setNewSearchValue={sortEquipList} placeholder="Rechercher un équipement" />
                     <AddBtn placeholder="Nouveau" addFunction={()=>{setModalVisibility(true)}}/>
                 </div>
 
@@ -221,17 +219,17 @@ export default function Equipments () {
                     addBtnLabel="Ajouter"
                     addNewAction = {addNewEquipment}
                 >
-                    <div className="w-full flex flex-row justify-center gap-8">
+                    <div className="w-full flex flex-row justify-center gap-4">
                         <div className="w-full flex flex-col justify-start gap-4">
                             <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                                 Image de l’équipement
                             </span>
-                            <div className="w-3/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
+                            <div className="w-4/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
                                 <div className='w-full aspect-square rounded-2xl flex flex-col bg-[rgba(0,0,0,0.5)] text-white justify-center items-center absolute'>
                                     <BsUpload size={32}/>
                                     <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
                                 </div>
-                                <input id='imageInput' required className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" onChange={addImage} />
+                                <input required className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" onChange={addImage} />
                                 {previewImage && (
                                     <Image className="w-full aspect-square rounded-2xl" src={previewImage} alt="Equipment Preview" width={500} height={500}/>
                                 )}

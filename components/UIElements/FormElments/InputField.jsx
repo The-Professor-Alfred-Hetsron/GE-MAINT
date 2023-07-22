@@ -4,15 +4,15 @@ import React, {useState, useEffect} from 'react'
 import '../../../styles/formElements.css'
 
 function InputField(props) {
-    const [inputValue, setInputValue] = useState("")
+    const [inputValue, setInputValue] = useState(props.defaultValue?props.defaultValue:"")
 
     useEffect(()=> {
-        props.setNewValue(inputValue)
+        props.setNewValue(inputValue.trimEnd())
     },[inputValue, props])
 
   return (
     <div className="inputBox">
-        <input required type={props.label === "Email" ? "email" : "text"} onChange={(e)=>setInputValue(e.target.value.trimEnd())}/>
+        <input required value={inputValue} type={props.label === "Email" ? "email" : "text"} onChange={(e)=>setInputValue(e.target.value.trimEnd())}/>
         <span>{props.label}</span>
     </div>
   )

@@ -16,9 +16,9 @@ function Modal(props) {
     <>
       {isModalVisible ?
         <>
-          <div className='w-full fixed p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
+          <div className='w-full h-full fixed p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
             {/* modal container */}
-            <form className="p-8 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-4 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+            <form className="py-5 px-6 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
               {/* modal header */} 
               <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-center items-center'>
                 <span className='w-full text-center capitalize'>{props.modalTitle}</span>
@@ -31,7 +31,7 @@ function Modal(props) {
               <div className='w-full flex flex-col gap-4 justify-center items-center'>
 
                 {isDeleteModalVisible ?
-                  <div className='w-full flex flex-col gap-4 justify-center items-center'>
+                  <div className='w-full flex flex-col gap-3 justify-center items-center'>
                     <Image src="/assets/img/dashboard/modal/warningLogo.png" alt='warining Image' width="100" height="100"/>
                     <span className='w-full text-black text-center text-[20px] font-normal leading-[34px]'>
                       {props.deleteText}
@@ -47,7 +47,7 @@ function Modal(props) {
                   </div> :
                   <>
                     {props.children}
-                    <div className="w-full flex flex-row gap-4 justify-end items-center">
+                    <div className="w-full flex flex-row gap-2 justify-end items-center">
                         <button onClick={()=>props.closeModalAction()} className='p-4 bg-red-500 rounded-md justify-center items-center flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>
                             Annuler
                         </button>
