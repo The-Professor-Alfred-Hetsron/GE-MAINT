@@ -53,11 +53,108 @@ export default function Equipment ({params}:{params: {username: string, equipmen
             localisation: "Departement Equip",
             description: "La Meilleure Pièce au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Pièce2",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            description: "La Meilleure Pièce au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         }
     ])
     const [ displayPieceList, setDisplayPieceList ] = useState<Array<SubSystemType>>(apiPieceList)
 
     const [ apiPanneList, setApiPanneList ] = useState<Array<PanneType>>([
+        {
+            nom: "Panne 1",
+            description: "la description de la panne 1, voici ce qu’il faut faire",
+            gravite: 1
+        },
+        {
+            nom: "Panne 2",
+            description: "la description de la panne 2, voici ce qu’il faut faire",
+            gravite: 4
+        },
+        {
+            nom: "Panne 3",
+            description: "la description de la panne 3, voici ce qu’il faut faire",
+            gravite: 2
+        },
+        {
+            nom: "Panne 4",
+            description: "la description de la panne 4, voici ce qu’il faut faire",
+            gravite: 1
+        },
+        {
+            nom: "Panne 5",
+            description: "la description de la panne 5, voici ce qu’il faut faire",
+            gravite: 2
+        },
         {
             nom: "Panne 1",
             description: "la description de la panne 1, voici ce qu’il faut faire",
