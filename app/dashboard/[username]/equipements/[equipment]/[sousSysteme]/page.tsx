@@ -471,7 +471,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                         </div>
                     </div>
 
-                    <div className="flex w-full h-[400px] gap-4 sticky py-2 justify-start items-start flex-wrap overflow-auto">
+                    <div className="flex w-full gap-4 sticky py-2 justify-start items-start flex-wrap">
                         <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
                             <thead className="w-full bg-white border-b border-slate-400">
                                 <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
@@ -484,7 +484,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                                     <td className="w-full text-right">Action</td>
                                 </tr>
                             </thead>
-                            <tbody className="w-full">
+                            <tbody className="w-full h-[400px] overflow-auto">
                             {
                                 displayPanneList.map((panne, index) => {
                                     return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
