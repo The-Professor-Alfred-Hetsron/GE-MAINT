@@ -481,7 +481,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                                         <td className="w-3/5">Description</td>
                                     </div>
                                     <td className="w-[250px] text-center">Gravité</td>
-                                    <td className="w-full text-center">Action</td>
+                                    <td className="w-full text-right">Action</td>
                                 </tr>
                             </thead>
                             <tbody className="w-full">
