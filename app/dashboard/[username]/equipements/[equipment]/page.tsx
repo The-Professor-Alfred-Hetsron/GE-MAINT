@@ -110,6 +110,17 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         setUpdateFormValidity(false)
     }
 
+    const initialiseUpdateParams = () => {
+        setImageSubSys(apiEquipmentDetails.image)
+        setPreviewImageEquip(apiEquipmentDetails.image)
+        setNomEquip(apiEquipmentDetails.nom)
+        setMarqueEquip(apiEquipmentDetails.marque)
+        setModeleEquip(apiEquipmentDetails.modele)
+        setNumSerieEquip(apiEquipmentDetails.numSerie)
+        setLocalisationEquip(apiEquipmentDetails.localisation)
+        setDescriptionEquip(apiEquipmentDetails.description)
+    }
+
     const closeModal = () => {
         setDelEquipModalVisibility(false)
         setUpdateEquipModalVisibility(false)
@@ -138,6 +149,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }
 
     const updateEquipment = () => {
+        let tempEquipName = apiEquipmentDetails.nom
         if(isUpdateFormValid){
             const tempEquip = {
                 nom: nomEquip,
@@ -151,7 +163,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 image: imageEquip? imageEquip : ""
             }
             setApiEquipmentDetails(tempEquip)
-            router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
+            if(tempEquipName !== apiEquipmentDetails.nom){
+                router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
+            }
+            closeModal()
         }
         
     }
@@ -237,36 +252,37 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                             <span className="text-black text-[26px] font-semibold uppercase">{params.equipment.replace("-"," ")}</span>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Code: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.code}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.code}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Marque du Fabricant: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.marque}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.marque}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Numéro de Série: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.numSerie}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.numSerie}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Modèle: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.modele}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.modele}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Localisation: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.localisation}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.localisation}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Etat: </span>
-                                <span className="text-[20px] text-[#149FDA] font-semibold uppercase">{apiEquipmentDetails.etat}</span>
+                                <span className="text-[20px] text-[#149FDA] font-semibold">{apiEquipmentDetails.etat}</span>
                             </div>
                             <div className="justify-start items-baseline gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Description: </span>
-                                <span className="text-black text-[20px] font-semibold uppercase">{apiEquipmentDetails.description}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.description}</span>
                             </div>
                         </div>
                         <div className="w-full flex flex-row gap-3 justify-start items-start">
                             <DeleteBtn deleteAction={()=>{setDelEquipModalVisibility(true)}}/>
-                            <UpdateBtn updateAction={()=>{setUpdateEquipModalVisibility(true)}}/>
+                            <UpdateBtn updateAction={()=>{setUpdateEquipModalVisibility(true)
+                                                            initialiseUpdateParams()}}/>
                         </div>
                     </div>
                 </div>
