@@ -25,7 +25,7 @@ export default function Login () {
     return (
       <div className="w-screen h-screen bg-stone-50 flex justify-center items-center">
         <div className="w-full h-full flex justify-center items-center relative">
-            <div className=" w-full h-[500px] absolute top-0 pr-[200px]">
+            <div className=" w-full h-[650px] absolute top-0 pr-[250px]">
                 <div className="w-full h-full bg-[url('/assets/img/loginPAKstar.svg')] bg-cover bg-no-repeat bg-right-bottom"></div>
             </div>
 
