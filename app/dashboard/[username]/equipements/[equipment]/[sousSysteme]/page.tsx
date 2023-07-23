@@ -271,8 +271,8 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     }
 
     useEffect(()=> {
-        if(nomPanne !== "" && gravitePanne!==0
-            && descriptionPanne!==""){
+        if(nomPanne !== "" && gravitePanne>0
+            && gravitePanne <5 && descriptionPanne!==""){
             setAddPanneValidity(true)
         }
     },[nomPanne, gravitePanne, descriptionPanne])
