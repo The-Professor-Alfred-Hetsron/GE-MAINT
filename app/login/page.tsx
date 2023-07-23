@@ -14,11 +14,8 @@ export default function Login () {
     const router = useRouter()
 
     const submitForm = () => {
-        console.log('Nom: '+name)
-        console.log('Email: '+email)
-        console.log('Matricule: '+matricule)
         if(name && email && matricule){
-            router.push(`/dashboard/${name.trimEnd().replace(" ", "-")}/accueil`)
+            router.push(`/dashboard/${name.trimEnd()}/accueil`)
         }
     }
 

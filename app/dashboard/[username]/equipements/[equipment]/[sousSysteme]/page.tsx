@@ -23,8 +23,8 @@ import PanneType from "@/types/panne"
 export default function Equipment ({params}:{params: {username: string, equipment:string, sousSysteme: string }}) {
     const router = useRouter()
     const pathname = usePathname()
-    const equipmentName = params.equipment
-    const username = params.username
+    const equipmentName = decodeURI(params.equipment)
+    const username = decodeURI(params.username)
 
     const [ apiSubSystemDetails, setApiSubSystemDetails ] = useState<SubSystemType>({
         nom: "Nom Sous Système1",
@@ -205,11 +205,11 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>(apiSubSystemDetails.description)
     // Sub System Information End
 
-    // Piece Information Start
+    // Panne Information Start
     const [ nomPanne, setNomPanne ] = useState<string>("")
     const [ descriptionPanne, setDescriptionPanne ] = useState<string>("")
     const [ gravitePanne, setGravitePanne ] = useState<number>(0)
-    // Piece Information End
+    // Panne Information End
 
     const [ isUpdateFormValid, setUpdateFormValidity ] = useState<boolean>(false)
     const [ isAddPieceValid, setAddPieceValidity ] = useState<boolean>(false)
@@ -272,7 +272,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const deleteSubSys = () => {
         console.log("Deleting Sub System From the Database through API calls")
         closeModal()
-        router.push(`/dashboard/${params.username}/equipements/${equipmentName}`)
+        router.push(`/dashboard/${username}/equipements/${equipmentName}`)
     }
 
     const updateSubSys = () => {
@@ -288,10 +288,10 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 image: imageSubSys? imageSubSys : ""
             }
             setApiSubSystemDetails(tempSubSys)
-            if(tempSubSysName !== apiSubSystemDetails.nom){
-                router.push(`/dashboard/${params.username}/equipements/${params.equipment}/${apiSubSystemDetails.nom}`)
-            }
             closeModal()
+            if(tempSubSysName !== tempSubSys.nom){
+                router.push(`/dashboard/${username}/equipements/${equipmentName}/${tempSubSys.nom}`)
+            }
         }
     }
 
@@ -643,7 +643,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 modalTitle="Supprimer la Panne"
                 isVisible={isDelPanneModal}
                 isDeleteModalVisible = {isDelPanneModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer la panne <span className='font-bold'>{displayPanneList[selectedPanne].nom}</span> du sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span> et tout les protocoles préventif associés à cette panne. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer la panne <span className='font-bold'>{displayPanneList[selectedPanne].nom}</span> du sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span> et tout les protocols préventif associés à cette panne. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deletePanne}
