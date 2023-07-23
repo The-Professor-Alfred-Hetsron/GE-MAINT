@@ -11,7 +11,7 @@ function EquipmentCard(props) {
   const equipmentInfo = props.equipmentInfo? props.equipmentInfo : {}
 
   const routeToDetails = () => {
-    router.push(`${pathname}/${equipmentInfo.nom.replace(" ", "-")}`)
+    router.push(`${pathname}/${equipmentInfo.nom}`)
   }
 
   return (

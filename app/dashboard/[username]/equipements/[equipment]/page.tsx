@@ -90,7 +90,6 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const [ numSerieSubSys, setNumSerieSubSys ] = useState<string>("")
     const [ localisationSubSys, setLocalisationSubSys ] = useState<string>("")
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>("")
-    const [ newSubSys, setNewSubSys ] = useState<SubSystemType | undefined>()
     // Sub System Information End
     
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
@@ -172,16 +171,6 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         
     }
 
-    // const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const selectedFiles = event.target.files as FileList;
-    //     const data = new FileReader()
-    //     data.addEventListener("load", () =>{
-    //         setImageSubSys(data.result? data.result: undefined)
-    //     })
-    //     data.readAsDataURL(selectedFiles?.[0])
-    //     setPreviewImageSubSys(URL.createObjectURL(selectedFiles?.[0]));
-    // }
-
     const deleteSubSys = () => {
         let tempApiSubSysList = [...apiSubSysList]
         tempApiSubSysList.splice(selectedSubSys,1)
@@ -216,14 +205,8 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 image: imageSubSys? imageSubSys : ""
             }
             setApiSubSysList([...displaySubSysList, tempNewSubSys])
-            setNewSubSys(tempNewSubSys)
             closeModal()
         }
-    }
-
-    const routeToDetails = (index:number) => {
-        const subSys = displaySubSysList[index]
-        router.push(`${pathname}/${subSys.nom.replace(" ", "-")}`)
     }
 
     useEffect(()=>{
@@ -246,11 +229,11 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
             <div className="w-full h-full overflow-y-auto p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full flex-row justify-start items-start gap-2 inline-flex">
                     <div className='w-full aspect-square bg-[#D0E5F0] rounded-[16px] flex justify-center items-center'>
-                        <Image className="w-4/5 aspect-square" width="500" height="500" src={`${apiEquipmentDetails.image}`} alt={params.equipment.replace("-", " ")}/>
+                        <Image className="w-4/5 aspect-square" width="500" height="500" src={`${apiEquipmentDetails.image}`} alt={decodeURI(params.equipment)}/>
                     </div>
                     <div className="w-full px-4 flex-col justify-start items-start gap-2 inline-flex">
                         <div className="flex-col justify-start items-start inline-flex">
-                            <span className="text-black text-[26px] font-semibold uppercase">{params.equipment.replace("-"," ")}</span>
+                            <span className="text-black text-[26px] font-semibold uppercase">{decodeURI(params.equipment)}</span>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Code: </span>
                                 <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.code}</span>
@@ -290,7 +273,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
 
                 <div className="w-full flex flex-col">
                     <div className="w-full pb-2 border-b border-slate-300 justify-start items-center gap-2.5 inline-flex">
-                        <div className="w-[300px] gap-2 flex flex-row justify-start items-baseline">
+                        <div className="w-[300px] gap-2 flex flex-row justify-start items-center">
                             <span className="text-black text-[24px] font-normal">Sous Systèmes</span>
                             <span className="w-8 h-8 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiSubSysList.length}</span>
                         </div>
@@ -300,13 +283,13 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         </div>
                     </div>
 
-                    <div className="inline-flex h-full gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
+                    <div className="flex w-full h-[210px] gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
                         {
                             displaySubSysList.map((system, index) => {
                                 return <SubsysPieceCard
                                     key={index}
                                     sysPieceInfo = {system}
-                                    routeToDetails = {() => routeToDetails(index)}
+                                    href = {`${pathname}/${displaySubSysList[index].nom}`}
                                     deleteAction = {() => {setSelectedSubSys(index)
                                                             setDelSubSysModalVisibility(true)}}
                                 />

@@ -16,7 +16,7 @@ function Modal(props) {
     <>
       {isModalVisible ?
         <>
-          <div className='w-full h-full fixed px-10 pt-[100px] rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-start'>
+          <div className='w-full h-full fixed p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
             {/* modal container */}
             <form className="py-5 px-6 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
               {/* modal header */} 
