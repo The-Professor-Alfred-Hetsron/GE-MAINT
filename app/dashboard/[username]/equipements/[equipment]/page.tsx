@@ -8,7 +8,7 @@ import AddBtn from "@/components/UIElements/AddBtn"
 import SubsysPieceCard from '@/components/UIElements/SubsysPieceCard'
 import { BsUpload } from "react-icons/bs";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import Modal from "@/components/UIElements/Modal"
 import InputField from "@/components/UIElements/FormElments/InputField"
 import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
@@ -83,7 +83,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
 
     // Sub System Information Start
     const [ imageSubSys, setImageSubSys ] = useState<string | ArrayBuffer | undefined>()
-    const [ previewImageSubSys, setPreviewImageSubSys ] = useState<string>("")
+    const [ previewImageSubSys, setPreviewImageSubSys ] = useState<string | ArrayBuffer | undefined>()
     const [ nomSubSys, setNomSubSys ] = useState<string>("")
     const [ marqueSubSys, setMarqueSubSys ] = useState<string>("")
     const [ modeleSubSys, setModeleSubSys ] = useState<string>("")
@@ -118,6 +118,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         setModeleEquip(apiEquipmentDetails.modele)
         setNumSerieEquip(apiEquipmentDetails.numSerie)
         setLocalisationEquip(apiEquipmentDetails.localisation)
+        setEtatEquip(apiEquipmentDetails.etat)
         setDescriptionEquip(apiEquipmentDetails.description)
     }
 
@@ -132,14 +133,14 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         initialiseParams()
     }  
 
-    const addEquipImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const addImage = (event: React.ChangeEvent<HTMLInputElement>, setImage:Dispatch<SetStateAction<string | ArrayBuffer | undefined>>, setPreviewImage:Dispatch<SetStateAction<string | ArrayBuffer | undefined>>) => {
         const selectedFiles = event.target.files as FileList;
         const data = new FileReader()
         data.addEventListener("load", () =>{
-            setImageEquip(data.result? data.result: undefined)
+            setImage(data.result? data.result: undefined)
         })
         data.readAsDataURL(selectedFiles?.[0])
-        setPreviewImageEquip(URL.createObjectURL(selectedFiles?.[0]));
+        setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
     }
 
     const deleteEquipment = () => {
@@ -171,15 +172,15 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         
     }
 
-    const addSubSysImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFiles = event.target.files as FileList;
-        const data = new FileReader()
-        data.addEventListener("load", () =>{
-            setImageSubSys(data.result? data.result: undefined)
-        })
-        data.readAsDataURL(selectedFiles?.[0])
-        setPreviewImageSubSys(URL.createObjectURL(selectedFiles?.[0]));
-    }
+    // const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const selectedFiles = event.target.files as FileList;
+    //     const data = new FileReader()
+    //     data.addEventListener("load", () =>{
+    //         setImageSubSys(data.result? data.result: undefined)
+    //     })
+    //     data.readAsDataURL(selectedFiles?.[0])
+    //     setPreviewImageSubSys(URL.createObjectURL(selectedFiles?.[0]));
+    // }
 
     const deleteSubSys = () => {
         let tempApiSubSysList = [...apiSubSysList]
@@ -190,12 +191,12 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
 
     const sortSubSysList = (value: string) => {
         if(value !== ""){
-            let tempDisplaySubSys = [...apiSubSysList]
-            tempDisplaySubSys = apiSubSysList.filter((equip)=>{
-                return equip.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
+            let tempList = [...apiSubSysList]
+            tempList = apiSubSysList.filter((subsys)=>{
+                return subsys.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
             })
-            if(tempDisplaySubSys.length > 0) {
-                setDisplaySubSysList(tempDisplaySubSys)
+            if(tempList.length > 0) {
+                setDisplaySubSysList(tempList)
             }
         }
         else{
@@ -346,7 +347,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                                 <BsUpload size={32}/>
                                 <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
                             </div>
-                            <input onChange={addEquipImage} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
+                            <input onChange={(e)=>{addImage(e,setImageEquip, setPreviewImageEquip)}} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
                             <Image className="w-full aspect-square rounded-2xl" src={`${previewImageEquip}`} alt="Equipment Preview" width={500} height={500}/>
                         </div>
                     </div>
@@ -368,11 +369,11 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
             </Modal>
 
             {/* Delete Sub System Modal */}
-            <Modal 
+            <Modal
                 modalTitle="Supprimer le sous Système"
                 isVisible={isDelSubSysModal}
                 isDeleteModalVisible = {isDelSubSysModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{displaySubSysList[selectedSubSys].nom}</span> de <span className='font-bold'>{apiEquipmentDetails.nom}</span> et tout les pièces de rechange associés à ce sous système. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{displaySubSysList[selectedSubSys].nom}</span> de <span className='font-bold'>{apiEquipmentDetails.nom}</span> et toutes les pièces de rechange et les pannes associés à ce sous système. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deleteSubSys}
@@ -398,9 +399,9 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                                 <BsUpload size={32}/>
                                 <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
                             </div>
-                            <input onChange={addSubSysImage} required className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
+                            <input onChange={(e)=>{addImage(e,setImageSubSys, setPreviewImageSubSys)}} required className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
                             {previewImageSubSys && (
-                                <Image className="w-full aspect-square rounded-2xl" src={previewImageSubSys} alt="Sub System Preview" width={500} height={500}/>
+                                <Image className="w-full aspect-square rounded-2xl" src={`${previewImageSubSys}`} alt="Sub System Preview" width={500} height={500}/>
                             )}
                         </div>
                     </div>
