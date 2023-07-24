@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation'
 
 import DeleteBtn from '@/components/UIElements/DeleteBtn'
 import UpdateBtn from '@/components/UIElements/UpdateBtn'
+import DateInputField from '@/components/UIElements/FormElments/DateInputField'
 import InputField from "@/components/UIElements/FormElments/InputField"
 import Modal from "@/components/UIElements/Modal"
 import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { BsUpload } from "react-icons/bs";
 
 import PieceType from "@/types/piece"
 
@@ -56,7 +58,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
 
     // Transaction Stock Start
     const [ quantity, setQuantity ] = useState<number>(0)
-    const [ date, setDate ] = useState<string>()
+    const [ dateStock, setDateStock ] = useState<string>()
     // Transaction Stock End
 
     const initialiseUpdateParams = () => {
@@ -76,7 +78,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
 
     const initialiseStockParams = () => {
         setQuantity(0)
-        setDate("")
+        setDateStock("")
         setStockValidity(false)
     }
 
@@ -126,12 +128,47 @@ export default function Piece ({params}:{params: {username: string, equipment:st
     }
 
     const saveAddStock =() =>{
-
+        if(isStockValid){
+            const tempStock = {
+                piece: apiPieceDetails.nom,
+                subSystem: subSysName,
+                quantity: quantity,
+                date: dateStock,
+                type: "Depôt"
+            }
+            console.log(tempStock)
+            closeModal()
+        }
     }
 
     const saveRemoveStock =() => {
-        
+        if(isStockValid){
+            const tempStock = {
+                piece: apiPieceDetails.nom,
+                subSystem: subSysName,
+                quantity: quantity,
+                date: dateStock,
+                type: "Retrait"
+            }
+            console.log(tempStock)
+            closeModal()
+        }
     }
+
+    useEffect(()=>{
+        if(quantity>0 && dateStock!==""){
+            setStockValidity(true)
+        }
+    },[quantity,dateStock])
+
+    useEffect(()=> {
+        if(nomPiece!=="" && marquePiece!=="" &&
+            modelePiece!=="" && numSeriePiece!=="" &&
+            localisationPiece!=="" && qteStockPiece>0 &&
+            qteMinPiece>0 && descriptionPiece!==""){
+                setUpdateValidity(true)
+        }
+    }, [nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece])
 
     return(
         <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -194,6 +231,100 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                     </div>
                 </div>
             </div>
+
+            {/* Delete Piece Modal */}
+            <Modal
+                modalTitle="Supprimer la Pieèce de Rechange"
+                isVisible={isDelModalVisibile}
+                isDeleteModalVisible = {isDelModalVisibile}
+                deleteText = {<span>ous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{apiPieceDetails.nom}</span> du sous système <span className='font-bold'>{subSysName}</span>. Voulez-vous poursuivre ?</span>}
+                modalWidth = {600}
+                closeModalAction = {closeModal}
+                deleteAction = {deletePiece}
+            />
+
+            {/* Update Piece Modal */}
+            <Modal
+                modalTitle="Modifier la Pièce de Rechange"
+                isVisible={isUpdateModalVisible}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Modifier"
+                addNewAction = {updatePiece}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Image de la Pièce de Rechange
+                        </span>
+                        <div className="w-4/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
+                            <div className='w-full aspect-square rounded-2xl flex flex-col bg-[rgba(0,0,0,0.5)] text-white justify-center items-center absolute'>
+                                <BsUpload size={32}/>
+                                <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
+                            </div>
+                            <input onChange={(e)=>{addImage(e,setImagePiece, setPreviewImagePiece)}} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
+                            <Image className="w-full aspect-square rounded-2xl" src={`${previewImagePiece}`} alt="Equipment Preview" width={500} height={500}/>
+                        </div>
+                    </div>
+
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Caractéristiques
+                        </span>
+                        <InputField label="Nom" defaultValue={apiPieceDetails.nom} setNewValue={setNomPiece} />
+                        <InputField label="Marque du Fabricant" defaultValue={apiPieceDetails.marque} setNewValue={setMarquePiece} />
+                        <InputField label="Modèle" defaultValue={apiPieceDetails.modele} setNewValue={setModelePiece} />
+                        <InputField label="Numéro de Série" defaultValue={apiPieceDetails.numSerie} setNewValue={setNumSeriePiece} />
+                        <InputField label="Localisation" defaultValue={apiPieceDetails.localisation} setNewValue={setLocalisationPiece} />
+                        <InputField label="Quantité en Stock" defaultValue={apiPieceDetails.qteStock} type="Number" minValue={0} setNewValue={setQteStockPiece} />
+                        <InputField label="Quantité Minimale" defaultValue={apiPieceDetails.qteMin} type="Number" minValue={0} setNewValue={setQteMinPiece} />
+                        <TextAreaField label="Description" defaultValue={apiPieceDetails.description} setNewValue={setDescriptionPiece} />
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Add Piece in Stock Modal */}
+            <Modal
+                modalTitle={`Depôt de la pièce ${apiPieceDetails.nom} en Stock`}
+                isVisible={isAddStockModalVisible}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Ajouter"
+                addNewAction = {saveAddStock}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Information sur la Transaction
+                        </span>
+                        <InputField label="Quantité Deposé" type="Number" minValue={0} setNewValue={setQuantity} />
+                        <DateInputField label="Date du Depôt" setNewValue={setDateStock} />
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Remove Piece from Stock */}
+            <Modal
+                modalTitle={`Retrait de la pièce ${apiPieceDetails.nom} du Stock`}
+                isVisible={isRemoveStockModalVisible}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Retirer"
+                addNewAction = {saveRemoveStock}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Information sur la Transaction
+                        </span>
+                        <InputField label="Quantité Retiré" type="Number" minValue={0} setNewValue={setQuantity} />
+                        <DateInputField label="Date du Depôt" setNewValue={setDateStock} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }
