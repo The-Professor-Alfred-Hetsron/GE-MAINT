@@ -321,7 +321,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                             Information sur la Transaction
                         </span>
                         <InputField label="Quantité à Retirer" type="Number" minValue={0} setNewValue={setQuantity} />
-                        <DateInputField label="Date du Depôt" setNewValue={setDateStock} />
+                        <DateInputField label="Date du Retrait" setNewValue={setDateStock} />
                     </div>
                 </div>
             </Modal>
