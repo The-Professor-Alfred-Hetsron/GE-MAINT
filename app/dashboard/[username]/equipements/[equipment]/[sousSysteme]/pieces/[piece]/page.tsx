@@ -179,7 +179,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
             </div>
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
-                <div className="w-full flex-row justify-start items-start gap-2 inline-flex">
+                <div className="w-full h-full flex-row justify-start items-start gap-2 inline-flex">
                     <div className='w-full aspect-square bg-[#D0E5F0] rounded-[16px] flex justify-center items-center'>
                         <Image className="w-4/5 aspect-square" width="500" height="500" src={`${apiPieceDetails.image}`} alt={decodeURI(params.piece)}/>
                     </div>
@@ -299,7 +299,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Information sur la Transaction
                         </span>
-                        <InputField label="Quantité Deposé" type="Number" minValue={0} setNewValue={setQuantity} />
+                        <InputField label="Quantité à Deposer" type="Number" minValue={0} setNewValue={setQuantity} />
                         <DateInputField label="Date du Depôt" setNewValue={setDateStock} />
                     </div>
                 </div>
@@ -320,7 +320,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Information sur la Transaction
                         </span>
-                        <InputField label="Quantité Retiré" type="Number" minValue={0} setNewValue={setQuantity} />
+                        <InputField label="Quantité à Retirer" type="Number" minValue={0} setNewValue={setQuantity} />
                         <DateInputField label="Date du Depôt" setNewValue={setDateStock} />
                     </div>
                 </div>
