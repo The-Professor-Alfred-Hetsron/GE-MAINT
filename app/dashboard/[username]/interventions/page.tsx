@@ -5,9 +5,13 @@ import InputSearchField from "@/components/UIElements/FormElments/InputSearchFie
 import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionActionBtn from "@/components/UIElements/InterventionActionBtn"
 
+import InterventionType from '@/types/intervention'
+
+import { useState, useEffect } from "react"
+
 export default function Interventions () {
 
-    const interventionList = [
+    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>([
         {
             panne: "Nom Panne1",
             sousSysteme: "Nom Sous Systeme1",
@@ -124,7 +128,9 @@ export default function Interventions () {
             etatEquipementFinal: "Fonctionnel",
             observation:"La panne a été retablit"
         }
-    ]
+    ])
+
+    const [ displayIntervenList, setDisplayIntervenList] = useState<Array<InterventionType>>(apiInterventionList)
 
     const sortInterventionList = (value: string) => {
 
@@ -149,7 +155,7 @@ export default function Interventions () {
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Interventions</span>
-                <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{interventionList.length}</span>
+                <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
             </div>
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
@@ -173,13 +179,13 @@ export default function Interventions () {
                         </thead>
                         <tbody className="w-full">
                         {
-                            interventionList.map((intervention, index) => {
+                            displayIntervenList.map((intervention, index) => {
                                 return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                     <td className="w-[150px]">{index+1}</td>
                                     <td className="w-full">{intervention.panne}</td>
                                     <td className="w-full text-center">{intervention.demanderPar}</td>
                                     <td className="w-full capitalize text-center">{intervention.etatEquipementInitial}</td>
-                                    <td className="w-full text-center"><InterventionState state={intervention.etat}/></td>
+                                    <td className="w-full flex justify-center items-center text-center"><InterventionState state={intervention.etat}/></td>
                                     <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                         <InterventionActionBtn
                                             key={index}
