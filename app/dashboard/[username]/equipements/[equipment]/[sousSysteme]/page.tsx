@@ -527,7 +527,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 modalTitle="Supprimer le sous Système"
                 isVisible={isDelSubSysModal}
                 isDeleteModalVisible = {isDelSubSysModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span> ainsi que toutes les pièces de rechange et les pannes associés à ce sous système. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span> ainsi que toutes les <span className='font-bold'>{apiPieceList.length}</span> pièces de rechange et les <span className='font-bold'>{apiPanneList.length}</span> pannes associés à ce sous système. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deleteSubSys}

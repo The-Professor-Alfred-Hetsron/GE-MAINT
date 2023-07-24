@@ -65,7 +65,8 @@ function NavBar(props) {
         <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
           navLinks.map((link, index)=>{
-            const isActive = link.href2? (pathname.startsWith(link.href) || pathname.startsWith(link.href2)) : pathname.startsWith(link.href)
+            const newPath = decodeURI(pathname)
+            const isActive = link.href2? (newPath.startsWith(link.href) || newPath.startsWith(link.href2)) : newPath.startsWith(link.href)
             return (
                 <Link
                   key={index}

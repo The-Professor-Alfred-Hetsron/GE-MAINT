@@ -16,7 +16,7 @@ function SubsysPieceCard(props) {
   return (
     <div className='w-[180px] aspect-square bg-white rounded-[16px] shadow flex-col justify-start items-start inline-flex'>
         <button onClick={()=>routeToDetails()} className='w-full h-3/4 py-4 bg-[#D0E5F0] rounded-t-[16px] flex justify-center items-center'>
-            <Image className="w-3/4 aspect-square" width="500" height="500" src={sysPieceInfo.image} alt={sysPieceInfo.nom}/>
+            <Image className="w-3/4 aspect-square hover:scale-105 ease-in-out duration-300" width="500" height="500" src={sysPieceInfo.image} alt={sysPieceInfo.nom}/>
         </button>
         <div className='text-black w-full p-2 flex-row justify-center items-center inline-flex'>
             <button onClick={()=>routeToDetails()} className='by-2 w-full flex-col justify-start items-start gap-[3px] inline-flex'>

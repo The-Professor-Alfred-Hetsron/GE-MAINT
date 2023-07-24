@@ -3,6 +3,7 @@
 import AddBtn from "@/components/UIElements/AddBtn"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import InputField from "@/components/UIElements/FormElments/InputField"
+import DropDownField from "@/components/UIElements/FormElments/DropDownField"
 import Modal from "@/components/UIElements/Modal"
 import UserRole from "@/components/UIElements/UserRole"
 
@@ -13,6 +14,11 @@ import { FaRegEdit } from "react-icons/fa"
 import UserType from "@/types/user"
 
 export default function Users () {
+
+    const userRoles =[
+        "Personnel",
+        "Responsable"
+    ]
 
     const [ apiUserList, setApiUserList ] = useState<Array<UserType>>([
         {
@@ -191,7 +197,7 @@ export default function Users () {
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={sortUserList} placeholder="Rechercher un utilisateur:nom, email, matricule, role"/>
+                    <InputSearchField setNewSearchValue={sortUserList} placeholder="Rechercher un utilisateur: nom, email, matricule, role"/>
                     <AddBtn width={550} placeholder="ajouter un utilisateur" addFunction={()=>{setAddModalVisibility(true)}}/>
                 </div>
 
@@ -251,12 +257,20 @@ export default function Users () {
                 <div className="w-full flex flex-row justify-center gap-4">
                     <div className="w-full flex flex-col justify-start gap-4">
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Les Initials de {"l'utilisateur"}
+                        </span>
+                        <span className='w-[300px] aspect-square px-2 py-5 bg-sky-800 rounded-full justify-center items-center inline-flex text-white font-bold text-center text-[100px]'>
+                        {nom?`${nom.toUpperCase().split(" ")[0][0]} ${nom.toUpperCase().split(" ")[nom.toUpperCase().split(" ").length-1][0]===undefined?"":nom.toUpperCase().split(" ")[nom.toUpperCase().split(" ").length-1][0]}`:""}
+                        </span>
+                    </div>
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Caractéristiques
                         </span>
                         <InputField label="Nom" setNewValue={setNom} />
                         <InputField label="Email" setNewValue={setEmail} />
                         <InputField label="Matricule" setNewValue={setMatricule} />
-                        <InputField label="Rolz" setNewValue={setRole} />
+                        <DropDownField label="Role" optionList={userRoles} placeholder='Selectionner un role' setNewValue={setRole} />
                     </div>
                 </div>
             </Modal>
@@ -274,12 +288,20 @@ export default function Users () {
                 <div className="w-full flex flex-row justify-center gap-4">
                     <div className="w-full flex flex-col justify-start gap-4">
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Initials de {"l'utilisateur"}
+                        </span>
+                        <span className='w-[300px] aspect-square px-2 py-5 bg-sky-800 rounded-full justify-center items-center inline-flex text-white font-bold text-center text-[100px]'>
+                            {nom?`${nom.toUpperCase().split(" ")[0][0]} ${nom.toUpperCase().split(" ")[nom.toUpperCase().split(" ").length-1][0]===undefined?"":nom.toUpperCase().split(" ")[nom.toUpperCase().split(" ").length-1][0]}`:""}
+                        </span>
+                    </div>
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Caractéristiques
                         </span>
                         <InputField label="Nom" defaultValue={nom}  setNewValue={setNom} />
                         <InputField label="Email" defaultValue={email} setNewValue={setEmail} />
                         <InputField label="Matricule" defaultValue={matricule} setNewValue={setMatricule} />
-                        <InputField label="Role" defaultValue={role} setNewValue={setRole} />
+                        <DropDownField label="Role" optionList={userRoles} defaultValue={role} setNewValue={setRole} />
                     </div>
                 </div>
             </Modal>

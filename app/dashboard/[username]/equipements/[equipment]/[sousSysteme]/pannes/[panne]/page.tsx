@@ -285,7 +285,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 modalTitle="Supprimer la Panne"
                 isVisible={isDelPanneModal}
                 isDeleteModalVisible = {isDelPanneModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer la panne <span className='font-bold'>{apiPanneDetails.nom}</span> du sous système <span className='font-bold'>{}</span> et tout les protocols préventif associés à cette panne. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer la panne <span className='font-bold'>{apiPanneDetails.nom}</span> du sous système <span className='font-bold'>{subSysName}</span> et tout les <span className='font-bold'>{apiProtocolList.length}</span> protocols préventif associés à cette panne. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deletePanne}
@@ -335,7 +335,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
 
             {/* Update Protocol Modal */}
             <Modal
-                modalTitle="Modifier le Protocol"
+                modalTitle={`Modifier le Protocol N° ${selectedProtocol+1}`}
                 isVisible={isUpdateProtoModal}
                 isDeleteModalVisible = {false}
                 modalWidth = {'80%'}
@@ -355,7 +355,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
 
             {/* Delete Protocol Modal */}
             <Modal
-                modalTitle="Supprimer le Protocol"
+                modalTitle={`Supprimer le Protocol N° ${selectedProtocol+1}`}
                 isVisible={isDelProtoModal}
                 isDeleteModalVisible = {isDelProtoModal}
                 deleteText = {<span>Vous êtes sur le point de supprimer le protocole préventif numéro <span className='font-bold'>{selectedProtocol+1}</span> associé à la panne <span className='font-bold'>{apiPanneDetails.nom}</span>. Voulez-vous poursuivre ?</span>}

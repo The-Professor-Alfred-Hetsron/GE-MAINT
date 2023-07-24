@@ -257,7 +257,7 @@ export default function Equipments () {
                 modalTitle="Supprimer l'équipement"
                 isVisible={isModalVisible && isDeleteModalVisible}
                 isDeleteModalVisible = {isDeleteModalVisible}
-                deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{displayEquipList[selectedEquipment].nom}</span> et tout les sous systèmes associés à cette équipement. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{displayEquipList[selectedEquipment].nom}</span> et tout les sous systèmes associés à cet équipement. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deleteEquipment}

@@ -303,11 +303,11 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys])
 
     return(
-        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
-            <div className="w-full  justify-start items-center inline-flex">
+        <div className="w-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+            <div className="w-full justify-start items-center inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Catalogue d’équipements</span>
             </div>
-            <div className="w-full h-full overflow-y-auto p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
+            <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full flex-row justify-start items-start gap-2 inline-flex">
                     <div className='w-full aspect-square bg-[#D0E5F0] rounded-[16px] flex justify-center items-center'>
                         <Image className="w-4/5 aspect-square" width="500" height="500" src={`${apiEquipmentDetails.image}`} alt={decodeURI(params.equipment)}/>
@@ -352,7 +352,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                     </div>
                 </div>
 
-                <div className="w-full flex flex-col">
+                <div className="w-full sticky flex flex-col">
                     <div className="w-full pb-2 border-b border-slate-300 justify-start items-center gap-2.5 inline-flex">
                         <div className="w-[300px] gap-2 flex flex-row justify-start items-center">
                             <span className="text-black text-[24px] font-normal">Sous Systèmes</span>
@@ -385,7 +385,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 modalTitle="Supprimer l'équipement"
                 isVisible={isDelEquipModal}
                 isDeleteModalVisible = {isDelEquipModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{apiEquipmentDetails.nom}</span> et tout les sous systèmes associés à cette équipement. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{apiEquipmentDetails.nom}</span> et tout les <span className='font-bold'>{apiSubSysList.length}</span> sous systèmes associés à cet équipement. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deleteEquipment}
