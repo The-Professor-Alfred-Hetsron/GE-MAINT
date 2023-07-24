@@ -117,10 +117,10 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 description: descriptionPanne,
             }
             setApiPanneDetails(tempPanne)
+            closeModal()
             if(tempPanneName !== tempPanne.nom){
                 router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}/pannes/${tempPanne.nom}`)
             }
-            closeModal()
         }
     }
 
@@ -168,7 +168,10 @@ export default function Panne ({params}:{params: {username: string, equipment:st
         closeModal()
     }
 
-    
+    useEffect(()=>{
+        setDisplayProtocolList(apiProtocolList)
+    },[apiProtocolList])
+
     useEffect(()=>{
         if(nomPanne!=="" && gravitePanne>0 &&
             gravitePanne<5 && descriptionPanne!== ""){

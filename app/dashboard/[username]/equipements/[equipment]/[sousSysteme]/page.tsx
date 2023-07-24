@@ -367,6 +367,14 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         closeModal()
     }
 
+    useEffect(()=>{
+        setDisplayPieceList(apiPieceList)
+    },[apiPieceList])
+
+    useEffect(()=>{
+        setDisplayPanneList(apiPanneList)
+    },[apiPanneList])
+
     useEffect(()=> {
         if(nomPanne !== "" && gravitePanne>0
             && gravitePanne <5 && descriptionPanne!==""){
