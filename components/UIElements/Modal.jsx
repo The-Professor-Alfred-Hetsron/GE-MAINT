@@ -28,10 +28,10 @@ function Modal(props) {
     <>
       {isModalVisible ?
         <>
-          <div className='w-full h-full fixed p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
+          <div className='w-full h-full !absolute top-0 left-0 p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
             {/* modal container */}
             {!isDetailIntervention &&
-              <form className="py-5 px-6 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+              <form className="py-5 px-6 min-w-[600px] bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
               {/* modal header */} 
               <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-center items-center'>
                 <span className='w-full text-center capitalize'>{props.modalTitle}</span>
@@ -77,7 +77,7 @@ function Modal(props) {
               <form className="py-5 px-6 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
                 
                 {/* modal header */} 
-                <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-between items-center'>
+                <div className='w-full  text-[26px] font-semibold leading-10 text-black flex flex-row justify-between items-center'>
                   <div className='flex flex-row justify-between items-center'>
                     <span className='w-full text-left capitalize text-black text-[32px] font-bold leading-7 tracking-tight'>Intervention #{props.index}</span>
                     <InterventionState state={interventionInfo.etat}/>
@@ -89,7 +89,7 @@ function Modal(props) {
 
                 {/* modal body */}
                 <div className='w-full flex flex-col gap-4 justify-center items-center'>
-                  <div className="flex-col justify-start items-start inline-flex">
+                  <div className="w-full flex-col justify-start items-start inline-flex">
                       <div className="justify-start items-center gap-[4px] inline-flex">
                           <span className="text-black text-[18px] font-normal leading-loose">Panne: </span>
                           <span className="text-black text-[20px] font-semibold">{interventionInfo.panne}</span>
@@ -110,7 +110,7 @@ function Modal(props) {
                           <span className="text-black text-[18px] font-normal leading-loose">Demandé par: </span>
                           <span className="text-black text-[20px] font-semibold">{interventionInfo.demanderPar}</span>
                       </div>
-                      {interventionInfo.etat === "Validé" &&
+                      {(interventionInfo.etat === "Validé" || interventionInfo.etat === "Rapport") &&
                       <>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Executant: </span>
@@ -143,6 +143,8 @@ function Modal(props) {
                         viewIntervention={()=>{router.push(`/dashboard/${props.username}/equipements/${interventionInfo.equipement}/${interventionInfo.sousSysteme}/pannes/${interventionInfo.panne}`)}}
                         validateIntervention={()=>props.validateIntervention()}
                         reportIntervention={()=>{props.reportIntervention()}}
+                        detailPlaceholder = "Consulter les protocols"
+                        reportPlaceholder = "Faire le Rapport"
                     />
                   </div>
                 </div>

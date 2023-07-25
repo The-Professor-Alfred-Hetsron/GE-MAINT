@@ -15,7 +15,7 @@ function DropDownField(props) {
         <select id="countries" className="custom-dropdown" onChange={(e)=>setInputValue(e.target.value)}>
             {props.placeholder && <option value="" disabled selected hidden>{props.placeholder}</option>}
             {props.defaultValue && <option value="" disabled selected hidden>{props.defaultValue}</option>}
-            {props.optionList.map((option, index) =>{
+            {props.optionList?.map((option, index) =>{
                 return <option 
                             key={index}
                             value={option}
@@ -25,7 +25,7 @@ function DropDownField(props) {
                         </option>
             })}
         </select>
-        <span>{props.label}</span>
+        <span className='capitalize'>{props.label}</span>
     </div>
   )
 }

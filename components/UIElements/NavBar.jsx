@@ -25,11 +25,11 @@ function NavBar(props) {
       icon: <RxDashboard size={24}/>,
       href: `${baseUrl}/equipements`,
     },
-    {
-      name: "Maintenance",
-      icon: <FiRotateCcw size={24}/>,
-      href: `${baseUrl}/maintenance`,
-    },
+    // {
+    //   name: "Maintenance",
+    //   icon: <FiRotateCcw size={24}/>,
+    //   href: `${baseUrl}/maintenance`,
+    // },
     {
       name: "Interventions",
       icon: <LuClipboardCopy size={24}/>,
@@ -41,11 +41,11 @@ function NavBar(props) {
       href: `${baseUrl}/stocks/listes`,
       href2: `${baseUrl}/stocks/transactions`
     },
-    {
-      name: "Alarmes",
-      icon: <RiAlarmWarningLine size={24}/>,
-      href: `${baseUrl}/alarmes`,
-    },
+    // {
+    //   name: "Alarmes",
+    //   icon: <RiAlarmWarningLine size={24}/>,
+    //   href: `${baseUrl}/alarmes`,
+    // },
     {
       name: "Utilisateurs",
       icon: <HiOutlineUserGroup size={24}/>,

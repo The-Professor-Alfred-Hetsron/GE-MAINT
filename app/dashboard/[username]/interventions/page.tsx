@@ -1,149 +1,91 @@
 'use client'
 
 import AddBtn from "@/components/UIElements/AddBtn"
-import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionActionBtn from "@/components/UIElements/InterventionActionBtn"
+import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
+import InputField from "@/components/UIElements/FormElments/InputField"
+import DateInputField from '@/components/UIElements/FormElments/DateInputField'
+import DropDownField from "@/components/UIElements/FormElments/DropDownField"
+import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 import Modal from "@/components/UIElements/Modal"
 
 import InterventionType from '@/types/intervention'
+import {
+    apiInterventions,
+    apiEquipmentList,
+    apiSubSystemList,
+    apiPanneList,
+    apiUserList
+} from '@/data/interventionData'
 
 import { useState, useEffect } from "react"
 
 export default function Interventions ({params}:{params: {username:string}}) {
     const username = decodeURI(params.username)
+    const actualDate = `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`
 
-    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>([
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "En Attente"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Validé",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Validé",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "En Attente"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        },
-        {
-            panne: "Nom Panne1",
-            sousSysteme: "Nom Sous Systeme1",
-            equipement: "Nom Equipement",
-            etatEquipementInitial: "Très Mal",
-            demanderPar: "Nom Prénom",
-            etat: "Rapport",
-            executant: "Nom Executant",
-            debutIntervention: "12.06.2023",
-            finIntervention: "12.06.2023",
-            etatEquipementFinal: "Fonctionnel",
-            observation:"La panne a été retablit"
-        }
-    ])
-
+    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>(apiInterventions)
     const [ displayIntervenList, setDisplayIntervenList] = useState<Array<InterventionType>>(apiInterventionList)
+
+    // APi Equipment, Sub system, Panne and User List Start
+    const [ apiEquipNameList, setApiEquipNameList ] = useState<Array<string>>(apiEquipmentList)
+    const [ apiSubSysNameList, setApiSubNameSysList ] = useState<Array<string>>(apiSubSystemList)
+    const [ apiPanneNameList, setApiPanneNameList ] = useState<Array<string>>(apiPanneList)
+    const [ apiUserNamesList, setApiUserNamesList ] = useState<Array<string>>(apiUserList)
+    // APi Equipment, Sub system, Panne and User List End
 
     const [ isAddModal, setAddModalVisibility ] = useState<boolean>(false)
     const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
+    const [ isValidateModal, setValidateModalVisibility ] = useState<boolean>(false)
+    const [ isReportModal, setReportModalVisibility ] = useState<boolean>(false)
+    const [ toogleExecutantType, executantTypeToogler ] = useState<boolean>(false)
+    // Intervention Information start
+    const [ panne, setPanne ] = useState<string>("")
+    const [ subSys, setSubSys ] = useState<string>("")
+    const [ equip, setEquip ] = useState<string>("")
+    const [ etatInitial, setEtatInitial ] = useState<string>("")
+    const [ demanderPar, setDemanderPar ] = useState<string>("")
+
+    const [ executant, setExecutant ] = useState<string>("")
+    const [ startDate, setStartDate ] = useState<string>("")
+    const [ endDate, setEndDate ] = useState<string>("")
+    
+    const [ etatFinal, setEtatFinal ] = useState<string>("")
+    const [ observation, setObservation ] = useState<string>("")
+    // Intervention Information End
 
     const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
-    
+    const [ isApproveFormValid, setApproveFormValidity ] = useState<boolean>(false)
+    const [ isReportFormValid, setReportFormValidity ] = useState<boolean>(false)
+
+    const initialiseParams = () => {
+        setPanne("")
+        setSubSys("")
+        setEquip("")
+        setEtatInitial("")
+        setDemanderPar("")
+        setFormValidity(false)
+
+        setExecutant("")
+        setStartDate("")
+        setEndDate("")
+        setApproveFormValidity(false)
+
+        setEtatFinal("")
+        setObservation("")
+        setReportFormValidity(false)
+    }
+
     const closeModal = () => {
         setAddModalVisibility(false)
         setDetailModalVisibility(false)
+        setValidateModalVisibility(false)
+        setReportModalVisibility(false)
+
         setSelectedInterven(0)
+        initialiseParams()
     }
 
     const sortInterventionList = (value: string) => {
@@ -169,9 +111,68 @@ export default function Interventions ({params}:{params: {username:string}}) {
         }
     }
 
+    const demandIntervention = () => {
+        if(isFormValid){
+            const tempIntervention = {
+                panne: panne,
+                sousSysteme: subSys,
+                equipement: equip,
+                etatEquipementInitial: etatInitial,
+                demanderPar: demanderPar,
+                etat: "En Attente"
+            }
+            setApiInterventionList([...apiInterventionList,tempIntervention])
+            closeModal()
+        }
+    }
+
+    const validateIntervention = () => {
+        if(isApproveFormValid){
+            let tempList = [...apiInterventionList]
+            tempList[selectedInterven]["executant"] = executant
+            tempList[selectedInterven]["debutIntervention"] = startDate
+            tempList[selectedInterven]["finIntervention"] = endDate
+            tempList[selectedInterven]["etat"] = "Validé"
+            setApiInterventionList(tempList)
+            closeModal()
+        }
+    }
+
+    const reportIntervention = () => {
+        if(isReportFormValid){
+            let tempList = [...apiInterventionList]
+            tempList[selectedInterven]["etatEquipementFinal"] = etatFinal
+            tempList[selectedInterven]["observation"] = observation
+            tempList[selectedInterven]["etat"] = "Rapport"
+            setApiInterventionList(tempList)
+            closeModal()
+        }
+    }
+
     useEffect(()=>{
         setDisplayIntervenList(apiInterventionList)
     },[apiInterventionList])
+
+    useEffect(()=>{
+        if(etatFinal!=="" && observation !== ""){
+            setReportFormValidity(true)
+        }
+    },[etatFinal, observation])
+
+    useEffect(()=>{
+        if(executant!=="" && startDate!=="" &&
+            endDate!== ""){
+                setApproveFormValidity(true)
+        }
+    },[executant,startDate,endDate])
+
+    useEffect(()=>{
+        if(panne!=="" && subSys!=="" &&
+        equip!=="" && etatInitial!=="" &&
+        demanderPar!==""){
+            setFormValidity(true)
+        }
+    },[panne,subSys,equip,etatInitial,demanderPar])
 
     return(
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -213,8 +214,10 @@ export default function Interventions ({params}:{params: {username:string}}) {
                                             state={intervention.etat}
                                             viewIntervention={()=>{setSelectedInterven(index)
                                                                     setDetailModalVisibility(true)}}
-                                            validateIntervention={()=>{setSelectedInterven(index)}}
-                                            reportIntervention={()=>{setSelectedInterven(index)}}
+                                            validateIntervention={()=>{setSelectedInterven(index)
+                                                                        setValidateModalVisibility(true)}}
+                                            reportIntervention={()=>{setSelectedInterven(index)
+                                                                        setReportModalVisibility(true)}}
                                         />
                                     </td>
                                 </tr>
@@ -231,12 +234,164 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 isVisible={isDetailModal}
                 isDeleteModalVisible = {false}
                 isDetailIntervention={isDetailModal}
-                index= {selectedInterven}
+                index= {selectedInterven+1}
                 interventionInfo = {apiInterventionList[selectedInterven]}
+                validateIntervention = {()=>{setDetailModalVisibility(false)
+                                                setValidateModalVisibility(true)}}
+                reportIntervention = {()=>{setDetailModalVisibility(false)
+                                        setReportModalVisibility(true)}}
                 username = {username}
-                modalWidth = {600}
+                modalWidth = {650}
                 closeModalAction = {closeModal}
             />
+
+            {/* Add Intervention Modal */}
+            <Modal
+                modalTitle="Demande d'Intervention"
+                isVisible={isAddModal}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Envoyer"
+                addNewAction = {demandIntervention}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 capitalize justify-center items-center text-black text-[20px] font-normal">
+                            équipement
+                        </span>
+                        <DropDownField label="" optionList={apiEquipNameList.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'équipement" setNewValue={setEquip} />
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Sous Système
+                        </span>
+                        <DropDownField label="" optionList={apiSubSysNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner le sous Système' setNewValue={setSubSys} />
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Panne
+                        </span>
+                        <DropDownField label="" optionList={apiPanneNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner la panne à intervenir' setNewValue={setPanne} />
+                    </div>
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Détails sur la demande
+                        </span>
+                        <InputField label="Demandé Par" defaultValue={username} setNewValue={setDemanderPar} />
+                        <TextAreaField label="Description de l'état actuel de l'équipement" setNewValue={setEtatInitial} />
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Validate Intervention Modal */}
+            <Modal
+                modalTitle="Valider L’intervention"
+                isVisible={isValidateModal}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Valider"
+                addNewAction = {validateIntervention}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex-col justify-start items-start inline-flex">
+                        <span className="w-full border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Information sur la demande {"d'intervention"}
+                        </span>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Panne: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].panne}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Sous Système: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].sousSysteme}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose capitalize">équipement: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].equipement}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose capitalize">état de l’équipement: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].etatEquipementInitial}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Demandé par: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].demanderPar}</span>
+                        </div>
+                    </div>
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Détails sur la validation
+                        </span>
+                        {!toogleExecutantType?
+                            <DropDownField label="" optionList={apiUserNamesList?.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'executant de l'intervention" setNewValue={setExecutant} />
+                        :
+                            <InputField label="Executant" setNewValue={setExecutant} />
+                        }
+                        <span onClick={()=>{executantTypeToogler(!toogleExecutantType)}} className="cursor-pointer hover:text-[#EDA92A] italic">
+                            {!toogleExecutantType && 'Cliquez ici pour ajouter un executant externe'}
+                            {toogleExecutantType && 'Cliquez ici pour choisir un personnel comme executant'}
+                        </span>
+                        <DateInputField label="Début d'intervention" defaultValue={actualDate} minDate={actualDate} setNewValue={setStartDate} />
+                        <DateInputField label="Fin d'intervention" defaultValue={actualDate} minDate={actualDate} setNewValue={setEndDate} />
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Report Intervention Modal */}
+            <Modal
+                modalTitle="Faire un Rapport sur L’intervention"
+                isVisible={isReportModal}
+                isDeleteModalVisible = {false}
+                modalWidth = {'80%'}
+                closeModalAction = {closeModal}
+                addBtnLabel="Valider"
+                addNewAction = {reportIntervention}
+            >
+                <div className="w-full flex flex-row justify-center gap-4">
+                    <div className="w-full flex-col justify-start items-start inline-flex">
+                        <span className="w-full border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Information sur {"l'intervention"}
+                        </span>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Panne: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].panne}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Sous Système: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].sousSysteme}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose capitalize">équipement: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].equipement}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose capitalize">état de l’équipement: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].etatEquipementInitial}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Demandé par: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].demanderPar}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Executant: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].executant}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Début d’intervention: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].debutIntervention}</span>
+                        </div>
+                        <div className="justify-start items-center gap-[4px] inline-flex">
+                            <span className="text-black text-[18px] font-normal leading-loose">Fin d’intervention: </span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].finIntervention}</span>
+                        </div>
+                    </div>
+                    <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                            Détails sur le rapport
+                        </span>
+                        <TextAreaField label="Description de l'état Final de l'équipement" setNewValue={setEtatFinal} />
+                        <TextAreaField label="Autres Observations" setNewValue={setObservation} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

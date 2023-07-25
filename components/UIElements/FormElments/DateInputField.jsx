@@ -4,7 +4,8 @@ import React, {useState, useEffect} from 'react'
 import '@/styles/formElements.css'
 
 function DateInputField(props) {
-    const [inputValue, setInputValue] = useState(props.defaultValue?Date(props.defaultValue):"")
+  const actualDate = `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`
+    const [inputValue, setInputValue] = useState(props.defaultValue?props.defaultValue:actualDate)
 
     useEffect(()=> {
         props.setNewValue(`${inputValue}`)
@@ -12,8 +13,8 @@ function DateInputField(props) {
 
   return (
     <div className="inputBox">
-        <input required value={inputValue} type="date" onChange={(e)=>setInputValue(e.target.value)}/>
-        <span>{props.label}</span>
+        <input required value={inputValue} type="date" min={props.minDate} onChange={(e)=>setInputValue(e.target.value)}/>
+        <span className='capitalize'>{props.label}</span>
     </div>
   )
 }

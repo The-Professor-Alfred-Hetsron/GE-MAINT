@@ -13,7 +13,7 @@ function InterventionActionBtn(props) {
     <>
         <button onClick={()=>props.viewIntervention()} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
             <AiFillEye size={20}/>
-            <span>Details</span>
+            {props.detailPlaceholder?<span>{props.detailPlaceholder}</span>:<span>Détails</span>}
         </button>
 
         {state === "En Attente" ?
@@ -25,7 +25,7 @@ function InterventionActionBtn(props) {
         {state === "Validé" ?
         <button onClick={()=>props.reportIntervention()} className="py-1 px-2 bg-white rounded-[100px] text-[#EDA92A] border border-amber-400 justify-center items-center gap-1 inline-flex hover:bg-[#EDA92A] hover:text-white">
             <LuClipboardCopy size={20}/>
-            <span>Rapport</span>
+            {props.reportPlaceholder?<span>{props.reportPlaceholder}</span>:<span>Rapport</span>}
         </button>: null}
 
         {/* {state === "Rapport" ?

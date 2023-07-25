@@ -1,5 +1,5 @@
-import NavBar from '../../../components/UIElements/NavBar'
-import Header from '../../../components/UIElements/Header'
+import NavBar from '@/components/UIElements/NavBar'
+import Header from '@/components/UIElements/Header'
 
 
 export default function DashboardLayout(

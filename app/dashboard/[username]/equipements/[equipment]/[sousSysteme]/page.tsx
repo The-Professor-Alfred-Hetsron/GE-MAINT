@@ -505,7 +505,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                                         <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                             <button onClick={()=>{router.push(`${pathname}/pannes/${displayPanneList[index].nom}`)}} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
                                                 <AiFillEye size={20}/>
-                                                <span>Details</span>
+                                                <span>Détails</span>
                                             </button>
                                             <button onClick={()=>{setDelPanneModalVisibility(true)
                                                                     setSelectedPanne(index)}} className="py-1 px-2 bg-white rounded-[100px] text-[#EA4335] border border-red-500 justify-center items-center gap-1 inline-flex hover:bg-[#EA4335] hover:text-white">
