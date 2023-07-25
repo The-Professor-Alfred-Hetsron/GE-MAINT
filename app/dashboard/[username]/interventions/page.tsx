@@ -4,12 +4,14 @@ import AddBtn from "@/components/UIElements/AddBtn"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionActionBtn from "@/components/UIElements/InterventionActionBtn"
+import Modal from "@/components/UIElements/Modal"
 
 import InterventionType from '@/types/intervention'
 
 import { useState, useEffect } from "react"
 
-export default function Interventions () {
+export default function Interventions ({params}:{params: {username:string}}) {
+    const username = decodeURI(params.username)
 
     const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>([
         {
@@ -18,7 +20,7 @@ export default function Interventions () {
             equipement: "Nom Equipement",
             etatEquipementInitial: "Très Mal",
             demanderPar: "Nom Prénom",
-            etat: "EnAttente"
+            etat: "En Attente"
         },
         {
             panne: "Nom Panne1",
@@ -61,7 +63,7 @@ export default function Interventions () {
             equipement: "Nom Equipement",
             etatEquipementInitial: "Très Mal",
             demanderPar: "Nom Prénom",
-            etat: "EnAttente"
+            etat: "En Attente"
         },
         {
             panne: "Nom Panne1",
@@ -132,25 +134,45 @@ export default function Interventions () {
 
     const [ displayIntervenList, setDisplayIntervenList] = useState<Array<InterventionType>>(apiInterventionList)
 
+    const [ isAddModal, setAddModalVisibility ] = useState<boolean>(false)
+    const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
+
+    const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
+    const [ isFormValid, setFormValidity ] = useState<boolean>(false)
+    
+    const closeModal = () => {
+        setAddModalVisibility(false)
+        setDetailModalVisibility(false)
+        setSelectedInterven(0)
+    }
+
     const sortInterventionList = (value: string) => {
-
+        if(value !== ""){
+            let tempList = [...apiInterventionList]
+            tempList = apiInterventionList.filter((intervention)=>{
+                return ((intervention.panne.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.sousSysteme.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.equipement.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.etatEquipementInitial.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.demanderPar.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.executant?.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.etat.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (intervention.etatEquipementFinal?.toLowerCase().trim().includes(value.toLowerCase().trim())) )
+                        
+            })
+            if(tempList.length > 0) {
+                setDisplayIntervenList(tempList)
+            }
+        }
+        else{
+            setDisplayIntervenList(apiInterventionList)
+        }
     }
 
-    const openAddInterventionModal = () => {
-        console.log("Open Intervention Modal")
-    }
+    useEffect(()=>{
+        setDisplayIntervenList(apiInterventionList)
+    },[apiInterventionList])
 
-    const viewIntervention = (index: number) => {
-        console.log("View Intervention "+index)
-    }
-
-    const validateIntervention = (index: number) => {
-        console.log("Validate Intervention "+index)
-    }
-
-    const reportIntervention = (index: number) => {
-        console.log("Report Intervention "+index)
-    }
     return(
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
@@ -160,8 +182,8 @@ export default function Interventions () {
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={sortInterventionList} placeholder="Rechercher une intervention"/>
-                    <AddBtn width={700} placeholder="Demander une Intervention" addFunction={openAddInterventionModal}/>
+                    <InputSearchField setNewSearchValue={sortInterventionList} placeholder="Rechercher une intervention: tout critère"/>
+                    <AddBtn width={700} placeholder="Demander une Intervention" addFunction={()=>{setAddModalVisibility(true)}}/>
                 </div>
 
                 {/* Liste des interventions ci-dessous */}
@@ -188,11 +210,11 @@ export default function Interventions () {
                                     <td className="w-full flex justify-center items-center text-center"><InterventionState state={intervention.etat}/></td>
                                     <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                         <InterventionActionBtn
-                                            key={index}
                                             state={intervention.etat}
-                                            viewIntervention={viewIntervention}
-                                            validateIntervention={validateIntervention}
-                                            reportIntervention={reportIntervention}
+                                            viewIntervention={()=>{setSelectedInterven(index)
+                                                                    setDetailModalVisibility(true)}}
+                                            validateIntervention={()=>{setSelectedInterven(index)}}
+                                            reportIntervention={()=>{setSelectedInterven(index)}}
                                         />
                                     </td>
                                 </tr>
@@ -202,6 +224,19 @@ export default function Interventions () {
                     </table>
                 </div>
             </div>
+
+            {/* View Intervention Detail Modal */}
+            <Modal
+                modalTitle="Supprimer l'utilisateur"
+                isVisible={isDetailModal}
+                isDeleteModalVisible = {false}
+                isDetailIntervention={isDetailModal}
+                index= {selectedInterven}
+                interventionInfo = {apiInterventionList[selectedInterven]}
+                username = {username}
+                modalWidth = {600}
+                closeModalAction = {closeModal}
+            />
         </div>
     )
 }

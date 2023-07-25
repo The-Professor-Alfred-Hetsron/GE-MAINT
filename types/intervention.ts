@@ -4,10 +4,10 @@ export default interface InterventionType {
     equipement: string,
     etatEquipementInitial: string,
     demanderPar: string,
-    executant: string,
-    debutIntervention: string,
-    finIntervention: string,
-    etatEquipementFinal: string,
-    observation: string,
+    executant?: string,
+    debutIntervention?: string,
+    finIntervention?: string,
+    etatEquipementFinal?: string,
+    observation?: string,
     etat: string
 }
