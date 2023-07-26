@@ -165,10 +165,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
         if(nomPiece!=="" && marquePiece!=="" &&
             modelePiece!=="" && numSeriePiece!=="" &&
             localisationPiece!=="" && qteStockPiece>0 &&
-            qteMinPiece>0 && descriptionPiece!==""){
+            qteMinPiece>0 && descriptionPiece!==""
+            && imagePiece!==""){
                 setUpdateValidity(true)
         }
-    }, [nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece])
+    }, [nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
 
     return(
         <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -237,7 +238,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 modalTitle="Supprimer la Pieèce de Rechange"
                 isVisible={isDelModalVisibile}
                 isDeleteModalVisible = {isDelModalVisibile}
-                deleteText = {<span>ous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{apiPieceDetails.nom}</span> du sous système <span className='font-bold'>{subSysName}</span>. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{apiPieceDetails.nom}</span> du sous système <span className='font-bold'>{subSysName}</span>. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deletePiece}

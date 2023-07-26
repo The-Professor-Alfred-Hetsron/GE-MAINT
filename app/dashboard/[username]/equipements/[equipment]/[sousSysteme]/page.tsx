@@ -10,13 +10,15 @@ import AddBtn from "@/components/UIElements/AddBtn"
 import SubsysPieceCard from '@/components/UIElements/SubsysPieceCard'
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import InputField from "@/components/UIElements/FormElments/InputField"
-import Modal from "@/components/UIElements/Modal"
 import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
+import Modal from "@/components/UIElements/Modal"
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiFillEye } from "react-icons/ai";
 import { BsUpload } from "react-icons/bs";
+
+import PieceType from "@/types/piece"
 import SubSystemType from "@/types/subSystem"
 import PanneType from "@/types/panne"
 
@@ -35,99 +37,141 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         description: "Le Meilleur Sous Système au monde",
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     })
-    const [ apiPieceList, setApiPieceList ] = useState<Array<SubSystemType>>([
+    const [ apiPieceList, setApiPieceList ] = useState<Array<PieceType>>([
         {
-            nom: "Nom Pièce1",
+            nom: "Nom Piece1",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece2",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece3",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece4",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece5",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece6",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece1",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece2",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece3",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         },
         {
-            nom: "Nom Pièce2",
+            nom: "Nom Piece4",
             marque: "Marque Fabricant",
             numSerie: "5G4D5F1D",
             modele: "Equip5G4D5F1D",
             localisation: "Departement Equip",
-            description: "La Meilleure Pièce au monde",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Piece5",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
+            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
+        },
+        {
+            nom: "Nom Piece6",
+            marque: "Marque Fabricant",
+            numSerie: "5G4D5F1D",
+            modele: "Equip5G4D5F1D",
+            localisation: "Departement Equip",
+            qteStock: 10,
+            qteMin: 2,
+            description: "Le Meilleur Sous Système au monde",
             image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
         }
     ])
-    const [ displayPieceList, setDisplayPieceList ] = useState<Array<SubSystemType>>(apiPieceList)
+    const [ displayPieceList, setDisplayPieceList ] = useState<Array<PieceType>>(apiPieceList)
 
     const [ apiPanneList, setApiPanneList ] = useState<Array<PanneType>>([
         {
@@ -204,6 +248,8 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const [ localisationSubSys, setLocalisationSubSys ] = useState<string>(apiSubSystemDetails.localisation)
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>(apiSubSystemDetails.description)
     // Sub System Information End
+    const [ qteStockPiece, setQteStockPiece ] = useState<number>(0)
+    const [ qteMinPiece, setQteMinPiece ] = useState<number>(0)
 
     // Panne Information Start
     const [ nomPanne, setNomPanne ] = useState<string>("")
@@ -234,6 +280,9 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         setNumSerieSubSys("")
         setLocalisationSubSys("")
         setDescriptionSubSys("")
+
+        setQteStockPiece(0)
+        setQteMinPiece(0)
     }
     const initialiseAddPanneParams = () => {
         setNomPanne("")
@@ -303,6 +352,8 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 numSerie: numSerieSubSys,
                 modele: modeleSubSys,
                 localisation: localisationSubSys,
+                qteStock: qteStockPiece,
+                qteMin: qteMinPiece,
                 description: descriptionSubSys,
                 image: imageSubSys? imageSubSys : ""
             }
@@ -387,11 +438,12 @@ export default function Equipment ({params}:{params: {username: string, equipmen
             if(isUpdateSubSysModal){
                 setUpdateFormValidity(true)
             }
-            if(isAddPieceModal){
+            if(isAddPieceModal && qteStockPiece>0 &&
+                qteMinPiece>0){
                 setAddPieceValidity(true)
             }
         }
-    }, [isUpdateSubSysModal, isAddPieceModal, nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys])
+    }, [isUpdateSubSysModal, isAddPieceModal, nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys,qteStockPiece,qteMinPiece])
     
     return(
         <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -608,6 +660,8 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                         <InputField label="Modèle" setNewValue={setModeleSubSys} />
                         <InputField label="Numéro de Série" setNewValue={setNumSerieSubSys} />
                         <InputField label="Localisation" setNewValue={setLocalisationSubSys} />
+                        <InputField label="Quantité en Stock" type="Number" minValue={0} setNewValue={setQteStockPiece} />
+                        <InputField label="Quantité Minimale" type="Number" minValue={0} setNewValue={setQteMinPiece} />
                         <TextAreaField label="Description" setNewValue={setDescriptionSubSys} />
                     </div>
                 </div>

@@ -13,7 +13,7 @@ function DropDownField(props) {
   return (
     <div className="inputBox">
         <select id="countries" className="custom-dropdown" onChange={(e)=>setInputValue(e.target.value)}>
-            {props.placeholder && <option value="" disabled selected hidden>{props.placeholder}</option>}
+            {props.placeholder && <option value="" disabled selected hidden ><sapn className='text-[#0B5DA7]'>{props.placeholder}</sapn></option>}
             {props.defaultValue && <option value="" disabled selected hidden>{props.defaultValue}</option>}
             {props.optionList?.map((option, index) =>{
                 return <option 
