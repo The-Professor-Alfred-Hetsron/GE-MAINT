@@ -129,8 +129,9 @@ export default function StockLists ({params}:{params: {username: string }}) {
                 return (stock.nomSousSysteme.toLowerCase().trim().includes(subSysName.toLowerCase().trim()))
                 && (stock.nomEquipement.toLowerCase().trim().includes(equipName.toLowerCase().trim()))
             })
-            if(selectedStock){
+            if(selectedStock !== undefined){
                 stockIndex = tempList.indexOf(selectedStock)
+                console.log(stockIndex)
                 tempList[stockIndex].listePieces.push(tempPiece)
             }
             else{
@@ -176,7 +177,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
     }, [equipName,subSysName,nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
 
     return(
-        <div className="h-full animate__animated animate__fadeInRight w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full animate__animated animate__fadeInRight bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Stocks des pièces de rechange</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiStockList.length}</span>
@@ -184,7 +185,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={sortPieceList} placeholder="Rechercher une pièce ou un sous système"/>
+                    <InputSearchField setNewSearchValue={sortPieceList} placeholder="Rechercher une pièce, un sous système ou équipement"/>
                     <AddBtn width={400} placeholder="Ajouter une Pièce" addFunction={()=>{setAddModalVisibility(true)}}/>
                 </div>
 
@@ -220,66 +221,66 @@ export default function StockLists ({params}:{params: {username: string }}) {
                 </div>
 
             </div>
+                {/* Delete Piece Modal */}
+                <Modal
+                    modalTitle="Supprimer la Pieèce de Rechange"
+                    isVisible={isDelPieceModalVisibile}
+                    isDeleteModalVisible = {isDelPieceModalVisibile}
+                    deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{selectedPiece.pieceName}</span> du sous système <span className='font-bold'>{apiStockList[selectedPiece.stockIndex].nomSousSysteme}</span>. Voulez-vous poursuivre ?</span>}
+                    modalWidth = {600}
+                    closeModalAction = {closeModal}
+                    deleteAction = {deletePiece}
+                />
 
-            {/* Delete Piece Modal */}
-            <Modal
-                modalTitle="Supprimer la Pieèce de Rechange"
-                isVisible={isDelPieceModalVisibile}
-                isDeleteModalVisible = {isDelPieceModalVisibile}
-                deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{selectedPiece.pieceName}</span> du sous système <span className='font-bold'>{apiStockList[selectedPiece.stockIndex].nomSousSysteme}</span>. Voulez-vous poursuivre ?</span>}
-                modalWidth = {600}
-                closeModalAction = {closeModal}
-                deleteAction = {deletePiece}
-            />
-
-            {/* Add Piece in Stock Modal */}
-            <Modal
-                modalTitle="Nouvelle PIèce de Rechange en Stock"
-                isVisible={isAddModalVisibile}
-                isDeleteModalVisible = {false}
-                modalWidth = {'80%'}
-                closeModalAction = {closeModal}
-                addBtnLabel="Ajouter"
-                addNewAction = {addPieceInStock}
-            >
-                <div className="w-full flex flex-row justify-center gap-4">
-                    <div className="w-full flex flex-col justify-start gap-4">
-                    <span className="border-b border-slate-300 capitalize justify-center items-center text-black text-[20px] font-normal">
-                            équipement
-                        </span>
-                        <DropDownField label="" optionList={apiEquipNameList.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'équipement" setNewValue={setEquipName} />
-                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
-                            Sous Système
-                        </span>
-                        <DropDownField label="" optionList={apiSubSysNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner le sous Système' setNewValue={setSubSysName} />
-                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
-                            Image de la Pièce de Rechange
-                        </span>
-                        <div className="w-4/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
-                            <div className='w-full aspect-square rounded-2xl flex flex-col bg-[rgba(0,0,0,0.5)] text-white justify-center items-center absolute'>
-                                <BsUpload size={32}/>
-                                <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
+                {/* Add Piece in Stock Modal */}
+                <Modal
+                    modalTitle="Nouvelle PIèce de Rechange en Stock"
+                    isVisible={isAddModalVisibile}
+                    isDeleteModalVisible = {false}
+                    modalWidth = {'80%'}
+                    closeModalAction = {closeModal}
+                    addBtnLabel="Ajouter"
+                    addNewAction = {addPieceInStock}
+                >
+                    <div className="w-full flex flex-row justify-center gap-4">
+                        <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 capitalize justify-center items-center text-black text-[20px] font-normal">
+                                équipement
+                            </span>
+                            <DropDownField label="" optionList={apiEquipNameList.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'équipement" setNewValue={setEquipName} />
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Sous Système
+                            </span>
+                            <DropDownField label="" optionList={apiSubSysNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner le sous Système' setNewValue={setSubSysName} />
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Image de la Pièce de Rechange
+                            </span>
+                            <div className="w-4/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
+                                <div className='w-full aspect-square rounded-2xl flex flex-col bg-[rgba(0,0,0,0.5)] text-white justify-center items-center absolute'>
+                                    <BsUpload size={32}/>
+                                    <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
+                                </div>
+                                <input onChange={(e)=>{addImage(e,setImagePiece, setPreviewImagePiece)}} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
+                                {previewImagePiece && <Image className="w-full aspect-square rounded-2xl" src={`${previewImagePiece}`} alt="Apercu de la pièce" width={500} height={500}/>}
                             </div>
-                            <input onChange={(e)=>{addImage(e,setImagePiece, setPreviewImagePiece)}} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
-                            {previewImagePiece && <Image className="w-full aspect-square rounded-2xl" src={`${previewImagePiece}`} alt="Apercu de la pièce" width={500} height={500}/>}
+                        </div>
+
+                        <div className="w-full flex flex-col justify-start gap-4">
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Caractéristiques
+                            </span>
+                            <InputField label="Nom" setNewValue={setNomPiece} />
+                            <InputField label="Marque du Fabricant" setNewValue={setMarquePiece} />
+                            <InputField label="Modèle"  setNewValue={setModelePiece} />
+                            <InputField label="Numéro de Série" setNewValue={setNumSeriePiece} />
+                            <InputField label="Localisation" setNewValue={setLocalisationPiece} />
+                            <InputField label="Quantité en Stock" type="Number" minValue={0} setNewValue={setQteStockPiece} />
+                            <InputField label="Quantité Minimale" type="Number" minValue={0} setNewValue={setQteMinPiece} />
+                            <TextAreaField label="Description" setNewValue={setDescriptionPiece} />
                         </div>
                     </div>
-
-                    <div className="w-full flex flex-col justify-start gap-4">
-                        <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
-                            Caractéristiques
-                        </span>
-                        <InputField label="Nom" setNewValue={setNomPiece} />
-                        <InputField label="Marque du Fabricant" setNewValue={setMarquePiece} />
-                        <InputField label="Modèle"  setNewValue={setModelePiece} />
-                        <InputField label="Numéro de Série" setNewValue={setNumSeriePiece} />
-                        <InputField label="Localisation" setNewValue={setLocalisationPiece} />
-                        <InputField label="Quantité en Stock" type="Number" minValue={0} setNewValue={setQteStockPiece} />
-                        <InputField label="Quantité Minimale" type="Number" minValue={0} setNewValue={setQteMinPiece} />
-                        <TextAreaField label="Description" setNewValue={setDescriptionPiece} />
-                    </div>
-                </div>
-            </Modal>
+                </Modal>
+            
         </div>
     )
 }

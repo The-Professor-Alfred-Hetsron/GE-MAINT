@@ -4,63 +4,45 @@ import 'animate.css';
 import { AiFillEye } from "react-icons/ai"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import TransactionState from "@/components/UIElements/TransactionState"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'
+import { transactionList } from '@/data/stockPage';
 
-export default function StockTransaction () {
-
-    const transactionList = [
-        {
-            panne: "Nom Piece1",
-            sousSysteme: "Nom Sous Systeme1",
-            quantite: 2,
-            date: "12.06.2023",
-            type: "Depôt",
-        },
-        {
-            panne: "Nom Piece2",
-            sousSysteme: "Nom Sous Systeme1",
-            quantite: 2,
-            date: "12.06.2023",
-            type: "Retrait",
-        },
-        {
-            panne: "Nom Piece4",
-            sousSysteme: "Nom Sous Systeme1",
-            quantite: 2,
-            date: "12.06.2023",
-            type: "Retrait",
-        },
-        {
-            panne: "Nom Piece1",
-            sousSysteme: "Nom Sous Systeme1",
-            quantite: 2,
-            date: "12.06.2023",
-            type: "Depôt",
-        },
-        {
-            panne: "Nom Piece2",
-            sousSysteme: "Nom Sous Systeme1",
-            quantite: 2,
-            date: "12.06.2023",
-            type: "Depôt",
-        }
-    ]
+export default function StockTransaction ({params}:{params: {username: string }}) {
+    const username = decodeURI(params.username)
+    const router = useRouter()
+    const [ apiTransactionList, setApiTransactionList ] = useState(transactionList)
+    const [ displayTransList, setDisplayTransList ] = useState(apiTransactionList)
 
     const sortTransactionList = (value: string) => {
-
+        if(value !== ""){
+            let tempList = [...apiTransactionList]
+            tempList = apiTransactionList.filter((transaction)=>{
+                return ((transaction.piece.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (transaction.sousSysteme.toLowerCase().trim().includes(value.toLowerCase().trim()))
+                        )
+            })
+            if(tempList.length > 0) {
+                setDisplayTransList(tempList)
+            }
+        }
+        else{
+            setDisplayTransList(apiTransactionList)
+        }
     }
 
-    const viewPieceDetails = (index: number) => {
-
+    const viewPieceDetails = (equipName:string, subsSysName:string, pieceName:string) => {
+        router.push(`/dashboard/${username}/equipements/${equipName}/${subsSysName}/pieces/${pieceName}`)
     }
 
     return(
-        <div className="animate__animated animate__fadeInLeft w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="animate__animated animate__fadeInLeft w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex overflow-y-auto">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Transaction des Pièces de rechange</span>
-                <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{transactionList.length}</span>
+                <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiTransactionList.length}</span>
             </div>
 
-            <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 flex">
+            <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 flex overflow-y-auto">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
                     <InputSearchField setNewSearchValue={sortTransactionList} placeholder="Rechercher une pièce ou un module"/>
                 </div>
@@ -81,16 +63,16 @@ export default function StockTransaction () {
                         </thead>
                         <tbody className="w-full">
                             {
-                                transactionList.map((transaction, index)=> {
+                                displayTransList.map((transaction, index)=> {
                                     return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                         <td className="w-[150px]">{index+1}</td>
-                                        <td className="w-full capitalize">{transaction.panne}</td>
+                                        <td className="w-full capitalize">{transaction.piece}</td>
                                         <td className="w-full capitalize">{transaction.sousSysteme}</td>
                                         <td className="w-full capitalize text-center">{transaction.quantite}</td>
                                         <td className="w-full capitalize text-center">{transaction.date}</td>
                                         <td className="w-full capitalize text-center"><TransactionState type={transaction.type}/></td>
                                         <td className="w-full text-center">
-                                        <button onClick={()=>viewPieceDetails(index)} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
+                                        <button onClick={()=>viewPieceDetails(transaction.equipement, transaction.sousSysteme, transaction.piece)} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
                                             <AiFillEye size={20}/>
                                             <span>Details</span>
                                         </button>

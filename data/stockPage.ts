@@ -1,5 +1,6 @@
 import PieceType from "@/types/stock"
 import StockType from "@/types/stock"
+import TransactionStock from "@/types/transactionStock"
 
 export const apiStockDataList:Array<StockType> = [
     {
@@ -68,5 +69,88 @@ export const apiStockDataList:Array<StockType> = [
                 image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
             }
         ]
+    }
+]
+
+export const transactionList:Array<TransactionStock> =  [
+    {
+        piece: "Nom Piece1",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
+    },
+    {
+        piece: "Nom Piece2",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Retrait",
+    },
+    {
+        piece: "Nom Piece4",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Retrait",
+    },
+    {
+        piece: "Nom Piece1",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
+    },
+    {
+        piece: "Nom Piece2",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
+    },
+    {
+        piece: "Nom Piece1",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
+    },
+    {
+        piece: "Nom Piece2",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Retrait",
+    },
+    {
+        piece: "Nom Piece4",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Retrait",
+    },
+    {
+        piece: "Nom Piece1",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
+    },
+    {
+        piece: "Nom Piece2",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement:"Nom équipement 1",
+        quantite: 2,
+        date: "12.06.2023",
+        type: "Depôt",
     }
 ]

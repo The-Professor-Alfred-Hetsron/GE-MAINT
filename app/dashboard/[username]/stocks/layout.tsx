@@ -29,7 +29,7 @@ export default function DashboardLayout(
     ]
 
     return (
-        <div className="w-full h-full sticky flex-col gap-2 flex justify-center items-center">
+        <div className="w-full h-full flex-col gap-2 flex justify-start items-center">
             {/* Le tab bar est ci-dessous */}
             <div className="w-full p-1 bg-white rounded-xl shadow backdrop-blur-[20px] justify-between items-center gap-2 flex">
                 {

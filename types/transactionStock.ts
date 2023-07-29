@@ -1,7 +1,8 @@
 export default interface TransactionStock {
     piece: string,
-    subSystem: string,
-    quantity: number,
+    sousSysteme: string,
+    equipement:string,
+    quantite: number,
     date: string,
     type: string
 }

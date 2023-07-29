@@ -13,13 +13,11 @@ export default function DashboardLayout(
 ){
     const userType = "Responsable"
     return (
-        <div className="w-screen h-screen bg-stone-50 flex justify-center items-center">
-            <div className="w-full h-full flex overflow-auto justify-center items-center">
-                <NavBar username={decodeURI(params.username)}/>
-                <div className='w-4/5 h-full flex flex-col pl-4 pr-2.5 py-2.5 bg-stone-50 justify-start items-center gap-2'>
-                    <Header username={decodeURI(params.username)} role={userType}/>
-                    {children}
-                </div>
+        <div className="w-screen h-screen bg-stone-50 flex justify-center items-center overflow-auto">
+            <NavBar username={decodeURI(params.username)}/>
+            <div className='w-4/5 h-full fixed top-0 right-0 flex flex-col gap-2 p-2 bg-stone-50 justify-start items-center overflow-y-auto'>
+                <Header username={decodeURI(params.username)} role={userType}/>
+                {children}
             </div>
         </div>
     )
