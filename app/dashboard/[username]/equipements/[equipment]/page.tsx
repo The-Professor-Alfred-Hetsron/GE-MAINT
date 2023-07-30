@@ -15,133 +15,15 @@ import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 import SubSystemType from "@/types/subSystem"
 import EquipmentType from "@/types/equipment"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
+import { subSysList, apiEquipDetails } from '@/data/equipmentDetailPage'
 
 export default function Equipment ({params}:{params: {username:string,  equipment: string }}) {
     const router = useRouter()
     const pathname = usePathname()
     
-    const [ apiSubSysList, setApiSubSysList ] = useState<Array<SubSystemType>>([
-        {
-            nom: "Nom SousSystème1",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-        },
-        {
-            nom: "Nom SousSystème2",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-        },
-        {
-            nom: "Nom SousSystème3",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro2.png"
-        },
-        {
-            nom: "Nom SousSystème1",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-        },
-        {
-            nom: "Nom SousSystème2",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-        },
-        {
-            nom: "Nom SousSystème3",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro2.png"
-        },
-        {
-            nom: "Nom SousSystème1",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-        },
-        {
-            nom: "Nom SousSystème2",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-        },
-        {
-            nom: "Nom SousSystème3",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro2.png"
-        },
-        {
-            nom: "Nom SousSystème1",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-        },
-        {
-            nom: "Nom SousSystème2",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-        },
-        {
-            nom: "Nom SousSystème3",
-            marque: "Marque Fabricant",
-            numSerie: "5G4D5F1D",
-            modele: "Equip5G4D5F1D",
-            localisation: "Departement Equip",
-            description: "Le Meilleur Equipement au monde",
-            image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro2.png"
-        }
-    ])
+    const [ apiSubSysList, setApiSubSysList ] = useState<Array<SubSystemType>>(subSysList)
     const [ displaySubSysList, setDisplaySubSysList ] = useState<Array<SubSystemType>>(apiSubSysList)
-    const [ apiEquipmentDetails, setApiEquipmentDetails ] = useState<EquipmentType>({
-        nom: "Nom Equipement1",
-        code: "5G4D5F1D",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
-        modele: "Equip5G4D5F1D",
-        localisation: "Departement Equip",
-        etat: "Fonctionnel",
-        description: "Le Meilleur Equipement au monde",
-        image: "/assets/img/index-generator.png",
-    })
+    const [ apiEquipmentDetails, setApiEquipmentDetails ] = useState<EquipmentType>(apiEquipDetails)
 
     const [ isDelEquipModal, setDelEquipModalVisibility ] = useState<boolean>(false)
     const [ isUpdateEquipModal, setUpdateEquipModalVisibility ] = useState<boolean>(false)

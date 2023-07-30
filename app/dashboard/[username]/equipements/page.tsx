@@ -11,6 +11,7 @@ import { BsUpload } from "react-icons/bs";
 
 import { useState, useEffect } from "react";
 import EquipmentType from '@/types/equipment'
+import { tempEquipList } from '@/data/equipmentPage'
 
 // import IFile from '@/types/ImageFile'
 
@@ -23,80 +24,7 @@ interface tempEquipmentType {
 
 export default function Equipments () {
 
-    const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>([
-        {
-            nom: "Nom Equipement1",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement2",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement3",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement1",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement2",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement3",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement1",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement2",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement3",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement1",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement2",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        },
-        {
-            nom: "Nom Equipement3",
-            code: "5G4D5F1D",
-            sousSystem: 10,
-            image: "/assets/img/index-generator.png"
-        }
-    ])
+    const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>(tempEquipList)
     const [ displayEquipList, setDisplayEquipList ] = useState<Array<tempEquipmentType>>(apiEquipList)
 
     const [ isModalVisible, setModalVisibility ] = useState<boolean>(false)

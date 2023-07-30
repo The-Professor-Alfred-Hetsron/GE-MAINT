@@ -16,50 +16,20 @@ import { RiDeleteBin6Line } from "react-icons/ri"
 import { FaRegEdit } from "react-icons/fa"
 import PanneType from "@/types/panne"
 
+import {
+    tempApiPannedetails,
+    tempApiProtocolList
+} from "@/data/panneDetailPage"
+
 export default function Panne ({params}:{params: {username: string, equipment:string, sousSysteme: string, panne: string }}) {
     const subSysName = decodeURI(params.sousSysteme)
     const equipmentName = decodeURI(params.equipment)
     const username = decodeURI(params.username)
     const router = useRouter()
 
-    const [ apiPanneDetails, setApiPanneDetails ] = useState<PanneType>({
-        nom: "Nom Panne1",
-        description: "La description de la panne 1, voici ce qu’il faut faire",
-        gravite: 2
-    })
+    const [ apiPanneDetails, setApiPanneDetails ] = useState<PanneType>(tempApiPannedetails)
 
-    const [ apiProtocolList, setApiProtocolList ] = useState<Array<{description:string}>>([
-        {
-            description: "la description1, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description2, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description3, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description4, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description5, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description1, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description2, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description3, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description4, voici ce qu’il faut faire"
-        },
-        {
-            description: "la description5, voici ce qu’il faut faire"
-        }
-    ])
+    const [ apiProtocolList, setApiProtocolList ] = useState<Array<{description:string}>>(tempApiProtocolList)
     const [ displayProtocolList, setDisplayProtocolList ] = useState<Array<{description:string}>>(apiProtocolList)
     
     // Panne Information Start
