@@ -2,200 +2,197 @@
 
 //import 'animate.css';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation'
+import Image from "next/image"
+import { useRouter } from 'next/navigation'
+
 import AddBtn from "@/components/UIElements/AddBtn"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import SubsysPieceCard from "@/components/UIElements/SubsysPieceCard"
-import { useEffect, useState } from 'react';
-interface Piece {
-    id: number;
-    nom: string;
-    stock: number;
-    image: string;
-}
-interface SousSysteme {
-    id: number;
-    nom: string;
-    pieces: Piece[];
-}
-interface Equipement {
-    id: number;
-    nomEquipement: string;
-    nomSousSysteme: string;
-    listePieces: {
-        nom: string,
-        marque: string,
-        numSerie: string,
-        modele: string,
-        localisation: string,
-        qteStock: number,
-        qteMin: number,
-        description: string,
-        image: string
-    }[];
-    sousSystemes: SousSysteme[]
-}
-export default function StockLists () {
-    const [packs, setPacks] = useState<Equipement[]>([])
+import Modal from "@/components/UIElements/Modal"
+
+import DropDownField from "@/components/UIElements/FormElments/DropDownField"
+import InputField from "@/components/UIElements/FormElments/InputField"
+import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
+import StockType from "@/types/stock"
+import {apiStockDataList} from "@/data/stockPage"
+import {
+    apiEquipmentList,
+    apiSubSystemList
+} from '@/data/interventionData'
+
+import { BsUpload } from "react-icons/bs";
+import { useState, useEffect, SetStateAction, Dispatch } from "react"
+
+export default function StockLists ({params}:{params: {username: string }}) {
     const router = useRouter()
-    const pathname = usePathname()
-    const username = pathname.split('/')[pathname.split('/').indexOf("dashboard")+1]
-    //recuperer la liste des equipements
-    useEffect(() => {
-        const loadData = async () => {
-            const res = await fetch('/api/equipements')
-            const json = await res.json()
-            const { equipements } = json
-            const equpimenents: Equipement[] = []
+    const username = decodeURI(params.username)
+    
+    const [ apiStockList, setApiStockList ] = useState<Array<StockType>>(apiStockDataList)
+    const [ displayStockList, setDisplayStockList ] = useState<Array<StockType>>(apiStockList)
 
-            if (equipements) {
-                //console.log(equipements)
-                for (let i=0, c=equipements.length; i<c; i++) {
-                    const res2 = await fetch(`/api/equipements/${equipements[i].id}/sous-systemes`)
-                    const json2 = await res2.json()
-                    const { sousSystemes } = json2
-                    const equipement: Equipement = {
-                        id: equipements[i].id,
-                        nomEquipement: equipements[i].nom,
-                        nomSousSysteme: '',
-                        sousSystemes: [],
-                        listePieces: [],
-                    }
-                    if (sousSystemes) {
-                        //console.log(sousSystemes)
-                        for ( let j=0, d=sousSystemes.length; j<d; j++){
-                            const res3 = await fetch(`/api/equipements/sous-systeme/${sousSystemes[j].id}/pieces`)
-                            const json3 = await res3.json()
-                            const { pieces } = json3
-                            equipement.nomSousSysteme = sousSystemes[j].nom
-                            const sousSysteme: SousSysteme = {
-                                id: sousSystemes[j].id,
-                                nom: sousSystemes[j].nom,
-                                pieces: []
-                            }
-                            if (pieces){
-                                for (let k=0, e=pieces.length; k<e; k++){
-                                    const piece:Piece = {
-                                        id: pieces[k].id as number,
-                                        nom: pieces[k].nom as string,
-                                        stock: pieces[k].stock as number,
-                                        image: pieces[k].image as string,
-                                    }
-                                    sousSysteme.pieces.push(piece)
-                                }
-                            }
-                            equipement.sousSystemes.push(sousSysteme)
-                        }
-                    }
-                    equpimenents.push(equipement)
-                    //console.log(equipements)
-                    setPacks(equipements)
-                }
-            }
-        }
-        loadData()
-    }, [])
-    const StockLists = [
-        {
-            nomEquipement: "Nom Equipement1",
-            nomSousSysteme: "Nom Sous système1",
-            listePieces: [
-                {
-                    nom: "Nom Piece1",
-                    marque: "Marque Fabricant",
-                    numSerie: "5G4D5F1D",
-                    modele: "Equip5G4D5F1D",
-                    localisation: "Departement Equip",
-                    qteStock: 10,
-                    qteMin: 2,
-                    description: "Le Meilleur Sous Système au monde",
-                    image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-                },
-                {
-                    nom: "Nom Piece2",
-                    marque: "Marque Fabricant",
-                    numSerie: "5G4D5F1D",
-                    modele: "Equip5G4D5F1D",
-                    localisation: "Departement Equip",
-                    qteStock: 10,
-                    qteMin: 2,
-                    description: "Le Meilleur Sous Système au monde",
-                    image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
-                }
-            ]
-        },
-        {
-            nomEquipement: "Nom Equipement1",
-            nomSousSysteme: "Nom Sous système2",
-            listePieces: [
-                {
-                    nom: "Nom Piece1",
-                    marque: "Marque Fabricant",
-                    numSerie: "5G4D5F1D",
-                    modele: "Equip5G4D5F1D",
-                    localisation: "Departement Equip",
-                    qteStock: 10,
-                    qteMin: 2,
-                    description: "Le Meilleur Sous Système au monde",
-                    image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-                },
-                {
-                    nom: "Nom Piece2",
-                    marque: "Marque Fabricant",
-                    numSerie: "5G4D5F1D",
-                    modele: "Equip5G4D5F1D",
-                    localisation: "Departement Equip",
-                    qteStock: 10,
-                    qteMin: 2,
-                    description: "Le Meilleur Sous Système au monde",
-                    image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro2.png"
-                },
-                {
-                    nom: "Nom Piece2",
-                    marque: "Marque Fabricant",
-                    numSerie: "5G4D5F1D",
-                    modele: "Equip5G4D5F1D",
-                    localisation: "Departement Equip",
-                    qteStock: 10,
-                    qteMin: 2,
-                    description: "Le Meilleur Sous Système au monde",
-                    image: "/assets/img/dashboard/sousSystemes/moteur-groupElectro1.png"
-                }
-            ]
-        }
-    ]
-    const sortPieceList = (value : string) =>{
+    const [ isAddModalVisibile, setAddModalVisibility ] = useState<boolean>(false)
+    const [ isDelPieceModalVisibile, setDelPieceModalVisibility ] = useState<boolean>(false)
 
+    // APi Equipment and Sub System Informatio Start
+    const [ apiEquipNameList, setApiEquipNameList ] = useState<Array<string>>(apiEquipmentList)
+    const [ apiSubSysNameList, setApiSubNameSysList ] = useState<Array<string>>(apiSubSystemList)
+    // APi Equipment and Sub System Informatio End
+
+    // Piece Information Start
+    const [ equipName, setEquipName ] = useState<string>("")
+    const [ subSysName, setSubSysName ] = useState<string>("")
+    const [ imagePiece, setImagePiece ] = useState<string | ArrayBuffer | undefined>("")
+    const [ previewImagePiece, setPreviewImagePiece ] = useState<string | ArrayBuffer | undefined>("")
+    const [ nomPiece, setNomPiece ] = useState<string>("")
+    const [ marquePiece, setMarquePiece ] = useState<string>("")
+    const [ modelePiece, setModelePiece ] = useState<string>("")
+    const [ numSeriePiece, setNumSeriePiece ] = useState<string>("")
+    const [ localisationPiece, setLocalisationPiece ] = useState<string>("")
+    const [ qteStockPiece, setQteStockPiece ] = useState<number>(0)
+    const [ qteMinPiece, setQteMinPiece ] = useState<number>(0)
+    const [ descriptionPiece, setDescriptionPiece ] = useState<string>("")
+    // Piece Information End
+
+    const [ isAddFormValid, setAddFormValidity ] = useState<boolean>(false)
+    const [ selectedPiece, setSelectedPiece ] = useState<{stockIndex:number, pieceIndex:number, pieceName:string}>({stockIndex:0, pieceIndex:0, pieceName:""})
+
+    const initialiseParams = () => {
+        setEquipName("")
+        setSubSysName("")
+        setImagePiece("")
+        setPreviewImagePiece("")
+        setNomPiece("")
+        setMarquePiece("")
+        setModelePiece("")
+        setNumSeriePiece("")
+        setLocalisationPiece("")
+        setQteStockPiece(0)
+        setQteMinPiece(0)
+        setDescriptionPiece("")
+        setAddFormValidity(false)
     }
 
-    const openAddPieceModal = () => {
+    const closeModal = () => {
+        setAddModalVisibility(false)
+        setDelPieceModalVisibility(false)
 
+        setSelectedPiece({stockIndex:0, pieceIndex:0, pieceName:""})
+        initialiseParams()
+    }
+
+    const addImage = (event: React.ChangeEvent<HTMLInputElement>, setImage:Dispatch<SetStateAction<string | ArrayBuffer | undefined>>, setPreviewImage:Dispatch<SetStateAction<string | ArrayBuffer | undefined>>) => {
+        const selectedFiles = event.target.files as FileList;
+        const data = new FileReader()
+        data.addEventListener("load", () =>{
+            setImage(data.result? data.result: undefined)
+        })
+        data.readAsDataURL(selectedFiles?.[0])
+        setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
+    }
+
+    const sortPieceList = (value : string) =>{
+        if(value !== ""){
+            let tempList = [...apiStockList]
+            tempList = apiStockList.filter((stock)=>{
+                return ((stock.nomEquipement.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (stock.nomSousSysteme.toLowerCase().trim().includes(value.toLowerCase().trim())) ||
+                        (stock.listePieces.find((piece)=>{
+                            return piece.nom.toLowerCase().trim().includes(value.toLowerCase().trim())
+                        })?.nom.toLowerCase().trim().includes(value.toLowerCase().trim()))
+                        )
+            })
+            if(tempList.length > 0) {
+                setDisplayStockList(tempList)
+            }
+        }
+        else{
+            setDisplayStockList(apiStockList)
+        }
+    }
+
+    const addPieceInStock = () => {
+        if(isAddFormValid){
+            let tempList = [...apiStockList]
+            const tempPiece = {
+                nom: nomPiece,
+                marque: marquePiece,
+                modele: modelePiece,
+                numSerie: numSeriePiece,
+                localisation: localisationPiece,
+                qteStock: qteStockPiece,
+                qteMin: qteMinPiece,
+                description: descriptionPiece,
+                image: imagePiece
+            }
+            let stockIndex
+            let selectedStock = tempList.find((stock)=>{
+                return (stock.nomSousSysteme.toLowerCase().trim().includes(subSysName.toLowerCase().trim()))
+                && (stock.nomEquipement.toLowerCase().trim().includes(equipName.toLowerCase().trim()))
+            })
+            if(selectedStock !== undefined){
+                stockIndex = tempList.indexOf(selectedStock)
+                console.log(stockIndex)
+                tempList[stockIndex].listePieces.push(tempPiece)
+            }
+            else{
+                let tempStock = {
+                    nomEquipement: equipName,
+                    nomSousSysteme: subSysName,
+                    listePieces: [tempPiece]
+                }
+                tempList.push(tempStock)
+            }
+            setApiStockList(tempList)
+            closeModal()
+        }
     }
     
     const routeToPiece = (equipmentName: string, subSysName: string, pieceName: string) => {
-        router.push(`/dashboard/${username}/equipements/${equipmentName.replace(" ","-")}/${subSysName.replace(" ","-")}/pieces/${pieceName.replace(" ","-")}`)
+        router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}/pieces/${pieceName}`)
     }
 
-    const deletePiece = (equipmentName: string, subSysName: string, pieceName: string) => {
-        console.log('delete piece '+pieceName)
+    const deletePiece = () => {
+        let tempList = [...apiStockList]
+        tempList[selectedPiece.stockIndex].listePieces.splice(selectedPiece.pieceIndex,1)
+        if(tempList[selectedPiece.stockIndex].listePieces.length===0){
+            tempList.splice(selectedPiece.stockIndex,1)
+        }
+        setApiStockList(tempList)
+        closeModal()
     }
+
+    useEffect(()=>{
+        setDisplayStockList(apiStockList)
+    },[apiStockList])
+
+    useEffect(()=> {
+        if(equipName!=="" && subSysName!=="" &&
+            nomPiece!=="" && marquePiece!=="" &&
+            modelePiece!=="" && numSeriePiece!=="" &&
+            localisationPiece!=="" && qteStockPiece>0 &&
+            qteMinPiece>0 && descriptionPiece!=="" &&
+            imagePiece!==""){
+                setAddFormValidity(true)
+        }
+    }, [equipName,subSysName,nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
+
     return(
-        <div className="animate__animated animate__fadeInRight w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full animate__animated animate__fadeInRight bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
-                <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Stocks des pièces de rechange {JSON.stringify(packs)}</span>
+                <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Stocks des pièces de rechange</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{StockLists.length}</span>
             </div>
 
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
-                    <InputSearchField setNewSearchValue={sortPieceList} placeholder="Rechercher une pièce ou un sous système"/>
-                    <AddBtn width={400} placeholder="Ajouter une Pièce" addFunction={openAddPieceModal}/>
+                    <InputSearchField setNewSearchValue={sortPieceList} placeholder="Rechercher une pièce, un sous système ou équipement"/>
+                    <AddBtn width={400} placeholder="Ajouter une Pièce" addFunction={()=>{setAddModalVisibility(true)}}/>
                 </div>
 
-                <div className="pb-2 w-full flex flex-col gap-2">
+                <div className="pb-2 w-full h-full flex flex-col gap-4 overflow-y-auto">
                     {/* Below is the List of Pieces in the Stock */}
                     {
-                        StockLists.map((stock, index) => {
+                        displayStockList.map((stock, index) => {
                             const equipmentNameLink = stock.nomEquipement.replace(' ', '-')
                             const subSysNameLink = stock.nomSousSysteme.replace(' ', '-')
                             return <div key={index} className="w-full p-2 bg-white rounded-2xl border border-[#165081] justify-start items-center gap-2 flex flex-col">
@@ -206,12 +203,13 @@ export default function StockLists () {
                                         </div>
                                         <div className="w-full flex flex-wrap gap-2 justify-start items-start">
                                             {
-                                                stock.listePieces.map((piece, index) => {
+                                                stock.listePieces.map((piece, i) => {
                                                     return <SubsysPieceCard
-                                                                key ={index}
+                                                                key ={i}
                                                                 sysPieceInfo = {piece}
                                                                 routeToDetails = {()=> routeToPiece(stock.nomEquipement, stock.nomSousSysteme, piece.nom)}
-                                                                deleteAction = {()=> deletePiece(stock.nomEquipement, stock.nomSousSysteme, piece.nom)}
+                                                                deleteAction = {()=>{setSelectedPiece({stockIndex:index, pieceIndex:i, pieceName:piece.nom})
+                                                                                        setDelPieceModalVisibility(true)}}
                                                             />
                                                 })
                                             }
@@ -223,6 +221,66 @@ export default function StockLists () {
                 </div>
 
             </div>
+                {/* Delete Piece Modal */}
+                <Modal
+                    modalTitle="Supprimer la Pieèce de Rechange"
+                    isVisible={isDelPieceModalVisibile}
+                    isDeleteModalVisible = {isDelPieceModalVisibile}
+                    deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{selectedPiece.pieceName}</span> du sous système <span className='font-bold'>{apiStockList[selectedPiece.stockIndex].nomSousSysteme}</span>. Voulez-vous poursuivre ?</span>}
+                    modalWidth = {600}
+                    closeModalAction = {closeModal}
+                    deleteAction = {deletePiece}
+                />
+
+                {/* Add Piece in Stock Modal */}
+                <Modal
+                    modalTitle="Nouvelle PIèce de Rechange en Stock"
+                    isVisible={isAddModalVisibile}
+                    isDeleteModalVisible = {false}
+                    modalWidth = {'80%'}
+                    closeModalAction = {closeModal}
+                    addBtnLabel="Ajouter"
+                    addNewAction = {addPieceInStock}
+                >
+                    <div className="w-full flex flex-row justify-center gap-4">
+                        <div className="w-full flex flex-col justify-start gap-4">
+                        <span className="border-b border-slate-300 capitalize justify-center items-center text-black text-[20px] font-normal">
+                                équipement
+                            </span>
+                            <DropDownField label="" optionList={apiEquipNameList.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'équipement" setNewValue={setEquipName} />
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Sous Système
+                            </span>
+                            <DropDownField label="" optionList={apiSubSysNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner le sous Système' setNewValue={setSubSysName} />
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Image de la Pièce de Rechange
+                            </span>
+                            <div className="w-4/5 relative aspect-square rounded-2xl bg-slate-300 border border-slate-500 border-dotted">
+                                <div className='w-full aspect-square rounded-2xl flex flex-col bg-[rgba(0,0,0,0.5)] text-white justify-center items-center absolute'>
+                                    <BsUpload size={32}/>
+                                    <span className='text-center text-[20px] font-normal leading-normal tracking-wide'>Ajouter l’image</span>
+                                </div>
+                                <input onChange={(e)=>{addImage(e,setImagePiece, setPreviewImagePiece)}} className='w-full absolute aspect-square rounded-2xl file:text-transparent file:hover:cursor-pointer file:border-0 file:w-full file:aspect-square file:bg-transparent' type="file" accept="image/*" />
+                                {previewImagePiece && <Image className="w-full aspect-square rounded-2xl" src={`${previewImagePiece}`} alt="Apercu de la pièce" width={500} height={500}/>}
+                            </div>
+                        </div>
+
+                        <div className="w-full flex flex-col justify-start gap-4">
+                            <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
+                                Caractéristiques
+                            </span>
+                            <InputField label="Nom" setNewValue={setNomPiece} />
+                            <InputField label="Marque du Fabricant" setNewValue={setMarquePiece} />
+                            <InputField label="Modèle"  setNewValue={setModelePiece} />
+                            <InputField label="Numéro de Série" setNewValue={setNumSeriePiece} />
+                            <InputField label="Localisation" setNewValue={setLocalisationPiece} />
+                            <InputField label="Quantité en Stock" type="Number" minValue={0} setNewValue={setQteStockPiece} />
+                            <InputField label="Quantité Minimale" type="Number" minValue={0} setNewValue={setQteMinPiece} />
+                            <TextAreaField label="Description" setNewValue={setDescriptionPiece} />
+                        </div>
+                    </div>
+                </Modal>
+            
         </div>
     )
 }

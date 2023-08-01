@@ -11,7 +11,7 @@ function Header(props) {
   
   
   return (
-    <div className='w-full rounded-2xl shadow-lg backdrop-blur-[20px] flex-col justify-start items-start'>
+    <div className='w-full mb-2 rounded-2xl shadow-lg backdrop-blur-[20px] flex-col justify-start items-start'>
   
         <div className='w-full px-4 py-2 bg-white rounded-tl-2xl rounded-tr-2xl justify-start items-center inline-flex'>
           <div className="w-full flex flex-row justify-start items-center gap-4">

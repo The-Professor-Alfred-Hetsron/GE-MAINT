@@ -11,13 +11,13 @@ function EquipmentCard(props) {
   const equipmentInfo = props.equipmentInfo? props.equipmentInfo : {}
 
   const routeToDetails = () => {
-    router.push(`${pathname}/${equipmentInfo.nom.replace(" ", "-")}`)
+    router.push(`${pathname}/${equipmentInfo.nom}`)
   }
 
   return (
     <div className='w-[300px] bg-white rounded-[16px] shadow flex-col justify-start items-start inline-flex'>
       <button onClick={()=>routeToDetails()} className='w-full h-[200px] bg-[#D0E5F0] rounded-t-[16px] flex justify-center items-center'>
-        <Image className="w-3/4 h-full" width="500" height="500" src={equipmentInfo.image} alt={equipmentInfo.nom}/>
+        <Image className="w-3/4 h-full hover:scale-105 ease-in-out duration-300" width="500" height="500" src={equipmentInfo.image} alt={equipmentInfo.nom}/>
       </button>
       <div className='text-black w-full px-[11.45px] py-[8.58px] flex-row justify-center items-center inline-flex'>
           <button onClick={()=>routeToDetails()} className='w-full flex-col justify-start items-start gap-[3px] inline-flex'>

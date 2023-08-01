@@ -27,7 +27,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff"/>
       </head> 
       <ReduxProvider>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          {children}
+        </body>
       </ReduxProvider>
     </html>
   )

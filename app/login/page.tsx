@@ -1,5 +1,6 @@
 'use client'
 
+import 'animate.css';
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
 import Image from "next/image";
@@ -53,7 +54,7 @@ export default function Login () {
     return (
       <div className="w-screen h-screen bg-stone-50 flex justify-center items-center">
         <div className="w-full h-full flex justify-center items-center relative">
-            <div className=" w-full h-[500px] absolute top-0 pr-[200px]">
+            <div className=" w-full h-[70%] absolute top-0 pr-[250px]">
                 <div className="w-full h-full bg-[url('/assets/img/loginPAKstar.svg')] bg-cover bg-no-repeat bg-right-bottom"></div>
             </div>
 
@@ -87,7 +88,7 @@ export default function Login () {
                 </div>
             </div>
 
-            <div className="w-full h-[400px] absolute bottom-0">
+            <div className="w-full h-[55%] absolute bottom-0">
                 <div className="w-full h-full bg-[url('/assets/img/loginPAKleaf.svg')] bg-cover bg-no-repeat bg-right-top"></div>
             </div>
         </div>

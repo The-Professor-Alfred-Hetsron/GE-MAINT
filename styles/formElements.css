@@ -40,7 +40,34 @@
     transform: translateX(14px) translateY(-7.5px);
     padding: 0 5px;
     border-radius: 2px;
-    background: white;
+    background: #F9F9F9;
+    letter-spacing: 0em;
+    color: #4285F4;
+  }
+  
+  /* custom-dropdown */
+  .inputBox .custom-dropdown {
+    padding: 15px 20px;
+    outline: none;
+    background: transparent;
+    border-radius: 5px;
+    color: black;
+    border: 1px solid#0B5DA7;
+    font-size: 1em;
+    width: 100%;
+  }
+
+  .inputBox .custom-dropdown:focus{
+    border: 1px solid#4285F4;
+  }
+
+  .inputBox .custom-dropdown:focus ~ span,
+  .inputBox .custom-dropdown:valid ~ span {
+    font-size: 16px;
+    transform: translateX(14px) translateY(-7.5px);
+    padding: 0 5px;
+    border-radius: 2px;
+    background: #F9F9F9;
     letter-spacing: 0em;
     color: #4285F4;
   }

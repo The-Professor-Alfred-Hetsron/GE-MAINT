@@ -5,13 +5,15 @@ import { usePathname } from 'next/navigation'
 
 export default function DashboardLayout(
     { 
-        children
+        children,
+        params
     } : {
-        children: React.ReactNode
+        children: React.ReactNode,
+        params: { username: string }
     }
 ){
     const pathname = usePathname()
-    const username = pathname.split('/')[pathname.split('/').indexOf("dashboard")+1]
+    const username = decodeURI(params.username)
 
     const tabLinks = [
         {
@@ -27,7 +29,7 @@ export default function DashboardLayout(
     ]
 
     return (
-        <div className="w-full flex-col gap-2 flex justify-center items-center">
+        <div className="w-full h-full flex-col gap-2 flex justify-start items-center">
             {/* Le tab bar est ci-dessous */}
             <div className="w-full p-1 bg-white rounded-xl shadow backdrop-blur-[20px] justify-between items-center gap-2 flex">
                 {
@@ -45,7 +47,7 @@ export default function DashboardLayout(
             </div>
 
             {/* Le Corps des stocks sont ci-dessous */}
-            <div className="w-full flex justify-center items-center">
+            <div className="w-full h-full flex justify-center items-center">
                 {children}
             </div>
         </div>

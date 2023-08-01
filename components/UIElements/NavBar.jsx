@@ -25,27 +25,27 @@ function NavBar(props) {
       icon: <RxDashboard size={24}/>,
       href: `${baseUrl}/equipements`,
     },
-    {
-      name: "Maintenance",
-      icon: <FiRotateCcw size={24}/>,
-      href: `${baseUrl}/maintenance`,
-    },
+    // {
+    //   name: "Maintenance",
+    //   icon: <FiRotateCcw size={24}/>,
+    //   href: `${baseUrl}/maintenance`,
+    // },
     {
       name: "Interventions",
       icon: <LuClipboardCopy size={24}/>,
       href: `${baseUrl}/interventions`,
     },
     {
-      name: "Stocks des pièces de rechange",
+      name: "Stocks",
       icon: <AiOutlineAppstoreAdd size={24}/>,
       href: `${baseUrl}/stocks/listes`,
       href2: `${baseUrl}/stocks/transactions`
     },
-    {
-      name: "Alarmes",
-      icon: <RiAlarmWarningLine size={24}/>,
-      href: `${baseUrl}/alarmes`,
-    },
+    // {
+    //   name: "Alarmes",
+    //   icon: <RiAlarmWarningLine size={24}/>,
+    //   href: `${baseUrl}/alarmes`,
+    // },
     {
       name: "Utilisateurs",
       icon: <HiOutlineUserGroup size={24}/>,
@@ -58,14 +58,15 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[25%] z-10 sticky top-0 h-full overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
-        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
-          <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
+    <nav className='w-1/5 fixed left-0 top-0 h-full rounded-tr-2xl rounded-br overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
+        <div className='w-full pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
+          <span className='w-full text-center text-white text-[60px] font-semibold'>TYA MAINT</span>
         </div>
         <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
           navLinks.map((link, index)=>{
-            const isActive = link.href2? (pathname.startsWith(link.href) || pathname.startsWith(link.href2)) : pathname.startsWith(link.href)
+            const newPath = decodeURI(pathname)
+            const isActive = link.href2? (newPath.startsWith(link.href) || newPath.startsWith(link.href2)) : newPath.startsWith(link.href)
             return (
                 <Link
                   key={index}
