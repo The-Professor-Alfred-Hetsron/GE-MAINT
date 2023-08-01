@@ -20,68 +20,7 @@ export default function Users () {
         "Responsable"
     ]
 
-    const [ apiUserList, setApiUserList ] = useState<Array<UserType>>([
-        {
-            nom: "Nom Prénom1",
-            email: "nom1@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        },
-        {
-            nom: "Nom Prénom2",
-            email: "nom2@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Responsable"
-        },
-        {
-            nom: "Nom Prénom3",
-            email: "nom3@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Responsable"
-        },
-        {
-            nom: "Nom Prénom4",
-            email: "nom4@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        },
-        {
-            nom: "Nom Prénom5",
-            email: "nom5@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        },
-        {
-            nom: "Nom Prénom1",
-            email: "nom1@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        },
-        {
-            nom: "Nom Prénom2",
-            email: "nom2@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Responsable"
-        },
-        {
-            nom: "Nom Prénom3",
-            email: "nom3@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Responsable"
-        },
-        {
-            nom: "Nom Prénom4",
-            email: "nom4@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        },
-        {
-            nom: "Nom Prénom5",
-            email: "nom5@gmail.com",
-            matricule: "PAK5DS5S4",
-            role: "Personnel"
-        }
-    ])
+    const [ apiUserList, setApiUserList ] = useState<Array<UserType>>([])
     const [ displayUserList, setDisplayUserList ] = useState<Array<UserType>>(apiUserList)
 
     const [ isDelAddModal, setDelModalVisibility ] = useState<boolean>(false)
@@ -142,7 +81,7 @@ export default function Users () {
         }
     }
 
-    const addUser = () => {
+    const addUser = async () => {
         if(isFormValid){
             const tempUser = {
                 nom: nom,
@@ -150,32 +89,69 @@ export default function Users () {
                 matricule: matricule,
                 role: role
             }
-            setApiUserList([...apiUserList, tempUser])
+            const response = await fetch('/api/users/inscription', {
+                method: 'POST',
+                body: JSON.stringify(tempUser)
+            })
+            const json = await response.json()
+            const { user } = json
+            if(!user) return;
+            setApiUserList([...apiUserList, user])
             closeModal()
         }
     }
 
-    const updateUser = () => {
+    const updateUser = async () => {
         if(isFormValid){
             const tempUser = {
+                id: apiUserList[selectedUser].id,
                 nom: nom,
                 email: email,
                 matricule: matricule,
                 role: role
             }
+            const response = await fetch(`/api/users/${tempUser.id}/editer`, {
+                method: 'PATCH',
+                body: JSON.stringify(tempUser)
+            })
+            const json = await response.json()
+            const { user } = json
+            if (!user) closeModal()
             let tempUserList = [...apiUserList]
-            tempUserList[selectedUser] = tempUser
+            tempUserList[selectedUser] = user
             setApiUserList(tempUserList)
             closeModal()
         }
     }
 
-    const deleteUser = () => {
+    const deleteUser = async () => {
+        const response = await fetch('/api/users/supprimer/'+apiUserList[selectedUser].id, {
+            method: 'DELETE',
+            body: JSON.stringify({})
+        })
+        const json = await response.json()
+        const { message } = json
+        console.log(json)
+        if(!message) {
+            closeModal()
+        }
         let tempList = [...apiUserList]
-        tempList.splice(selectedUser,1)
+        tempList.splice(selectedUser, 1)
         setApiUserList(tempList)
         closeModal()
     }
+
+    useEffect(() => {
+        const loadUsers = async () => {
+            const response = await fetch('/api/users')
+            const json = await response.json()
+            const { users } = json
+            if (!users) return;
+            console.log(users)
+            setApiUserList(users);
+        }
+        loadUsers()
+    }, [])
     
     useEffect(()=>{
         setDisplayUserList(apiUserList)
@@ -311,7 +287,7 @@ export default function Users () {
                 modalTitle="Supprimer l'utilisateur"
                 isVisible={isDelAddModal}
                 isDeleteModalVisible = {isDelAddModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer {"l'utilisateur"} <span className='font-bold'>{apiUserList[selectedUser].nom}</span> ainsi que tout les droits {"d'accès"} associés à cet utilisateur. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer {"l'utilisateur"} <span className='font-bold'>{apiUserList[selectedUser] && apiUserList[selectedUser].nom}</span> ainsi que tout les droits {"d'accès"} associés à cet utilisateur. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {deleteUser}

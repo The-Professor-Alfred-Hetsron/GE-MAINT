@@ -1,6 +1,7 @@
 export default interface UserType {
-    nom: string,
-    email: string,
-    matricule: string,
-    role: string
+    id?: number;
+    nom: string;
+    email: string;
+    matricule: string;
+    role: string;
 }

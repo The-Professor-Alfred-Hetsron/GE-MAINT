@@ -10,7 +10,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         },
       });
 
-      return NextResponse.json({ user: "deleted successfully" }, { status: 200 });
+      return NextResponse.json({ message: "deleted successfully" }, { status: 200 });
 
     } catch (error) {
       console.log(error);
