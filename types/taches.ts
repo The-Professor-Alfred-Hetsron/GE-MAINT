@@ -3,7 +3,7 @@ export default interface tacheType {
     startDate: Date,
     endDate: Date,
     priorityId: number,
-    location: string,
+    element: string,
     allDay: boolean,
     rRule:string
 } 
