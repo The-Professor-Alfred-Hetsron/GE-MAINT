@@ -25,11 +25,11 @@ function NavBar(props) {
       icon: <RxDashboard size={24}/>,
       href: `${baseUrl}/equipements`,
     },
-    // {
-    //   name: "Maintenance",
-    //   icon: <FiRotateCcw size={24}/>,
-    //   href: `${baseUrl}/maintenance`,
-    // },
+    {
+      name: "Maintenance",
+      icon: <FiRotateCcw size={24}/>,
+      href: `${baseUrl}/maintenance`,
+    },
     {
       name: "Interventions",
       icon: <LuClipboardCopy size={24}/>,
