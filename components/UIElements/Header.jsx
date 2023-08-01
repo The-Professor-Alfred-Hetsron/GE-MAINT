@@ -27,7 +27,7 @@ function Header(props) {
                   <span className='text-black text-[20px] font-normal'>{username}</span>
                   <span className='text-black text-[18px] font-medium leading-[30px] tracking-tight'>{props.role}</span>
               </div>
-              <span className='w-[60px] h-[60px] px-2 py-5 bg-sky-800 rounded-[100px] justify-center items-center inline-flex text-white font-bold text-[16px]'>
+              <span className='w-[60px] h-[60px] px-2 py-5 bg-sky-800 rounded-[100px] justify-center items-center inline-flex text-white font-bold text-[20px]'>
                 {userInitials}
               </span>
           </div>

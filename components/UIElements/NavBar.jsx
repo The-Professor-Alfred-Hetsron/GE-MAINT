@@ -38,7 +38,8 @@ function NavBar(props) {
     {
       name: "Stocks des pièces de rechange",
       icon: <AiOutlineAppstoreAdd size={24}/>,
-      href: `${baseUrl}/stocks`,
+      href: `${baseUrl}/stocks/listes`,
+      href2: `${baseUrl}/stocks/transactions`
     },
     {
       name: "Alarmes",
@@ -57,22 +58,22 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[25%] h-full overflow-auto p-8 bg-sky-700 rounded-tr-2xl shadow backdrop-blur-[20px] rounded-br-2xl flex-col justify-center items-center'>
-        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center gap-2.5 inline-flex'>
+    <nav className='w-[25%] z-10 sticky top-0 h-full overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
+        <div className='pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
           <span className=' w-full text-center text-white text-[45px] font-semibold tracking-wide'>TYA MAINT</span>
         </div>
-        <div className='w-full py-4 flex-col justify-evenly items-center gap-5 inline-flex'>
+        <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
         {
           navLinks.map((link, index)=>{
-            const isActive = pathname.startsWith(link.href)
+            const isActive = link.href2? (pathname.startsWith(link.href) || pathname.startsWith(link.href2)) : pathname.startsWith(link.href)
             return (
                 <Link
                   key={index}
                   href={link.href}
-                  className={isActive ? "w-full p-4 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "w-full p-4 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
+                  className={isActive ? "w-full p-4 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "group hover:bg-white w-full p-4 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
                 >
-                  <span className={isActive ? "text-sky-700" : "text-white"}>{link.icon}</span>
-                  <span className={isActive ? "text-sky-700 text-xl font-semibold" : "text-white text-xl font-semibold"}>{link.name}</span>
+                  <span className={isActive ? "text-sky-700" : "text-white group-hover:text-sky-700"}>{link.icon}</span>
+                  <span className={isActive ? "text-sky-700 text-xl font-semibold" : "text-white text-xl font-semibold group-hover:text-sky-700"}>{link.name}</span>
                 </Link>
             )
           })
