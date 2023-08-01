@@ -58,7 +58,8 @@ export default function StockLists () {
                         id: equipements[i].id,
                         nomEquipement: equipements[i].nom,
                         nomSousSysteme: '',
-                        sousSystemes: []
+                        sousSystemes: [],
+                        listePieces: [],
                     }
                     if (sousSystemes) {
                         //console.log(sousSystemes)
