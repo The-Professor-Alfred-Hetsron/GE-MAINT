@@ -10,7 +10,7 @@ export default function Home() {
           <span className="text-sky-400 text-[400%] font-semibold w-full">TYA MAINT</span>
           <span className="text-[350%] font-semibold">Gestion de Suivi et Maintenance des Groupes électrogenes</span>
           <span className="text-[24px] font-normal">Service d’Exploitation et Maintenance des Réseaux Utilitaires</span>
-          <Link href="/login" className="h-[30px] px-4 py-[24px] bg-amber-400 rounded-[32px] justify-center items-center inline-flex text-white text-[20px] font-normal leading-9">Se Connecter</Link>
+          <Link href="/login" className="h-[30px] px-4 py-[24px] bg-amber-400 rounded-[32px] justify-center items-center inline-flex text-white text-[20px] font-normal leading-9 hover:scale-110">Se Connecter</Link>
         </div>
       </div>
 
