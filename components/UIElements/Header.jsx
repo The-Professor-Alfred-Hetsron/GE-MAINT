@@ -12,7 +12,7 @@ function Header(props) {
   
         <div className='w-full px-4 py-2 bg-white rounded-tl-2xl rounded-tr-2xl justify-start items-center inline-flex'>
           <div className="w-full flex flex-row justify-start items-center gap-4">
-            <Image className="rounded-[62.25px]" width="60" height="60" src="/assets/img/svgPAKLogo.png" alt="Logo PAK"/>
+            <Image className="rounded-[62.25px]" width="60" height="60" src="/assets/img/svgPAKLogo.svg" alt="Logo PAK"/>
             <div className="w-full flex flex-col h-full justify-evenly">
               <span className="w-full text-sky-700 text-[18px] font-normal">PORT AUTONOME DE KRIBI</span>
               <span className="w-full text-sky-500 text-[18px] font-normal">PORT AUTHORITY OF KRIBI</span>

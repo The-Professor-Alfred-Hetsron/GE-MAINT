@@ -37,7 +37,7 @@ import {
     taskNatureList
 } from '@/data/maintenancePage'
 
-export default function Maintenance () {
+function DefaultCalendar () {
 
     // const editingOptionsList = [
     //   { id: 'allowAdding', text: 'Adding' },
@@ -80,10 +80,10 @@ export default function Maintenance () {
     const [addedAppointment, setAddedAppointment] = useState({});
     const [isAppointmentBeingCreated, setIsAppointmentBeingCreated] = useState(false);
     const [editingOptions, setEditingOptions] = useState({
-      allowAdding: true,
-      allowDeleting: true,
-      allowUpdating: true,
-      allowResizing: true,
+      allowAdding: false,
+      allowDeleting: false,
+      allowUpdating: false,
+      allowResizing: false,
     });
     const {
       allowDeleting, allowUpdating
@@ -285,78 +285,65 @@ export default function Maintenance () {
   );
 
     return(
-        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
-            {/* <EditingOptionsSelector
-                options={editingOptions}
-                onOptionsChange={handleEditingOptionsChange}
-            /> */}
-            <span className="w-full text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Calendrier de Maintenance</span>
-            <Paper className="h-full border border-slate-300">
-              <Scheduler
-                data={data}
-                height="auto"
-              >
-                <ViewState
-                  defaultCurrentDate={currentDate}
-                  onCurrentDateChange={setCurrentDate}
-                  currentViewName={currentViewName}
-                  onCurrentViewNameChange={setCurrentViewName}
-              />
-                <EditingState
-                  onCommitChanges={commitChanges}
-                  addedAppointment={addedAppointment}
-                  onAddedAppointmentChange={onAddedAppointmentChange}
-                />
-                <EditRecurrenceMenu />
+        <Paper className="w-full h-[500px]">
+            <Scheduler
+            data={data}
+            >
+            <ViewState
+                defaultCurrentDate={currentDate}
+                onCurrentDateChange={setCurrentDate}
+                currentViewName={currentViewName}
+                onCurrentViewNameChange={setCurrentViewName}
+            />
 
-                <MonthView
-                  displayName="Mois"
-                />
+            <MonthView
+                displayName="Mois"
+            />
 
-                <WeekView
-                    name="work-week"
-                    displayName="Jour de Travail"
-                    timeTableCellComponent={TimeTableCell}
-                    excludedDays={[0, 6]}
-                    startDayHour={7}
-                    endDayHour={16}
-                />
-                
-                <DayView
-                  displayName="Toute la Journée"
-                  startDayHour={7}
-                  endDayHour={16}
-                />
-                <Toolbar />
-                <ViewSwitcher />
-                <DateNavigator />
-                <TodayButton />
-                <Appointments />
-                <AllDayPanel />
-                <AppointmentTooltip
-                  headerComponent={Header}
-                  contentComponent={Content}
-                  commandButtonComponent={CommandButton}
-                  showCloseButton={true}
-                  showOpenButton
-                />
-                <AppointmentForm 
-                  commandButtonComponent={FormCommandButton}
-                  readOnly={isAppointmentBeingCreated ? false : !allowUpdating}
-                />
+            <WeekView
+                name="work-week"
+                displayName="Jour de Travail"
+                timeTableCellComponent={TimeTableCell}
+                excludedDays={[0, 6]}
+                startDayHour={7}
+                endDayHour={16}
+            />
+            
+            <DayView
+                displayName="Toute la Journée"
+                startDayHour={7}
+                endDayHour={16}
+            />
+            <Toolbar />
+            <ViewSwitcher />
+            <DateNavigator />
+            <TodayButton />
+            <Appointments />
+            <AllDayPanel />
+            <AppointmentTooltip
+                headerComponent={Header}
+                contentComponent={Content}
+                commandButtonComponent={CommandButton}
+                showCloseButton={true}
+                showOpenButton
+            />
+            <AppointmentForm 
+                commandButtonComponent={FormCommandButton}
+                readOnly={isAppointmentBeingCreated ? false : !allowUpdating}
+            />
 
-                <Resources
-                  data={resources}
-                  mainResourceName="objetDeTache"
-                />
-                <CurrentTimeIndicator
-                  indicatorComponent={TimeIndicator}
-                  shadePreviousCells
-                  shadePreviousAppointments
-                />
-              </Scheduler>
-            </Paper>
-
-        </div>
+            <Resources
+                data={resources}
+                mainResourceName="objetDeTache"
+            />
+            <CurrentTimeIndicator
+                indicatorComponent={TimeIndicator}
+                shadePreviousCells
+                shadePreviousAppointments
+            />
+            </Scheduler>
+        </Paper>
     )
 }
+
+export default DefaultCalendar
