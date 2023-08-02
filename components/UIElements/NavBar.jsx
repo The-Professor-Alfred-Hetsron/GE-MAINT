@@ -21,7 +21,7 @@ function NavBar(props) {
       href: `${baseUrl}/accueil`,
     },
     {
-      name: "Equipements",
+      name: "Équipements",
       icon: <RxDashboard size={24}/>,
       href: `${baseUrl}/equipements`,
     },
@@ -41,11 +41,11 @@ function NavBar(props) {
       href: `${baseUrl}/stocks/listes`,
       href2: `${baseUrl}/stocks/transactions`
     },
-    // {
-    //   name: "Alarmes",
-    //   icon: <RiAlarmWarningLine size={24}/>,
-    //   href: `${baseUrl}/alarmes`,
-    // },
+    {
+      name: "Alarmes",
+      icon: <RiAlarmWarningLine size={24}/>,
+      href: `${baseUrl}/alarmes`,
+    },
     {
       name: "Utilisateurs",
       icon: <HiOutlineUserGroup size={24}/>,
