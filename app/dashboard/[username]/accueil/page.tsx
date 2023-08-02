@@ -90,7 +90,7 @@ export default function Home ({params}:{params: {username:string }}) {
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
-                        href = {`${baseUrl}/maintenance`}
+                        href = {`${baseUrl}/interventions`}
                     />
                 </div>
                 <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
@@ -129,7 +129,7 @@ export default function Home ({params}:{params: {username:string }}) {
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
-                        href = {`${baseUrl}/maintenance`}
+                        href = {`${baseUrl}/equipements`}
                     />
                 </div>
                 <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
