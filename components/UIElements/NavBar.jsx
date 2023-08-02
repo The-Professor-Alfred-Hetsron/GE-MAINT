@@ -58,11 +58,11 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-1/5 fixed left-0 top-0 h-full rounded-tr-2xl rounded-br overflow-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
+    <nav className='w-[320px] h-full fixed left-0 top-0 rounded-tr-2xl rounded-br overflow-y-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
         <div className='w-full pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
           <span className='w-full text-center text-white text-[60px] font-semibold'>TYA MAINT</span>
         </div>
-        <div className='w-full py-2 flex-col justify-center items-center gap-2 inline-flex'>
+        <div className='w-full py-2 flex-col justify-center items-center gap-2.5 inline-flex'>
         {
           navLinks.map((link, index)=>{
             const newPath = decodeURI(pathname)
@@ -71,7 +71,7 @@ function NavBar(props) {
                 <Link
                   key={index}
                   href={link.href}
-                  className={isActive ? "w-full p-4 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "group hover:bg-white w-full p-4 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
+                  className={isActive ? "w-full p-3 bg-white rounded-2xl justify-start items-center gap-2.5 inline-flex" : "group hover:bg-white w-full p-3 rounded-2xl justify-start items-center gap-2.5 inline-flex"}
                 >
                   <span className={isActive ? "text-sky-700" : "text-white group-hover:text-sky-700"}>{link.icon}</span>
                   <span className={isActive ? "text-sky-700 text-xl font-semibold" : "text-white text-xl font-semibold group-hover:text-sky-700"}>{link.name}</span>

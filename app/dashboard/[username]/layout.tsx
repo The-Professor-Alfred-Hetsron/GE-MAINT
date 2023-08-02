@@ -15,7 +15,7 @@ export default function DashboardLayout(
     return (
         <div className="w-screen h-screen bg-stone-50 flex justify-center items-center overflow-auto">
             <NavBar username={decodeURI(params.username)}/>
-            <div className='w-4/5 h-full fixed top-0 right-0 flex flex-col gap-2 p-2 bg-stone-50 justify-start items-center overflow-y-auto'>
+            <div className='w-[calc(100%-320px)] h-full fixed top-0 right-0 flex flex-col gap-2 p-2 bg-stone-50 justify-start items-center overflow-y-auto'>
                 <Header username={decodeURI(params.username)} role={userType}/>
                 {children}
             </div>
