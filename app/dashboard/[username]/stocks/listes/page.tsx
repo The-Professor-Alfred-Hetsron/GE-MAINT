@@ -1,6 +1,6 @@
 'use client'
 
-import 'animate.css';
+// import 'animate.css';
 import Link from 'next/link';
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
@@ -177,7 +177,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
     }, [equipName,subSysName,nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
 
     return(
-        <div className="w-full h-full animate__animated animate__fadeInRight bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Stocks des pièces de rechange</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiStockList.length}</span>

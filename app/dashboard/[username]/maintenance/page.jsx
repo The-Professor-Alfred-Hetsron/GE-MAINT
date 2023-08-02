@@ -39,7 +39,7 @@ export default function Maintenance () {
     
     const [ data, setData ] = useState(maintenanceList)
     const [ currentViewName, setCurrentViewName ] = useState('work-week')
-    const [ currentDate, setCurrentDate ] = useState('2018-06-27')
+    const [ currentDate, setCurrentDate ] = useState(actualDate?actualDate:'2018-06-27')
     const [editingOptions, setEditingOptions] = useState({
       allowAdding: true,
       allowDeleting: true,
@@ -392,6 +392,10 @@ export default function Maintenance () {
 
                     <IntegratedEditing />
 
+                    <MonthView
+                      displayName="Mois"
+                    />
+
                     <WeekView
                         name="work-week"
                         displayName="Jour de Travail"
@@ -400,9 +404,7 @@ export default function Maintenance () {
                         startDayHour={7}
                         endDayHour={16}
                     />
-                    <MonthView
-                      displayName="Mois"
-                    />
+                    
                     <DayView
                       displayName="Toute la Journée"
                     />

@@ -126,8 +126,8 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 image: imageEquip? imageEquip : ""
             }
             setApiEquipmentDetails(tempEquip)
-            if(tempEquipName !== apiEquipmentDetails.nom){
-                router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
+            if(tempEquipName !== nomEquip){
+                router.push(`/dashboard/${params.username}/equipements/${nomEquip}`)
             }
             closeModal()
         }
