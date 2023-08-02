@@ -85,20 +85,23 @@ export default function Maintenance () {
       allowResizing: true,
     });
     const {
-      allowDeleting, allowUpdating, allowResizing,
+      allowDeleting, allowUpdating
     } = editingOptions;
     
     const commitChanges = ({ added, changed, deleted }) => {
       let tempData = [...data]
       if (added) {
+        console.log(added)
         const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
         tempData = [...tempData, { id: startingAddedId, ...added }];
       }
       if (changed) {
+        console.log(changed)
         tempData = tempData.map(appointment => (
           changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
       }
       if (deleted !== undefined) {
+        console.log(deleted)
         tempData = tempData.filter(appointment => appointment.id !== deleted);
       }
       setData(tempData)
@@ -236,11 +239,6 @@ export default function Maintenance () {
     }
     return <AppointmentForm.CommandButton id={id} {...restProps} />;
   }, [allowDeleting]);
-
-  const allowResize = useCallback(
-    () => allowResizing && allowUpdating,
-    [allowResizing, allowUpdating],
-  );
 
   const StyledDiv = styled('div', {
     shouldForwardProp: prop => prop !== 'top',
