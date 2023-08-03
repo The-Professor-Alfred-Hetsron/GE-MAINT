@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { FiMenu } from "react-icons/fi";
 
 function Header(props) {
   const username = props.username? props.username.replace("-", " ") : "Nom Prenom"

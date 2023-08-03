@@ -56,9 +56,9 @@ export default function Home ({params}:{params: {username:string }}) {
     ]
 
     return(
-        <div className="w-full h-full flex flex-col gap-4 justify-start items-center">
-            <div className='w-full h-auto flex flex-row gap-2 justify-end items-start'>
-                <div className='w-full flex flex-wrap gap-4 justify-start'>
+        <div className="w-full h-auto sticky flex flex-col gap-4 justify-start items-center">
+            <div className='w-full h-auto flex flex-row 2xl:flex-col gap-2 justify-end items-start'>
+                <div className='w-full px-4 z-10 flex flex-wrap gap-4'>
                     {
                         totalList.map((total, index) => {
                             return  <NumberCards
@@ -68,7 +68,7 @@ export default function Home ({params}:{params: {username:string }}) {
                         })
                     }
                 </div>
-                <div className='w-full p-2 flex flex-col items-start justify-end bg-white rounded-2xl border border-slate-300'>
+                <div className='w-full z-10 p-2 flex flex-col items-start justify-end bg-white rounded-2xl border border-slate-300'>
                     <div className='w-full pr-6 border-b border-slate-300 pb-2 items-center flex flex-row justify-between'>
                         <span className='text-center text-[24px] font-bold'>
                             Calendrier de Maintenance

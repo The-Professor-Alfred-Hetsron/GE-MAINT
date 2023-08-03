@@ -338,8 +338,8 @@ function DefaultCalendar () {
             />
             <CurrentTimeIndicator
                 indicatorComponent={TimeIndicator}
-                shadePreviousCells
-                shadePreviousAppointments
+                shadePreviousCells = {true}
+                shadePreviousAppointments = {true}
             />
             </Scheduler>
         </Paper>
