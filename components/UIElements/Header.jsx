@@ -2,17 +2,23 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { FiMenu } from "react-icons/fi";
+import { FiMenu, FiX } from "react-icons/fi";
 
 function Header(props) {
   const username = props.username? props.username.replace("-", " ") : "Nom Prenom"
   const userInitials = `${username.toUpperCase().split(" ")[0][0]} ${username.toUpperCase().split(" ")[username.toUpperCase().split(" ").length-1][0]}`
+
 
   return (
     <div className='w-full mb-2 rounded-2xl shadow-lg backdrop-blur-[20px] flex-col justify-start items-start'>
   
         <div className='w-full px-4 py-2 bg-white rounded-tl-2xl rounded-tr-2xl justify-start items-center inline-flex'>
           <div className="w-full flex flex-row justify-start items-center gap-4">
+          <button onClick={()=>props.navToogler(!props.navStatus)} className='text-amber-400'>
+            {props.navStatus? <FiX size={32}/>
+                : <FiMenu size={32}/>
+            }
+          </button>
             <Image className="rounded-[62.25px]" width="60" height="60" src="/assets/img/svgPAKLogo.svg" alt="Logo PAK"/>
             <div className="w-full flex flex-col h-full justify-evenly">
               <span className="w-full text-sky-700 text-[18px] font-normal">PORT AUTONOME DE KRIBI</span>

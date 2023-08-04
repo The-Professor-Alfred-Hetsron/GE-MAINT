@@ -1,11 +1,12 @@
 'use client'
 
 import React from 'react'
+import 'animate.css';
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { AiOutlineHome, AiOutlineAppstoreAdd } from "react-icons/ai";
 import { RxDashboard } from "react-icons/rx";
-import { FiRotateCcw } from "react-icons/fi";
+import { FiRotateCcw, FiMenu, FiX } from "react-icons/fi";
 import { LuClipboardCopy } from "react-icons/lu";
 import { RiAlarmWarningLine } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
@@ -58,7 +59,12 @@ function NavBar(props) {
     }
   ]
   return (
-    <nav className='w-[320px] h-full fixed left-0 top-0 rounded-tr-2xl rounded-br overflow-y-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center'>
+    <div className='w-[320px] h-full fixed left-0 top-0 lg:w-screen lg:h-screen lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:bottom-0 lg:z-50 lg:inset-0 lg:bg-black/20 lg:backdrop-blur-sm lg:dark:bg-slate-900/80'>
+      <button onClick={()=>props.navToogler(false)} className='text-amber-400 hidden lg:flex lg:absolute lg:right-8 lg:top-8'>
+        <FiX size={32}/>
+      </button>
+      
+      <nav className='w-[320px] h-full fixed left-0 top-0 rounded-tr-2xl rounded-br overflow-y-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center animate__animated animate__fadeInLeft'>
         <div className='w-full pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
           <span className='w-full text-center text-white text-[60px] font-semibold'>TYA MAINT</span>
         </div>
@@ -80,7 +86,8 @@ function NavBar(props) {
           })
         }
         </div>
-    </nav>
+      </nav>
+    </div>
   )
 }
 

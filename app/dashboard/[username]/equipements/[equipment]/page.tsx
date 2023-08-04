@@ -185,7 +185,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys])
 
     return(
-        <div className="w-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Catalogue d’équipements</span>
             </div>

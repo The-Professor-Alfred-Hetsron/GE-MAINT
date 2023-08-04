@@ -260,7 +260,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     }, [isUpdateSubSysModal, isAddPieceModal, nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys,qteStockPiece,qteMinPiece])
     
     return(
-        <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-2xl font-semibold leading-[52.11px]">{equipmentName.replace("-"," ")}</Link>
                 <span className="text-zinc-800 text-2xl font-semibold leading-[52.11px]"> - Sous Systèmes</span>
