@@ -57,8 +57,8 @@ export default function Home ({params}:{params: {username:string }}) {
 
     return(
         <div className="w-full h-auto sticky flex flex-col gap-8 justify-start items-center">
-            <div className='w-full h-auto flex flex-row 2xl:flex-col gap-4 justify-end items-start'>
-                <div className='w-[800px] 2xl:w-full z-10 flex flex-wrap gap-4'>
+            <div className='w-full h-auto flex flex-row 2xl:flex-col gap-4 justify-end items-start' style={{}}>
+                <div className='w-[1000px] 2xl:w-full z-10 flex flex-auto flex-row flex-wrap gap-4'>
                     {
                         totalList.map((total, index) => {
                             return  <NumberCards
