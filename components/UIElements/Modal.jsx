@@ -29,7 +29,7 @@ function Modal(props) {
   return createPortal(
     <React.Fragment>
       {isModalVisible &&
-        <div className={`w-full h-full py-10 z-50 absolute top-0 left-0 right-0 inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-col items-center overflow-auto ${(isDeleteModalVisible||isDetailIntervention)?"justify-center":"justify-start"}`}>
+        <div className={`w-full h-full py-10 z-50 fixed top-0 left-0 bottom-0 right-0 inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-col items-center overflow-auto ${(isDeleteModalVisible||isDetailIntervention)?"justify-center":"justify-start"}`}>
           {/* modal container */}
           {!isDetailIntervention &&
             <form className="py-5 px-6 z-50 min-w-[600px] bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
