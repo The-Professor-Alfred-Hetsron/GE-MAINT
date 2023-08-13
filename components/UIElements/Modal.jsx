@@ -32,7 +32,7 @@ function Modal(props) {
         <div className={`w-full h-full py-10 z-50 fixed top-0 left-0 bottom-0 right-0 inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-col items-center overflow-auto ${(isDeleteModalVisible||isDetailIntervention)?"justify-center":"justify-start"}`}>
           {/* modal container */}
           {!isDetailIntervention &&
-            <form className="py-5 px-6 z-50 min-w-[600px] bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+            <form className="py-5 px-6 z-50 min-w-[600px] bg-stone-50 rounded-2xl backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth,boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.25)'}} onSubmit={(e)=>(e.preventDefault())}>
             {/* modal header */} 
             <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-center items-center'>
               <span className='w-full text-center capitalize'>{props.modalTitle}</span>
