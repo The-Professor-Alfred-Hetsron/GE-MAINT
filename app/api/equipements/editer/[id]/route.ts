@@ -26,7 +26,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
           marque_fabricant: json.marque_fabricant || equipement.marque_fabricant,
           image: json.image || equipement.image,
           description: json.description || equipement.description,
-          localisation: json.localistation || equipement.localisation,
+          localisation: json.localisation || equipement.localisation,
           numero_serie: json.numero_serie || equipement.numero_serie,
           modele: json.modele || equipement.modele,
           etat: json.etat || equipement.etat,

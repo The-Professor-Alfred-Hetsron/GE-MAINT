@@ -13,7 +13,7 @@ CREATE TABLE "Equipement" (
     "nom" TEXT NOT NULL,
     "marque_fabricant" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "localistation" TEXT NOT NULL,
+    "localisation" TEXT NOT NULL,
     "numero_serie" TEXT NOT NULL,
     "modele" TEXT NOT NULL,
     "etat" TEXT NOT NULL

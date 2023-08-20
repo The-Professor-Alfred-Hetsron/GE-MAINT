@@ -23,9 +23,20 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const router = useRouter()
     const pathname = usePathname()
     
-    const [ apiSubSysList, setApiSubSysList ] = useState<Array<SubSystemType>>(subSysList)
+    const [ apiSubSysList, setApiSubSysList ] = useState<Array<SubSystemType>>([])
     const [ displaySubSysList, setDisplaySubSysList ] = useState<Array<SubSystemType>>(apiSubSysList)
-    const [ apiEquipmentDetails, setApiEquipmentDetails ] = useState<EquipmentType>(apiEquipDetails)
+    const [ apiEquipmentDetails, setApiEquipmentDetails ] = useState<EquipmentType>({
+        id: 0,
+        image: "",
+        code: "",
+        nom: "",
+        marque_fabricant: "",
+        modele: "",
+        numero_serie: "",
+        localisation: "",
+        etat: "",
+        description: ""
+    })
 
     const [ isDelEquipModal, setDelEquipModalVisibility ] = useState<boolean>(false)
     const [ isUpdateEquipModal, setUpdateEquipModalVisibility ] = useState<boolean>(false)
@@ -41,7 +52,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const [ marqueEquip, setMarqueEquip ] = useState<string>(apiEquipmentDetails.marque_fabricant)
     const [ modeleEquip, setModeleEquip ] = useState<string>(apiEquipmentDetails.modele)
     const [ numSerieEquip, setNumSerieEquip ] = useState<string>(apiEquipmentDetails.numero_serie)
-    const [ localisationEquip, setLocalisationEquip ] = useState<string>(apiEquipmentDetails.localistation)
+    const [ localisationEquip, setLocalisationEquip ] = useState<string>(apiEquipmentDetails.localisation)
     const [ etatEquip, setEtatEquip ] = useState<string>(apiEquipmentDetails.etat)
     const [ descriptionEquip, setDescriptionEquip ] = useState<string>(apiEquipmentDetails.description)
     // Equipment Information End
@@ -80,7 +91,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         setMarqueEquip(apiEquipmentDetails.marque_fabricant)
         setModeleEquip(apiEquipmentDetails.modele)
         setNumSerieEquip(apiEquipmentDetails.numero_serie)
-        setLocalisationEquip(apiEquipmentDetails.localistation)
+        setLocalisationEquip(apiEquipmentDetails.localisation)
         setEtatEquip(apiEquipmentDetails.etat)
         setDescriptionEquip(apiEquipmentDetails.description)
     }
@@ -133,7 +144,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 marque_fabricant: marqueEquip,
                 numero_serie: numSerieEquip,
                 modele: modeleEquip,
-                localistation: localisationEquip,
+                localisation: localisationEquip,
                 etat: etatEquip,
                 description: descriptionEquip,
                 image: fileName
@@ -281,7 +292,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Localisation: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.localistation}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.localisation}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Etat: </span>
@@ -377,7 +388,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         <InputField label="Marque du Fabricant" defaultValue={apiEquipmentDetails.marque_fabricant} setNewValue={setMarqueEquip} />
                         <InputField label="Modèle" defaultValue={apiEquipmentDetails.modele} setNewValue={setModeleEquip} />
                         <InputField label="Numéro de Série" defaultValue={apiEquipmentDetails.numero_serie} setNewValue={setNumSerieEquip} />
-                        <InputField label="Localisation" defaultValue={apiEquipmentDetails.localistation} setNewValue={setLocalisationEquip} />
+                        <InputField label="Localisation" defaultValue={apiEquipmentDetails.localisation} setNewValue={setLocalisationEquip} />
                         <InputField label="Etat" defaultValue={apiEquipmentDetails.etat} setNewValue={setEtatEquip} />
                         <TextAreaField label="Description" defaultValue={apiEquipmentDetails.description} setNewValue={setDescriptionEquip}/>
                     </div>

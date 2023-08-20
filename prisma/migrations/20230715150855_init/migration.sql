@@ -7,12 +7,12 @@ CREATE TABLE "new_Equipement" (
     "marque_fabricant" TEXT NOT NULL,
     "image" TEXT NOT NULL DEFAULT '',
     "description" TEXT NOT NULL,
-    "localistation" TEXT NOT NULL,
+    "localisation" TEXT NOT NULL,
     "numero_serie" TEXT NOT NULL,
     "modele" TEXT NOT NULL,
     "etat" TEXT NOT NULL
 );
-INSERT INTO "new_Equipement" ("code", "description", "etat", "id", "localistation", "marque_fabricant", "modele", "nom", "numero_serie") SELECT "code", "description", "etat", "id", "localistation", "marque_fabricant", "modele", "nom", "numero_serie" FROM "Equipement";
+INSERT INTO "new_Equipement" ("code", "description", "etat", "id", "localisation", "marque_fabricant", "modele", "nom", "numero_serie") SELECT "code", "description", "etat", "id", "localisation", "marque_fabricant", "modele", "nom", "numero_serie" FROM "Equipement";
 DROP TABLE "Equipement";
 ALTER TABLE "new_Equipement" RENAME TO "Equipement";
 CREATE UNIQUE INDEX "Equipement_code_key" ON "Equipement"("code");

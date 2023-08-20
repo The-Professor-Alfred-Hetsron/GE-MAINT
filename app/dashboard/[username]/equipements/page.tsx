@@ -26,7 +26,7 @@ interface tempEquipmentType {
 
 export default function Equipments () {
 
-    const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>(tempEquipList)
+    const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>([])
     const [ displayEquipList, setDisplayEquipList ] = useState<Array<tempEquipmentType>>(apiEquipList)
 
     const [ isModalVisible, setModalVisibility ] = useState<boolean>(false)
@@ -144,7 +144,7 @@ export default function Equipments () {
                 marque_fabricant: marque,
                 modele: modele,
                 numero_serie: numSerie,
-                localistation: localisation,
+                localisation,
                 etat: etat,
                 description: description,
                 image: uploadedFilename

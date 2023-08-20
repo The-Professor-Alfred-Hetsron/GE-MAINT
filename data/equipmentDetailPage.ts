@@ -127,7 +127,7 @@ export const apiEquipDetails = {
     marque_fabricant: "marque_fabricant Fabricant",
     numero_serie: "5G4D5F1D",
     modele: "Equip5G4D5F1D",
-    localistation: "Departement Equip",
+    localisation: "Departement Equip",
     etat: "Fonctionnel",
     description: "Le Meilleur Equipement au monde",
     image: "/assets/img/index-generator.png",

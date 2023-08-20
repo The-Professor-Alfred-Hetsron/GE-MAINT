@@ -6,7 +6,7 @@ export default interface EquipmentType {
     marque_fabricant: string,
     modele: string,
     numero_serie: string,
-    localistation: string,
+    localisation: string,
     etat: string,
     description: string,
     image: string | ArrayBuffer | undefined
