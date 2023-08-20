@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { createPortal } from "react-dom";
 import { GrClose } from "react-icons/gr";
 
 import Image from 'next/image'
@@ -25,14 +26,13 @@ function Modal(props) {
     setInterventionInfo(props.interventionInfo?props.interventionInfo:null)
   }, [props])
 
-  return (
-    <>
-    {isModalVisible ?
-      <>
-        <div className='w-full h-full !absolute top-0 left-0 p-10 rounded-2xl inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-row justify-center items-center'>
+  return createPortal(
+    <React.Fragment>
+      {isModalVisible &&
+        <div className={`w-full h-full py-10 z-50 fixed top-0 left-0 bottom-0 right-0 inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80 flex flex-col items-center overflow-auto ${(isDeleteModalVisible||isDetailIntervention)?"justify-center":"justify-start"}`}>
           {/* modal container */}
           {!isDetailIntervention &&
-            <form className="py-5 px-6 min-w-[600px] bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+            <form className="py-5 px-6 z-50 min-w-[600px] bg-stone-50 rounded-2xl backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth,boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.25)'}} onSubmit={(e)=>(e.preventDefault())}>
             {/* modal header */} 
             <div className='w-full px-2 text-[26px] font-semibold leading-10 text-black flex flex-row justify-center items-center'>
               <span className='w-full text-center capitalize'>{props.modalTitle}</span>
@@ -75,7 +75,7 @@ function Modal(props) {
           
           {/* modal Intervention Detail Container */}
           {isDetailIntervention &&
-            <form className="py-5 px-6 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center overflow-auto" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+            <form className="py-5 px-6 z-50 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
               
               {/* modal header */} 
               <div className='w-full  text-[26px] font-semibold leading-10 text-black flex flex-row justify-between items-center'>
@@ -152,9 +152,8 @@ function Modal(props) {
             </form>
           }
         </div>
-      </>
-    : null}
-  </>
+      }
+    </React.Fragment>, document.body
   )
 }
 

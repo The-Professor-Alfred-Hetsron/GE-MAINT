@@ -1,5 +1,6 @@
 'use client'
 
+import 'animate.css';
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 
@@ -35,10 +36,11 @@ export default function DashboardLayout(
                 {
                     tabLinks.map((link, index) => {
                         const isActive = pathname.includes(link.tabId)
+                        const tabAnimation  = (link.name === "Liste des Pièces de Rechange")? "animate__animated animate__fadeInRight" : "animate__animated animate__fadeInLeft"
                         return <Link 
                                 href={link.href}
                                 key={index}
-                                className={isActive ? "w-full p-1 bg-sky-700 rounded-xl justify-center items-center flex text-center text-white text-xl font-semibold leading-tight" : "w-full rounded-xl justify-center items-center flex text-center text-black hover:text-[#0B5DA7] text-xl font-semibold leading-tight"}
+                                className={isActive ? `${tabAnimation} w-full p-1 bg-sky-700 rounded-xl justify-center items-center flex text-center text-white text-xl font-semibold leading-tight` : "w-full rounded-xl justify-center items-center flex text-center text-black hover:text-[#0B5DA7] text-xl font-semibold leading-tight"}
                             >
                             {link.name}
                             </Link>

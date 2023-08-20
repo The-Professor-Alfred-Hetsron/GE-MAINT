@@ -167,6 +167,7 @@ export default function Equipments () {
         const loadEquipements = async () => {
             const response = await fetch('/api/equipements')
             const json = await response.json()
+            console.log(json)
             const { equipements } = json
             if (!equipements) return;
             setApiEquipList(equipements)
