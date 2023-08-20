@@ -35,7 +35,15 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const equipmentName = decodeURI(params.equipment)
     const username = decodeURI(params.username)
 
-    const [ apiSubSystemDetails, setApiSubSystemDetails ] = useState<SubSystemType>(tempApiSubSysDetails)
+    const [ apiSubSystemDetails, setApiSubSystemDetails ] = useState<SubSystemType>({
+        id: 0,
+        nom: "",
+        marque_fabricant: "",
+        numero_serie: "",
+        modele: "string",
+        description: "",
+        image: "",
+    })
     const [ apiPieceList, setApiPieceList ] = useState<Array<PieceType>>(tempApiPieceList)
     const [ displayPieceList, setDisplayPieceList ] = useState<Array<PieceType>>(apiPieceList)
 
@@ -531,7 +539,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 modalTitle="Supprimer la Pièece de Rechange"
                 isVisible={isDelPieceModal}
                 isDeleteModalVisible = {isDelPieceModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer la pièece <span className='font-bold'>{displayPieceList[selectedPiece].nom}</span> du sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span>. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer la pièece <span className='font-bold'>{displayPieceList[selectedPiece]?.nom}</span> du sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span>. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
                 deleteAction = {() => deletePiece(apiPieceList[selectedPiece].id)}
