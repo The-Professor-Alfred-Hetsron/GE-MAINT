@@ -51,7 +51,7 @@ function Modal(props) {
                     {props.deleteText}
                   </span>
                   <div className='w-full justify-between items-center gap-4 flex flex-row'>
-                    <button onClick={()=>props.closeModalAction()} className='w-full py-2 px-4 rounded-md border border-red-500 justify-center items-center gap-2 flex text-center text-red-500 text-base font-medium uppercase leading-snug tracking-[3px]'>
+                    <button onClick={()=>props.closeModalAction()} type='cancel' className='w-full py-2 px-4 rounded-md border border-red-500 justify-center items-center gap-2 flex text-center text-red-500 text-base font-medium uppercase leading-snug tracking-[3px]'>
                       Non, Annuler
                     </button>
                     <button onClick={()=>props.deleteAction()} className='w-full py-2 px-4 bg-red-500 rounded-md justify-center items-center gap-2 flex text-center text-white text-base font-medium uppercase leading-snug tracking-[3px]'>

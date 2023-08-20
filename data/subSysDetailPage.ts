@@ -1,8 +1,9 @@
 export const tempApiPieceList = [
     {
+        id: 1,
         nom: "Nom Piece1",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -11,9 +12,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 2,
         nom: "Nom Piece2",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -22,9 +24,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 3,
         nom: "Nom Piece3",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -33,9 +36,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 4,
         nom: "Nom Piece4",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -44,9 +48,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 5,
         nom: "Nom Piece5",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -55,9 +60,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 6,
         nom: "Nom Piece6",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -66,9 +72,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 7,
         nom: "Nom Piece1",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -77,9 +84,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 8,
         nom: "Nom Piece2",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -88,9 +96,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 9,
         nom: "Nom Piece3",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -99,9 +108,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 10,
         nom: "Nom Piece4",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -110,9 +120,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 11,
         nom: "Nom Piece5",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -121,9 +132,10 @@ export const tempApiPieceList = [
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     },
     {
+        id: 12,
         nom: "Nom Piece6",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "marque_fabricant Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
         localisation: "Departement Equip",
         qteStock: 10,
@@ -187,9 +199,10 @@ export const tempApiPanneList = [
 ]
 
 export const tempApiSubSysDetails = {
+    id: 1,
     nom: "Nom Sous Système1",
-    marque: "Marque Fabricant",
-    numSerie: "5G4D5F1D",
+    marque_fabricant: " Fabricant",
+    numero_serie: "5G4D5F1D",
     modele: "Equip5G4D5F1D",
     localisation: "Departement Equip",
     description: "Le Meilleur Sous Système au monde",

@@ -16,6 +16,8 @@ import SubSystemType from "@/types/subSystem"
 import EquipmentType from "@/types/equipment"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import { subSysList, apiEquipDetails } from '@/data/equipmentDetailPage'
+import axios from "axios"
+import upload from "@/helpers/upload"
 
 export default function Equipment ({params}:{params: {username:string,  equipment: string }}) {
     const router = useRouter()
@@ -36,10 +38,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const [ previewImageEquip, setPreviewImageEquip ] = useState<string | ArrayBuffer | undefined>(apiEquipmentDetails.image)
     const [ codeEquip, setCodeEquip ] = useState<string>(apiEquipmentDetails.code)
     const [ nomEquip, setNomEquip ] = useState<string>(apiEquipmentDetails.nom)
-    const [ marqueEquip, setMarqueEquip ] = useState<string>(apiEquipmentDetails.marque)
+    const [ marqueEquip, setMarqueEquip ] = useState<string>(apiEquipmentDetails.marque_fabricant)
     const [ modeleEquip, setModeleEquip ] = useState<string>(apiEquipmentDetails.modele)
-    const [ numSerieEquip, setNumSerieEquip ] = useState<string>(apiEquipmentDetails.numSerie)
-    const [ localisationEquip, setLocalisationEquip ] = useState<string>(apiEquipmentDetails.localisation)
+    const [ numSerieEquip, setNumSerieEquip ] = useState<string>(apiEquipmentDetails.numero_serie)
+    const [ localisationEquip, setLocalisationEquip ] = useState<string>(apiEquipmentDetails.localistation)
     const [ etatEquip, setEtatEquip ] = useState<string>(apiEquipmentDetails.etat)
     const [ descriptionEquip, setDescriptionEquip ] = useState<string>(apiEquipmentDetails.description)
     // Equipment Information End
@@ -51,8 +53,8 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const [ marqueSubSys, setMarqueSubSys ] = useState<string>("")
     const [ modeleSubSys, setModeleSubSys ] = useState<string>("")
     const [ numSerieSubSys, setNumSerieSubSys ] = useState<string>("")
-    const [ localisationSubSys, setLocalisationSubSys ] = useState<string>("")
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>("")
+    const [file, setFile] = useState<File | null>(null);
     // Sub System Information End
     
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
@@ -65,7 +67,6 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         setMarqueSubSys("")
         setModeleSubSys("")
         setNumSerieSubSys("")
-        setLocalisationSubSys("")
         setDescriptionSubSys("")
 
         setFormValidity(false)
@@ -76,10 +77,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         setImageSubSys(apiEquipmentDetails.image)
         setPreviewImageEquip(apiEquipmentDetails.image)
         setNomEquip(apiEquipmentDetails.nom)
-        setMarqueEquip(apiEquipmentDetails.marque)
+        setMarqueEquip(apiEquipmentDetails.marque_fabricant)
         setModeleEquip(apiEquipmentDetails.modele)
-        setNumSerieEquip(apiEquipmentDetails.numSerie)
-        setLocalisationEquip(apiEquipmentDetails.localisation)
+        setNumSerieEquip(apiEquipmentDetails.numero_serie)
+        setLocalisationEquip(apiEquipmentDetails.localistation)
         setEtatEquip(apiEquipmentDetails.etat)
         setDescriptionEquip(apiEquipmentDetails.description)
     }
@@ -102,39 +103,68 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
             setImage(data.result? data.result: undefined)
         })
         data.readAsDataURL(selectedFiles?.[0])
+        setFile(selectedFiles?.[0])
         setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
     }
 
-    const deleteEquipment = () => {
+    const deleteEquipment = async (index: number) => {
         console.log("Deleting Equipment From the Database through API calls")
+        const response = await fetch('/api/equipements/supprimer/'+index, {
+            method: 'DELETE',
+            body: JSON.stringify({})
+        })
+        const json = await response.json()
+        const { message } = json
+        if (!message) return;
         closeModal()
         router.push(`/dashboard/${params.username}/equipements`)
     }
 
-    const updateEquipment = () => {
+    const updateEquipment = async (index: number) => {
         let tempEquipName = apiEquipmentDetails.nom
+        let fileName: string = ''
+        if (file){
+            fileName = await upload({image: file})
+        }
         if(isUpdateFormValid){
             const tempEquip = {
                 nom: nomEquip,
                 code: codeEquip,
-                marque: marqueEquip,
-                numSerie: numSerieEquip,
+                marque_fabricant: marqueEquip,
+                numero_serie: numSerieEquip,
                 modele: modeleEquip,
-                localisation: localisationEquip,
+                localistation: localisationEquip,
                 etat: etatEquip,
                 description: descriptionEquip,
-                image: imageEquip? imageEquip : ""
+                image: fileName
             }
-            setApiEquipmentDetails(tempEquip)
+
+            const response = await fetch('/api/equipements/editer/'+index, {
+                method: 'PATCH',
+                body: JSON.stringify(tempEquip)
+            })
+            const json = await response.json()
+            const { equipement } = json
+            setApiEquipmentDetails(equipement)
             if(tempEquipName !== apiEquipmentDetails.nom){
                 router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
             }
             closeModal()
+            setFile(null)
         }
         
     }
 
-    const deleteSubSys = () => {
+    const deleteSubSys = async (index: number) => {
+        const response = await fetch('/api/equipements/sous-systeme/retirer/'+index, {
+            method: 'DELETE',
+            body: JSON.stringify({})
+        })
+        const json = await response.json()
+        const { message } = json
+
+        if (!message) return;
+
         let tempApiSubSysList = [...apiSubSysList]
         tempApiSubSysList.splice(selectedSubSys,1)
         setApiSubSysList(tempApiSubSysList)
@@ -156,22 +186,58 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         }
     }
 
-    const addNewSubSys = () => {
+    const addNewSubSys = async () => {
+        if (!file) return
+        if (!params.equipment) return;
         if(isFormValid){
+            let uploadedFilename: string = ''
+            try {
+                const data = {image: file as File}
+                uploadedFilename = await upload(data)
+            } catch (error) {
+                console.log(error)
+            }
+            if (!uploadedFilename) return;
             const tempNewSubSys = {
                 nom: nomSubSys,
-                marque: marqueSubSys,
-                numSerie: numSerieSubSys,
+                marque_fabricant: marqueSubSys,
+                numero_serie: numSerieSubSys,
                 modele: modeleSubSys,
-                localisation: localisationSubSys,
                 description: descriptionSubSys,
-                image: imageSubSys? imageSubSys : ""
+                equipement_id: Number.parseInt(params.equipment),
+                image: uploadedFilename
             }
-            setApiSubSysList([...displaySubSysList, tempNewSubSys])
+            const response = await fetch('/api/equipements/sous-systeme/ajouter', {
+                method: 'POST',
+                body: JSON.stringify(tempNewSubSys)
+            });
+            const json = await response.json()
+            // const response = await axios.post('/api/equipements/sous-systeme/ajouter'+params.equipment, tempNewSubSys);
+            // const { sousSysteme } = response.data
+            const { sousSysteme } = json
+            if (!sousSysteme) return;
+            
+            setApiSubSysList([...displaySubSysList, sousSysteme])
             closeModal()
+            setFile(null)
         }
     }
-
+    useEffect(() => {
+        const loadEquipement = async () => {
+            const response = await fetch('/api/equipements/'+params.equipment)
+            const json = await response.json()
+            const { equipement } = json
+            if (!equipement) return;
+            setApiEquipmentDetails(equipement)
+            const response2 = await fetch('/api/equipements/'+params.equipment+'/sous-systemes')
+            const json2 = await response2.json()
+            const { sousSystemes } = json2
+            if (!sousSystemes) return;
+            // console.log(sousSystemes)
+            setApiSubSysList(sousSystemes)
+        }
+        loadEquipement()
+    }, [params.equipment])
     useEffect(()=>{
         if(codeEquip!=="" && nomEquip!=="" && marqueEquip!=="" && modeleEquip!=="" && numSerieEquip!=="" && localisationEquip!=="" && etatEquip!=="" && descriptionEquip!=="" && previewImageEquip!=="") {
             setUpdateFormValidity(true)
@@ -179,10 +245,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }, [codeEquip, nomEquip, marqueEquip, modeleEquip, numSerieEquip, localisationEquip, etatEquip, descriptionEquip, previewImageEquip])
 
     useEffect(()=>{
-        if(nomSubSys!=="" && marqueSubSys!=="" && modeleSubSys!=="" && numSerieSubSys!=="" && localisationSubSys!=="" && descriptionSubSys!=="" && previewImageSubSys!=="") {
+        if(nomSubSys!=="" && marqueSubSys!=="" && modeleSubSys!=="" && numSerieSubSys!=="" && descriptionSubSys!=="" && previewImageSubSys!=="") {
             setFormValidity(true)
         }
-    }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys])
+    }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, descriptionSubSys, previewImageSubSys])
 
     return(
         <div className="w-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -196,18 +262,18 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                     </div>
                     <div className="w-full px-4 flex-col justify-start items-start gap-2 inline-flex">
                         <div className="flex-col justify-start items-start inline-flex">
-                            <span className="text-black text-[26px] font-semibold uppercase">{decodeURI(params.equipment)}</span>
+                            <span className="text-black text-[26px] font-semibold uppercase">{apiEquipmentDetails.nom}</span>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Code: </span>
                                 <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.code}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Marque du Fabricant: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.marque}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.marque_fabricant}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Numéro de Série: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.numSerie}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.numero_serie}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Modèle: </span>
@@ -215,7 +281,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Localisation: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.localisation}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiEquipmentDetails.localistation}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Etat: </span>
@@ -228,8 +294,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         </div>
                         <div className="w-full flex flex-row gap-3 justify-start items-start">
                             <DeleteBtn deleteAction={()=>{setDelEquipModalVisibility(true)}}/>
-                            <UpdateBtn updateAction={()=>{setUpdateEquipModalVisibility(true)
-                                                            initialiseUpdateParams()}}/>
+                            <UpdateBtn updateAction={()=>{
+                                setUpdateEquipModalVisibility(true)
+                                initialiseUpdateParams()
+                            }}/>
                         </div>
                     </div>
                 </div>
@@ -252,9 +320,11 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                                 return <SubsysPieceCard
                                     key={index}
                                     sysPieceInfo = {system}
-                                    href = {`${pathname}/${displaySubSysList[index].nom}`}
-                                    deleteAction = {() => {setSelectedSubSys(index)
-                                                            setDelSubSysModalVisibility(true)}}
+                                    href = {`${pathname}/${displaySubSysList[index].nom}/${system.id}`}
+                                    deleteAction = {() => {
+                                        setSelectedSubSys(index)
+                                        setDelSubSysModalVisibility(true)
+                                    }}
                                 />
                             })
                         }
@@ -270,7 +340,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{apiEquipmentDetails.nom}</span> et tout les <span className='font-bold'>{apiSubSysList.length}</span> sous systèmes associés à cet équipement. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
-                deleteAction = {deleteEquipment}
+                deleteAction = {() => deleteEquipment(Number.parseInt(params.equipment))}
             />
 
             {/* Update Equipment Modal */}
@@ -281,7 +351,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Modifier"
-                addNewAction = {updateEquipment}
+                addNewAction = {() => updateEquipment(apiEquipmentDetails.id)}
             >
                 <div className="w-full flex flex-row justify-center gap-4">
                     <div className="w-full flex flex-col justify-start gap-4">
@@ -304,10 +374,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         </span>
                         <InputField label="Code" defaultValue={apiEquipmentDetails.code} setNewValue={setCodeEquip} />
                         <InputField label="Nom" defaultValue={apiEquipmentDetails.nom} setNewValue={setNomEquip} />
-                        <InputField label="Marque du Fabricant" defaultValue={apiEquipmentDetails.marque} setNewValue={setMarqueEquip} />
+                        <InputField label="Marque du Fabricant" defaultValue={apiEquipmentDetails.marque_fabricant} setNewValue={setMarqueEquip} />
                         <InputField label="Modèle" defaultValue={apiEquipmentDetails.modele} setNewValue={setModeleEquip} />
-                        <InputField label="Numéro de Série" defaultValue={apiEquipmentDetails.numSerie} setNewValue={setNumSerieEquip} />
-                        <InputField label="Localisation" defaultValue={apiEquipmentDetails.localisation} setNewValue={setLocalisationEquip} />
+                        <InputField label="Numéro de Série" defaultValue={apiEquipmentDetails.numero_serie} setNewValue={setNumSerieEquip} />
+                        <InputField label="Localisation" defaultValue={apiEquipmentDetails.localistation} setNewValue={setLocalisationEquip} />
                         <InputField label="Etat" defaultValue={apiEquipmentDetails.etat} setNewValue={setEtatEquip} />
                         <TextAreaField label="Description" defaultValue={apiEquipmentDetails.description} setNewValue={setDescriptionEquip}/>
                     </div>
@@ -319,10 +389,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                 modalTitle="Supprimer le sous Système"
                 isVisible={isDelSubSysModal}
                 isDeleteModalVisible = {isDelSubSysModal}
-                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{displaySubSysList[selectedSubSys].nom}</span> de <span className='font-bold'>{apiEquipmentDetails.nom}</span> et toutes les pièces de rechange et les pannes associés à ce sous système. Voulez-vous poursuivre ?</span>}
+                deleteText = {<span>Vous êtes sur le point de supprimer le sous système <span className='font-bold'>{displaySubSysList[selectedSubSys]?.nom}</span> de <span className='font-bold'>{apiEquipmentDetails.nom}</span> et toutes les pièces de rechange et les pannes associés à ce sous système. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
-                deleteAction = {deleteSubSys}
+                deleteAction = {() => deleteSubSys(displaySubSysList[selectedSubSys].id)}
             />
             
             {/* Add New Sous System Modal */}
@@ -360,7 +430,6 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         <InputField label="Marque du Fabricant" setNewValue={setMarqueSubSys} />
                         <InputField label="Modèle" setNewValue={setModeleSubSys} />
                         <InputField label="Numéro de Série" setNewValue={setNumSerieSubSys} />
-                        <InputField label="Localisation" setNewValue={setLocalisationSubSys} />
                         <TextAreaField label="Description" setNewValue={setDescriptionSubSys} />
                     </div>
                 </div>

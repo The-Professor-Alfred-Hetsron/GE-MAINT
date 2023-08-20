@@ -4,7 +4,6 @@ import prismadb from '../../../../../../lib/prismadb'
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     try {
       const id = params.id
-
       //rechercher toutes les pieces
       const res = await fetch(`http://localhost:3000/api/equipements/sous-systeme/${id}/pieces`)
       const data = await res.json()
@@ -13,14 +12,23 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       }
       let ready = false
       let i = 0
-      const length = data.pieces.length - 1
+      const length = data.pieces.length > 0 ? data.pieces.length - 1 : 0
+      if (length === 0){
+        await prismadb.sousSysteme.delete({
+          where: {
+            id: Number.parseInt(id),
+          },
+        });
+        return NextResponse.json({ message: "sous systeme supprime" }, { status: 200 });
+      }
+
       while(i <= length){
         const transactions = await prismadb.transaction.findMany({
           where: {
              piece_id: data.pieces[i].id
           }
         })
-        for(let j =0, c = transactions.length; j < c; j++){
+        for(let j = 0, c = transactions.length; j < c; j++){
           await prismadb.transaction.delete({
             where: {
               id: transactions[j].id

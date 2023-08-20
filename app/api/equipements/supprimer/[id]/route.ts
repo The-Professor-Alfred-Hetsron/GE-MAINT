@@ -12,7 +12,17 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       }
       let ready = false
       let i = 0
-      let length = data.sousSystemes.length - 1
+      let length = data.sousSystemes.length > 0 ? data.sousSystemes.length - 1 : 0
+
+      if (data.sousSystemes.length === 0) {
+        await prismadb.equipement.delete({
+          where: {
+            id: Number.parseInt(id),
+          },
+        });
+        return NextResponse.json({ message: "deleted successfully" }, { status: 200 });
+      }
+
       while (i <= length) {
         const pieces = await prismadb.piece.findMany({
           where: {
@@ -50,6 +60,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       }
       //supprimer l'equipement'
       console.log(ready)
+      
       if(ready){
         await prismadb.equipement.delete({
           where: {
@@ -58,7 +69,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         });
       }
 
-      return NextResponse.json({ user: "deleted successfully" }, { status: 200 });
+      return NextResponse.json({ message: "deleted successfully" }, { status: 200 });
 
     } catch (error) {
       console.log(error);

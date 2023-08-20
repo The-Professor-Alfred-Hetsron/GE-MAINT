@@ -1,7 +1,8 @@
 export default interface PieceType {
+    id: number;
     nom: string,
-    marque: string,
-    numSerie: string,
+    marque_fabricant: string,
+    numero_serie: string,
     modele: string,
     localisation: string,
     qteStock: number,

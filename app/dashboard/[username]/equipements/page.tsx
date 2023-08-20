@@ -12,10 +12,12 @@ import { BsUpload } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import EquipmentType from '@/types/equipment'
 import { tempEquipList } from '@/data/equipmentPage'
+import upload from '@/helpers/upload'
 
 // import IFile from '@/types/ImageFile'
 
 interface tempEquipmentType {
+    id: number;
     nom: string,
     code: string,
     sousSystem: number,
@@ -42,6 +44,7 @@ export default function Equipments () {
     const [ localisation, setLocalisation ] = useState<string>("")
     const [ etat, setEtat ] = useState<string>("")
     const [ description, setDescription ] = useState<string>("")
+    const [file, setFile] = useState<File | null>(null);
 
     const [ newEquip, setNewEquip ] = useState<EquipmentType | undefined>()
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
@@ -67,6 +70,7 @@ export default function Equipments () {
             setEquipImage(data.result? data.result: undefined)
         })
         data.readAsDataURL(selectedFiles?.[0])
+        setFile(selectedFiles?.[0])
         setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
     }
     
@@ -83,7 +87,15 @@ export default function Equipments () {
         setSelectedEquipment(index)
     }
 
-    const deleteEquipment = () => {
+    const deleteEquipment = async (index: number) => {
+        const response = await fetch('/api/equipements/supprimer/'+index, {
+            method: 'DELETE',
+            body: JSON.stringify({})
+        });
+        const json = await response.json()
+        const { message } = json
+        if (!message) return;
+
         let tempApiEquipList = [...apiEquipList]
         tempApiEquipList.splice(selectedEquipment,1)
         setApiEquipList(tempApiEquipList)
@@ -113,32 +125,54 @@ export default function Equipments () {
         />
     }))
 
-    const addNewEquipment = () => {
+    const addNewEquipment = async () => {
+        if (!file) return
         if(isFormValid){
+            //upload image file file
+            let uploadedFilename: string = ''
+            try {
+                const data = {image: file as File}
+                uploadedFilename = await upload(data)
+            } catch (error) {
+                console.log(error)
+            }
+            if (!uploadedFilename) return;
             setEquipComponentList([])
             const newEquipment = {
                 code: code,
                 nom: nom,
-                marque: marque,
+                marque_fabricant: marque,
                 modele: modele,
-                numSerie: numSerie,
-                localisation: localisation,
+                numero_serie: numSerie,
+                localistation: localisation,
                 etat: etat,
                 description: description,
-                image: equipImage? equipImage : ""
+                image: uploadedFilename
             }
-            const tempEquip = {
-                nom: nom,
-                code: code,
-                sousSystem: 0,
-                image: equipImage? equipImage : "/assets/img/dashboard/equipements/equip1.png"
-            }
-            setApiEquipList([...displayEquipList, tempEquip])
-            setNewEquip(newEquipment)
+            const response = await fetch('/api/equipements/nouveau', {
+                method: 'POST',
+                body: JSON.stringify(newEquipment)
+            });
+            const json = await response.json()
+            const { equipement } = json
+            if (!equipement) return;
+            setApiEquipList([...displayEquipList, equipement])
+            setNewEquip(equipement)
             closeModal()
         }
     }
 
+    useEffect(() => {
+        //recuperer les equipements
+        const loadEquipements = async () => {
+            const response = await fetch('/api/equipements')
+            const json = await response.json()
+            const { equipements } = json
+            if (!equipements) return;
+            setApiEquipList(equipements)
+        }
+        loadEquipements()
+    }, [])
     useEffect(()=> {
         setDisplayEquipList(apiEquipList)
     }, [apiEquipList])
@@ -188,7 +222,7 @@ export default function Equipments () {
                 deleteText = {<span>Vous êtes sur le point de supprimer l’équipement <span className='font-bold'>{displayEquipList[selectedEquipment].nom}</span> et tout les sous systèmes associés à cet équipement. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
-                deleteAction = {deleteEquipment}
+                deleteAction = {() => deleteEquipment(displayEquipList[selectedEquipment].id)}
             /> : 
             <>
                 {/* Add New Equipment Modal */}

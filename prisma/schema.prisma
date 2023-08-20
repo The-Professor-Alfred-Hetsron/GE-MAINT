@@ -25,7 +25,7 @@ model Equipement {
   marque_fabricant String
   image            String        @default("")
   description      String
-  localistation    String
+  localisation    String
   numero_serie     String        @unique
   modele           String
   etat             String

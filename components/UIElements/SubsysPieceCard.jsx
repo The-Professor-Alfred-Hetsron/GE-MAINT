@@ -21,7 +21,7 @@ function SubsysPieceCard(props) {
         <div className='text-black w-full p-2 flex-row justify-center items-center inline-flex'>
             <button onClick={()=>routeToDetails()} className='by-2 w-full flex-col justify-start items-start gap-[3px] inline-flex'>
                 <span className='w-full inline-flex justify-start items-start text-[12px] font-semibold'>{sysPieceInfo.nom}</span>
-                <span className='text-[11px] font-normal'>{sysPieceInfo.numSerie}</span>
+                <span className='text-[11px] font-normal'>{sysPieceInfo.numero_serie}</span>
                 {sysPieceInfo.qteStock? 
                     <span className='text-[11px] font-normal'>{sysPieceInfo.qteStock} Pièces en Stock</span>
                 : null}
