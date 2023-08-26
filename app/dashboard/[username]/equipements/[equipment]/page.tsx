@@ -15,8 +15,8 @@ import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 import SubSystemType from "@/types/subSystem"
 import EquipmentType from "@/types/equipment"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
-import { subSysList, apiEquipDetails } from '@/data/equipmentDetailPage'
-import axios from "axios"
+// import { subSysList, apiEquipDetails } from '@/data/equipmentDetailPage'
+// import axios from "axios"
 import upload from "@/helpers/upload"
 
 export default function Equipment ({params}:{params: {username:string,  equipment: string }}) {
