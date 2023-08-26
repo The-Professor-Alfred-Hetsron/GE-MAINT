@@ -21,7 +21,7 @@ export default function DashboardLayout(
     return (
         <div className="w-screen h-screen bg-stone-50 flex justify-center items-center overflow-auto">
             {isNavVisible && <NavBar username={decodeURI(params.username)} navToogler={setNavVisibility}/>}
-            <div className={isNavVisible? 'w-[calc(100%-320px)] lg:w-full h-full fixed top-0 right-0 flex flex-col gap-2 p-2 bg-stone-50 justify-start items-center overflow-y-auto':'w-full lg:w-full h-full fixed top-0 right-0 flex flex-col gap-2 p-2 bg-stone-50 justify-start items-center overflow-y-auto'}>
+            <div className={`lg:w-full h-full fixed top-0 right-0 flex flex-col gap-2 p-4 bg-stone-50 justify-start items-center overflow-y-auto ${isNavVisible?'w-[calc(100%-320px)]': 'w-full'}`}>
                 <Header username={decodeURI(params.username)} role={userType} navStatus={isNavVisible} navToogler={setNavVisibility}/>
                 {children}
             </div>

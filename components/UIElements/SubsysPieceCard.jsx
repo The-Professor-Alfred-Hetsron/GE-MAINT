@@ -14,7 +14,7 @@ function SubsysPieceCard(props) {
         router.push(props.href)
     }
   return (
-    <div className='w-[180px] aspect-square bg-white rounded-[16px] shadow flex-col justify-start items-start inline-flex'>
+    <div className='w-[180px] aspect-square bg-white rounded-[16px] shadow drop-shadow-md flex-col justify-start items-start inline-flex'>
         <button onClick={()=>routeToDetails()} className='w-full h-3/4 py-4 bg-[#D0E5F0] rounded-t-[16px] flex justify-center items-center'>
             <Image className="w-3/4 aspect-square hover:scale-105 ease-in-out duration-300" width="500" height="500" src={sysPieceInfo.image} alt={sysPieceInfo.nom}/>
         </button>

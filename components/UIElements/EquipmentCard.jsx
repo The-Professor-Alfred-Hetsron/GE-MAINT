@@ -15,7 +15,7 @@ function EquipmentCard(props) {
   }
 
   return (
-    <div className='w-[300px] bg-white rounded-[16px] shadow flex-col justify-start items-start inline-flex'>
+    <div className='w-[300px] bg-white rounded-[16px] shadow drop-shadow-md flex-col justify-start items-start inline-flex'>
       <button onClick={()=>routeToDetails()} className='w-full h-[200px] bg-[#D0E5F0] rounded-t-[16px] flex justify-center items-center'>
         <Image className="w-3/4 h-full hover:scale-105 ease-in-out duration-300" width="500" height="500" src={equipmentInfo.image} alt={equipmentInfo.nom}/>
       </button>

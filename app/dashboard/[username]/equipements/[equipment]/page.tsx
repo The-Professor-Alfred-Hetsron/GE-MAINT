@@ -262,11 +262,11 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, descriptionSubSys, previewImageSubSys])
 
     return(
-        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full sticky bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Catalogue d’équipements</span>
             </div>
-            <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
+            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full flex-row justify-start items-start gap-2 inline-flex">
                     <div className='w-full aspect-square bg-[#D0E5F0] rounded-[16px] flex justify-center items-center'>
                         <Image className="w-4/5 aspect-square" width="500" height="500" src={`${apiEquipmentDetails.image}`} alt={decodeURI(params.equipment)}/>
