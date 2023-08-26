@@ -25,7 +25,7 @@ model Equipement {
   marque_fabricant String
   image            String        @default("")
   description      String
-  localisation    String
+  localisation     String
   numero_serie     String        @unique
   modele           String
   etat             String
@@ -78,6 +78,7 @@ model Panne {
   soussysteme    SousSysteme    @relation(fields: [soussysteme_id], references: [id])
   soussysteme_id Int
   interventions  Intervention[]
+  statut         String
 }
 
 model Intervention {
@@ -85,6 +86,7 @@ model Intervention {
   etat_initial       String
   etat_final         String
   executant          String
+  statut             String
   debut_intervention DateTime
   fin_intervention   DateTime
   observation        String
