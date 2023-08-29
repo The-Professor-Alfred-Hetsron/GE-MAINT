@@ -2,10 +2,12 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 import authenticationUserReducer from '@/redux/features/authentication/authenticatedUserSlice'
+import alertsReducer from '@/redux/features/alerts/alertsSlice'
 
 export const store = configureStore({
   reducer: {
-    authentication: authenticationUserReducer
+    authentication: authenticationUserReducer,
+    alerts: alertsReducer
   }
 })
 

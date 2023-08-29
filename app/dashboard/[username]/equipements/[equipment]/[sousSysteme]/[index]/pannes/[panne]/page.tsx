@@ -20,14 +20,23 @@ import {
     tempApiPannedetails,
     tempApiProtocolList
 } from "@/data/panneDetailPage"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
+import { useAppDispatch } from "@/redux/hooks"
 
-export default function Panne ({params}:{params: {username: string, equipment:string, sousSysteme: string, panne: string }}) {
+export default function Panne ({params}:{params: {username: string, equipment:string, sousSysteme: string, panne: number }}) {
     const subSysName = decodeURI(params.sousSysteme)
     const equipmentName = decodeURI(params.equipment)
     const username = decodeURI(params.username)
     const router = useRouter()
+    const dispatch = useAppDispatch()
 
-    const [ apiPanneDetails, setApiPanneDetails ] = useState<PanneType>(tempApiPannedetails)
+    const [ apiPanneDetails, setApiPanneDetails ] = useState<PanneType>({
+        description: '',
+        garvite: 0,
+        id: 0,
+        nom: ''
+    })
 
     const [ apiProtocolList, setApiProtocolList ] = useState<Array<{description:string}>>(tempApiProtocolList)
     const [ displayProtocolList, setDisplayProtocolList ] = useState<Array<{description:string}>>(apiProtocolList)
@@ -55,7 +64,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
     const initialiseUpdateParams = () => {
         setNomPanne(apiPanneDetails.nom)
         setDescriptionPanne(apiPanneDetails.description)
-        setGravitePanne(apiPanneDetails.gravite)
+        setGravitePanne(apiPanneDetails.garvite)
     }
 
     const initialisePanneParams = () => {
@@ -88,24 +97,66 @@ export default function Panne ({params}:{params: {username: string, equipment:st
         setSelectedProtocol(0)
     }
 
-    const deletePanne = () => {
+    const deletePanne = async () => {
+        try {
+            const response = await fetch('/api/equipements/sous-systeme/panne/supprimer/'+params.panne, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            })
+            const json = await response.json()
+            const { message } = json
+            if(!message){
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                }, DISPLAYTIMEOUT)
+                closeModal()
+                return
+            }
+            closeModal()
+            router.back()
+        } catch (error: any) {
+            setTimeout(() => {
+                dispatch(addAlert({type: 'FAILURE', message: error}))
+            }, DISPLAYTIMEOUT)
+        }
         closeModal()
-        router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`)
     }
 
-    const updatePanne = () => {
+    const updatePanne = async () => {
         let tempPanneName = apiPanneDetails.nom
         if(isUpdatePanneValid){
             const tempPanne = {
                 nom: nomPanne,
-                gravite: gravitePanne,
+                garvite: gravitePanne,
                 description: descriptionPanne,
             }
-            setApiPanneDetails(tempPanne)
-            closeModal()
-            if(tempPanneName !== tempPanne.nom){
-                router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}/pannes/${tempPanne.nom}`)
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/editer/'+params.panne, {
+                    method: 'PATCH',
+                    body: JSON.stringify(tempPanne)
+                })
+                const json = await response.json()
+                const { panne } = json
+                if (!panne){
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                    }, DISPLAYTIMEOUT)
+                    closeModal()
+                    return
+                }
+                setApiPanneDetails(panne)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne mise a jour'}))
+                }, DISPLAYTIMEOUT)
+                if(tempPanneName !== tempPanne.nom){
+                    router.back()
+                }
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                }, DISPLAYTIMEOUT)
             }
+            closeModal()
         }
     }
 
@@ -154,6 +205,32 @@ export default function Panne ({params}:{params: {username: string, equipment:st
     }
 
     useEffect(()=>{
+        const loadPanne = async () => {
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/'+params.panne)
+                const json = await response.json()
+                const { panne } = json
+                if(!panne){
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                setApiPanneDetails(panne)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne loaded'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                }, DISPLAYTIMEOUT)
+                return
+            }
+        }
+        loadPanne()
+    },[dispatch, params.panne])
+
+    useEffect(()=>{
         setDisplayProtocolList(apiProtocolList)
     },[apiProtocolList])
 
@@ -175,7 +252,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
     return(
         <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
-                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">{equipmentName}</Link>
+                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">{apiPanneDetails.nom}</Link>
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`} className="text-[#0B5DA7] text-[24px] font-semibold uppercase"> - {subSysName}</Link>
                 <span className="text-zinc-800 text-[24px] font-semibold uppercase"> - Pannes</span>
             </div>
@@ -183,10 +260,10 @@ export default function Panne ({params}:{params: {username: string, equipment:st
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full flex-col justify-start items-start gap-2 inline-flex">
                     <div className="flex-col justify-start items-start inline-flex">
-                        <span className="text-black text-[26px] font-semibold uppercase">{(decodeURI(params.panne))}</span>
+                        <span className="text-black text-[26px] font-semibold uppercase">{apiPanneDetails.nom}</span>
                         <div className="justify-start items-baseline gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Gravité: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiPanneDetails.gravite}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiPanneDetails.garvite}</span>
                         </div>
                         <div className="justify-start items-baseline gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Description: </span>

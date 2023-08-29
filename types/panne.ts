@@ -1,5 +1,6 @@
 export default interface PanneType {
+    id: number;
     nom: string,
-    gravite: number,
+    garvite: number,
     description: string,
 }

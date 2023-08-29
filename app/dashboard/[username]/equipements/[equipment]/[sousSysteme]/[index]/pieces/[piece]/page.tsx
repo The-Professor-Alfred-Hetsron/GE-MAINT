@@ -16,21 +16,25 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { BsUpload } from "react-icons/bs";
 
 import PieceType from "@/types/piece"
+import { useAppDispatch } from "@/redux/hooks"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
 
 export default function Piece ({params}:{params: {username: string, equipment:string, sousSysteme: string, piece: string }}) {
+    const dispatch = useAppDispatch()
     const subSysName = decodeURI(params.sousSysteme)
     const equipmentName = decodeURI(params.equipment)
     const username = decodeURI(params.username)
     const router = useRouter()
 
     const [ apiPieceDetails, setApiPieceDetails ] = useState<PieceType>({
+        id: 0,
         nom: "Nom Piece1",
-        marque: "Marque Fabricant",
-        numSerie: "5G4D5F1D",
+        marque_fabricant: "Marque Fabricant",
+        numero_serie: "5G4D5F1D",
         modele: "Equip5G4D5F1D",
-        localisation: "Departement Equip",
-        qteStock: 10,
-        qteMin: 2,
+        stock: 10,
+        minimum_stock: 2,
         description: "Le Meilleur Sous Système au monde",
         image: "/assets/img/dashboard/sousSystemes/fan-groupElectro.png"
     })
@@ -47,12 +51,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
     const [ imagePiece, setImagePiece ] = useState<string | ArrayBuffer | undefined>(apiPieceDetails.image)
     const [ previewImagePiece, setPreviewImagePiece ] = useState<string | ArrayBuffer | undefined>(apiPieceDetails.image)
     const [ nomPiece, setNomPiece ] = useState<string>(apiPieceDetails.nom)
-    const [ marquePiece, setMarquePiece ] = useState<string>(apiPieceDetails.marque)
+    const [ marquePiece, setMarquePiece ] = useState<string>(apiPieceDetails.marque_fabricant)
     const [ modelePiece, setModelePiece ] = useState<string>(apiPieceDetails.modele)
-    const [ numSeriePiece, setNumSeriePiece ] = useState<string>(apiPieceDetails.numSerie)
-    const [ localisationPiece, setLocalisationPiece ] = useState<string>(apiPieceDetails.localisation)
-    const [ qteStockPiece, setQteStockPiece ] = useState<number>(apiPieceDetails.qteStock)
-    const [ qteMinPiece, setQteMinPiece ] = useState<number>(apiPieceDetails.qteMin)
+    const [ numSeriePiece, setNumSeriePiece ] = useState<string>(apiPieceDetails.numero_serie)
+    const [ qteStockPiece, setQteStockPiece ] = useState<number>(apiPieceDetails.stock)
+    const [ qteMinPiece, setQteMinPiece ] = useState<number>(apiPieceDetails.minimum_stock)
     const [ descriptionPiece, setDescriptionPiece ] = useState<string>(apiPieceDetails.description)
     // Piece Information End
 
@@ -65,12 +68,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
         setImagePiece(apiPieceDetails.image)
         setPreviewImagePiece(apiPieceDetails.image)
         setNomPiece(apiPieceDetails.nom)
-        setMarquePiece(apiPieceDetails.marque)
+        setMarquePiece(apiPieceDetails.marque_fabricant)
         setModelePiece(apiPieceDetails.modele)
-        setNumSeriePiece(apiPieceDetails.numSerie)
-        setLocalisationPiece(apiPieceDetails.localisation)
-        setQteStockPiece(apiPieceDetails.qteStock)
-        setQteMinPiece(apiPieceDetails.qteMin)
+        setNumSeriePiece(apiPieceDetails.numero_serie)
+        setQteStockPiece(apiPieceDetails.stock)
+        setQteMinPiece(apiPieceDetails.minimum_stock)
         setDescriptionPiece(apiPieceDetails.description)
 
         setUpdateValidity(false)
@@ -100,26 +102,62 @@ export default function Piece ({params}:{params: {username: string, equipment:st
         setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
     }
 
-    const deletePiece = () => {
+    const deletePiece = async () => {
+        try {
+            const response = await fetch('/api/equipements/sous-systeme/pieces/retirer/'+params.piece, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            })
+            const json = await response.json()
+            const { error } = json
+            if (error !== undefined){
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'suppression echouée'}))
+                }, DISPLAYTIMEOUT)
+                return
+            }
+            router.back()
+        } catch (error) {
+            console.log(error)
+        }
         closeModal()
-        router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`)
     }
 
-    const updatePiece =() => {
+    const updatePiece = async () => {
         let tempPieceName = apiPieceDetails.nom
         if(isUpdateValid){
             const tempPiece = {
                 nom: nomPiece,
-                marque: marquePiece,
+                marque_fabricant: marquePiece,
                 modele: modelePiece,
-                numSerie: numSeriePiece,
-                localisation: localisationPiece,
-                qteStock: qteStockPiece,
-                qteMin: qteMinPiece,
+                numero_serie: numSeriePiece,
+                stock: qteStockPiece,
+                minimum_stock: qteMinPiece,
                 description: descriptionPiece,
                 image: imagePiece
             }
-            setApiPieceDetails(tempPiece)
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/pieces/editer/'+params.piece, {
+                    method: 'PATCH',
+                    body: JSON.stringify(tempPiece)
+                })
+                const json = await response.json()
+                const { piece } = json 
+                if (piece){
+                    console.log(piece)
+                    setApiPieceDetails(piece)
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'piece mise a jour avec success'}))
+                    }, DISPLAYTIMEOUT)
+                }
+                
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error.message}))
+                }, DISPLAYTIMEOUT)
+                console.log(error.message)
+            } 
             closeModal()
             if(tempPieceName !== tempPiece.nom){
                 router.push(`/dashboard/${username}/equipements/${equipmentName}/${subSysName}/pieces/${tempPiece.nom}`)
@@ -127,7 +165,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
         }
     }
 
-    const saveAddStock =() =>{
+    const saveAddStock = async () =>{
         if(isStockValid){
             const tempStock = {
                 piece: apiPieceDetails.nom,
@@ -136,12 +174,72 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 date: dateStock,
                 type: "Depôt"
             }
-            console.log(tempStock)
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/pieces/editer/'+params.piece, {
+                    method: 'PATCH',
+                    body: JSON.stringify({stock: apiPieceDetails.stock+quantity})
+                })
+                const json = await response.json()
+                const { piece } = json 
+                if (piece){
+                    setApiPieceDetails(piece)
+                    dispatch(addAlert({type: 'SUCCESS', message: 'piece mise a jour avec success'}))
+                }
+                else{
+                    const { error } = json
+                    if (error){
+                        setTimeout(() => {
+                            dispatch(addAlert({type: 'FAILURE', message: error.message}))
+                        }, DISPLAYTIMEOUT)
+                    }
+                    else{
+                        setTimeout(() => {
+                            dispatch(addAlert({type: 'WARNING', message: 'OUPS!! quelque chose a mal fonctionné'}))
+                        }, DISPLAYTIMEOUT)
+                    }
+                }
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error.message}))
+                }, DISPLAYTIMEOUT)
+                console.log(error.message)
+            }
+            //save the transaction
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/pieces/transactions/creer/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type_transaction: 'TRANSACTION-AJOUT',
+                        quantite: quantity,
+                        piece_id: apiPieceDetails.id
+                    })
+                })
+                const json = await response.json()
+                const { transaction } = json
+                if(!transaction) {
+                    setQuantity(0)
+                    closeModal()
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'transaction enregistrée'}))
+                }, DISPLAYTIMEOUT)
+                console.log('transaction saved')
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error.message}))
+                }, DISPLAYTIMEOUT)
+                console.log(error)
+            }
+            setQuantity(0)
             closeModal()
         }
     }
 
-    const saveRemoveStock =() => {
+    const saveRemoveStock = async () => {
         if(isStockValid){
             const tempStock = {
                 piece: apiPieceDetails.nom,
@@ -150,11 +248,97 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 date: dateStock,
                 type: "Retrait"
             }
-            console.log(tempStock)
+            const canRetail = apiPieceDetails.stock - quantity > apiPieceDetails.minimum_stock
+            if(!canRetail) {
+                setQuantity(0)
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'WARNING', message: 'Can not remove more than minimun stock quantity'}))
+                }, DISPLAYTIMEOUT)
+                return;
+            }
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/pieces/editer/'+params.piece, {
+                    method: 'PATCH',
+                    body: JSON.stringify({stock: apiPieceDetails.stock-quantity})
+                })
+                const json = await response.json()
+                const { piece } = json 
+                if (piece){
+                    setApiPieceDetails(piece)
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'piece mise a jour'}))
+                    }, DISPLAYTIMEOUT)
+                }
+                else{
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error.message}))
+                    }, DISPLAYTIMEOUT)
+                }
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                }, DISPLAYTIMEOUT)
+                console.log(error.message)
+            }
+            //save the transaction
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/pieces/transactions/creer/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type_transaction: 'TRANSACTION-RETRAIT',
+                        quantite: quantity,
+                        piece_id: apiPieceDetails.id
+                    })
+                })
+                const json = await response.json()
+                const { transaction } = json
+                if(!transaction) {
+                    setQuantity(0)
+                    closeModal()
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error.message}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'transaction enregistrée'}))
+                }, DISPLAYTIMEOUT)
+                console.log('transaction saved')
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                }, DISPLAYTIMEOUT)
+                console.log(error)
+            }
+            setQuantity(0)
             closeModal()
         }
     }
-
+    //load curent piece
+    useEffect(()=> {
+        const loadPiece = async () => {
+            const response = await fetch('/api/equipements/sous-systeme/pieces/'+params.piece)
+            const json = await response.json();
+            const { piece } = json
+            if (!piece) return;
+            setApiPieceDetails(piece)
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'piece chargée avec success'}))
+            }, DISPLAYTIMEOUT)
+        }
+        const loadTransactions = async () => {
+            const response = await fetch('/api/equipements/sous-systeme/pieces/transactions/piece/'+params.piece)
+            const json = await response.json()
+            const { transactions } = json
+            if(!transactions) return;
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'transactions chargées avec success'}))
+            }, DISPLAYTIMEOUT)
+        }
+        loadPiece()
+        loadTransactions()
+    }, [dispatch, params.piece])
     useEffect(()=>{
         if(quantity>0 && dateStock!==""){
             setStockValidity(true)
@@ -164,12 +348,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
     useEffect(()=> {
         if(nomPiece!=="" && marquePiece!=="" &&
             modelePiece!=="" && numSeriePiece!=="" &&
-            localisationPiece!=="" && qteStockPiece>0 &&
             qteMinPiece>0 && descriptionPiece!==""
             && imagePiece!==""){
                 setUpdateValidity(true)
         }
-    }, [nomPiece,marquePiece,modelePiece,numSeriePiece,localisationPiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
+    }, [nomPiece,marquePiece,modelePiece,numSeriePiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
 
     return(
         <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
@@ -189,11 +372,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                             <span className="text-black text-[26px] font-semibold uppercase">{apiPieceDetails.nom}</span>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Marque du Fabricant: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.marque}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.marque_fabricant}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Numéro de Série: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.numSerie}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.numero_serie}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Modèle: </span>
@@ -201,15 +384,14 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Localisation: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.localisation}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Quantité en Stock: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.qteStock}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.stock}</span>
                             </div>
                             <div className="justify-start items-center gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Quantité Minimale: </span>
-                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.qteMin}</span>
+                                <span className="text-black text-[20px] font-semibold">{apiPieceDetails.minimum_stock}</span>
                             </div>
                             <div className="justify-start items-baseline gap-[4px] inline-flex">
                                 <span className="text-black text-[18px] font-normal leading-loose">Description: </span>
@@ -241,7 +423,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{apiPieceDetails.nom}</span> du sous système <span className='font-bold'>{subSysName}</span>. Voulez-vous poursuivre ?</span>}
                 modalWidth = {600}
                 closeModalAction = {closeModal}
-                deleteAction = {deletePiece}
+                deleteAction = {async () => await deletePiece()}
             />
 
             {/* Update Piece Modal */}
@@ -274,12 +456,11 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                             Caractéristiques
                         </span>
                         <InputField label="Nom" defaultValue={apiPieceDetails.nom} setNewValue={setNomPiece} />
-                        <InputField label="Marque du Fabricant" defaultValue={apiPieceDetails.marque} setNewValue={setMarquePiece} />
+                        <InputField label="Marque du Fabricant" defaultValue={apiPieceDetails.marque_fabricant} setNewValue={setMarquePiece} />
                         <InputField label="Modèle" defaultValue={apiPieceDetails.modele} setNewValue={setModelePiece} />
-                        <InputField label="Numéro de Série" defaultValue={apiPieceDetails.numSerie} setNewValue={setNumSeriePiece} />
-                        <InputField label="Localisation" defaultValue={apiPieceDetails.localisation} setNewValue={setLocalisationPiece} />
-                        <InputField label="Quantité en Stock" defaultValue={apiPieceDetails.qteStock} type="Number" minValue={0} setNewValue={setQteStockPiece} />
-                        <InputField label="Quantité Minimale" defaultValue={apiPieceDetails.qteMin} type="Number" minValue={0} setNewValue={setQteMinPiece} />
+                        <InputField label="Numéro de Série" defaultValue={apiPieceDetails.numero_serie} setNewValue={setNumSeriePiece} />
+                        <InputField label="Quantité en Stock" defaultValue={apiPieceDetails.stock} type="Number" minValue={0} setNewValue={setQteStockPiece} disabled={true}/>
+                        <InputField label="Quantité Minimale" defaultValue={apiPieceDetails.minimum_stock} type="Number" minValue={0} setNewValue={setQteMinPiece} />
                         <TextAreaField label="Description" defaultValue={apiPieceDetails.description} setNewValue={setDescriptionPiece} />
                     </div>
                 </div>

@@ -10,7 +10,17 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       const data = await res.json()
       let ready = false
       let i = 0
-      let length = data.transactions.length - 1
+      let length = data.transactions.length - 1 > 0 ? data.transactions.length - 1 : 0
+      console.log('to delete')
+      if (length === 0){
+        await prismadb.piece.delete({
+          where: {
+            id: Number.parseInt(id),
+          },
+        });
+        return NextResponse.json({ message: "piece supprimee" }, { status: 200 });
+      }
+
       while (i <= length){
         prismadb.transaction.delete({
           where: {

@@ -14,7 +14,7 @@ function InputField(props) {
     <>
         {props.type === "Number"?
           <div className="inputBox">
-            <input required value={inputValue} type="number" min={props.minValue} max={props.maxValue} maxLength={1} onChange={(e)=>setInputValue(Number(e.target.value))}/>
+            <input required value={inputValue} type="number" min={props.minValue} max={props.maxValue} maxLength={1} onChange={(e)=>setInputValue(Number(e.target.value))} disabled={props.disabled?props.disabled:false}/>
             <span className='capitalize'>{props.label}</span>
           </div>
         :

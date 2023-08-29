@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 import { ReduxProvider } from '../components'
+import Alerts from '@/components/Alerts'
 
 export const metadata: Metadata = {
   title: 'TYA MAINT',
@@ -27,8 +28,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff"/>
       </head> 
       <ReduxProvider>
-        <body className={inter.className}>
+        <body className={inter.className+ ' relative'}>
           {children}
+          <Alerts />
         </body>
       </ReduxProvider>
     </html>
