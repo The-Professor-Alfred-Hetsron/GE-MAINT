@@ -149,14 +149,17 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     
     const deleteSubSys = async (index: number) => {
         console.log(index)
+        console.log("Deleting SubSystem From the Database through API calls")
         const response = await fetch('/api/equipements/sous-systeme/retirer/'+index, {
             method: 'DELETE',
             body: JSON.stringify({})
         })
         const json = await response.json()
         const { message } = json
-        if (!message) return
-        console.log("Deleting Sub System From the Database through API calls")
+        if (!message){
+            closeModal()
+            return
+        }
         closeModal()
         router.push(`/dashboard/${username}/equipements/${equipmentName}`)
     }
@@ -172,13 +175,17 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                     modele: modeleSubSys,
                     description: descriptionSubSys,
                 }
+                console.log("Updating SubSystem From the Database through API calls")
                 const response = await fetch('/api/equipements/sous-systeme/editer/'+params.index, {
                     method: 'PATCH',
                     body: JSON.stringify(tempSubSys)
                 })
                 const json = await response.json()
                 const { sousSysteme } = json
-                if (!sousSysteme) return
+                if (!sousSysteme){
+                    closeModal()
+                    return
+                }
                 setApiSubSystemDetails(sousSysteme)
                 closeModal()
                 if(tempSubSysName !== tempSubSys.nom){
@@ -193,8 +200,14 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     }
 
     const addNewPiece = async () => {
-        if (!file) return
-        if (!params.equipment) return;
+        if (!file){
+            closeModal()
+            return
+        }
+        if (!params.equipment){
+            closeModal()
+            return
+        } 
         if(isAddPieceValid){
             let uploadedFilename: string = ''
             try {
@@ -208,7 +221,10 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                     dispatch(addAlert({type: 'FAILURE', message: error}))
                 }, DISPLAYTIMEOUT)
             }
-            if (!uploadedFilename) return;
+            if (!uploadedFilename){
+                closeModal()
+                return
+            };
             const tempPiece = {
                 nom: nomSubSys,
                 marque_fabricant: marqueSubSys,
@@ -221,6 +237,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 soussysteme_id: params.index
             }
             try {
+                console.log("Adding Piece In the Database through API calls")
                 const response = await fetch('/api/equipements/sous-systeme/pieces/ajouter', {
                     method: 'POST',
                     body: JSON.stringify(tempPiece)
@@ -260,7 +277,23 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         }
     }
 
-    const deletePiece = (index: number) => {
+    const deletePiece = async (index: number) => {
+        try{
+            console.log("Deleting Piece From the Database through API calls")
+            const response = await fetch('/api/equipements/sous-systeme/pieces/retirer/'+index, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            })
+            const json = await response.json()
+            const { message } = json
+            if (!message){
+                closeModal()
+                return;
+            }
+        }
+        catch(error){
+            console.log(error)
+        }
         let tempList = [...apiPieceList]
         tempList.splice(selectedPiece,1)
         setApiPieceList(tempList)
@@ -275,6 +308,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 description: descriptionPanne,
             }
             try {
+                console.log("Adding Panne in the Database through API calls")
                 const response = await fetch(`/api/equipements/sous-systeme/${params.index}/pannes`, {
                     method: 'POST',
                     body: JSON.stringify(tempPanne)
@@ -321,6 +355,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const deletePanne = async () => {
         let tempList = [...apiPanneList]
         try {
+            console.log("Deleting Panne From the Database through API calls")
             const response = await fetch('/api/equipements/sous-systeme/panne/supprimer/'+tempList[selectedPiece].id, {
                 method: 'DELETE',
                 body: JSON.stringify({})

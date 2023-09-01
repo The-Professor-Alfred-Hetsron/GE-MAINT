@@ -126,8 +126,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         })
         const json = await response.json()
         const { message } = json
-        if (!message) return;
-        closeModal()
+        if (!message){
+            closeModal()
+            return;
+        }
         router.push(`/dashboard/${params.username}/equipements`)
     }
 
@@ -174,8 +176,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
         const json = await response.json()
         const { message } = json
 
-        if (!message) return;
-
+        if (!message){
+            closeModal()
+            return
+        }
         let tempApiSubSysList = [...apiSubSysList]
         tempApiSubSysList.splice(selectedSubSys,1)
         setApiSubSysList(tempApiSubSysList)
@@ -226,8 +230,10 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
             // const response = await axios.post('/api/equipements/sous-systeme/ajouter'+params.equipment, tempNewSubSys);
             // const { sousSysteme } = response.data
             const { sousSysteme } = json
-            if (!sousSysteme) return;
-            
+            if (!sousSysteme){
+                closeModal()
+                return
+            }
             setApiSubSysList([...displaySubSysList, sousSysteme])
             closeModal()
             setFile(null)

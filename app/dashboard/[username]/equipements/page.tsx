@@ -94,8 +94,10 @@ export default function Equipments () {
         });
         const json = await response.json()
         const { message } = json
-        if (!message) return;
-
+        if (!message){
+            closeModal()
+            return;
+        }
         let tempApiEquipList = [...apiEquipList]
         tempApiEquipList.splice(selectedEquipment,1)
         setApiEquipList(tempApiEquipList)
@@ -126,7 +128,10 @@ export default function Equipments () {
     }))
 
     const addNewEquipment = async () => {
-        if (!file) return
+        if (!file){
+            closeModal()
+            return
+        }
         if(isFormValid){
             //upload image file file
             let uploadedFilename: string = ''

@@ -355,7 +355,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
     }, [nomPiece,marquePiece,modelePiece,numSeriePiece,qteStockPiece,qteMinPiece,descriptionPiece,imagePiece])
 
     return(
-        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">{equipmentName}</Link>
                 <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`} className="text-[#0B5DA7] text-[24px] font-semibold uppercase"> - {subSysName}</Link>
@@ -470,6 +470,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
             <Modal
                 modalTitle={`Depôt de la pièce ${apiPieceDetails.nom} en Stock`}
                 isVisible={isAddStockModalVisible}
+                isAddStock={true}
                 isDeleteModalVisible = {false}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
@@ -491,6 +492,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
             <Modal
                 modalTitle={`Retrait de la pièce ${apiPieceDetails.nom} du Stock`}
                 isVisible={isRemoveStockModalVisible}
+                isAddStock={true}
                 isDeleteModalVisible = {false}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
