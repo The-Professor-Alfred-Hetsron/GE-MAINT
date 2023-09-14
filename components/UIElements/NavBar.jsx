@@ -43,7 +43,7 @@ function NavBar(props) {
       href2: `${baseUrl}/stocks/transactions`
     },
     {
-      name: "Alarmes",
+      name: "Logs",
       icon: <RiAlarmWarningLine size={24}/>,
       href: `${baseUrl}/alarmes`,
     },
