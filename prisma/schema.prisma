@@ -93,3 +93,15 @@ model Intervention {
   panne              Panne    @relation(fields: [panne_id], references: [id])
   panne_id           Int
 }
+
+model Tache {
+  id             Int         @id @default(autoincrement())
+  title          String      
+  notes          String?     
+  objetDeTache   Int         @default(1)
+  allDay         Boolean     @default(false)
+  startDate      DateTime    @default(now())
+  endDate        DateTime    @default(now())
+  exDate         DateTime?
+  rRule          String?     
+}

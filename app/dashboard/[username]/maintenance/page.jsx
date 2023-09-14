@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Paper from '@mui/material/Paper';
 // import IconButton from '@mui/material/IconButton';
 // import MoreIcon from '@mui/icons-material/MoreVert';
@@ -74,9 +74,9 @@ export default function Maintenance () {
       shadedAppointment: `${PREFIX}-shadedAppointment`,
     };
     
-    const [ data, setData ] = useState(maintenanceList)
-    const [ currentViewName, setCurrentViewName ] = useState('work-week')
-    const [ currentDate, setCurrentDate ] = useState(actualDate?actualDate:'2018-06-27')
+    const [data, setData] = useState([])
+    const [currentViewName, setCurrentViewName] = useState('work-week')
+    const [currentDate, setCurrentDate] = useState(actualDate?actualDate:'2018-06-27')
     const [addedAppointment, setAddedAppointment] = useState({});
     const [isAppointmentBeingCreated, setIsAppointmentBeingCreated] = useState(false);
     const [editingOptions, setEditingOptions] = useState({
@@ -89,21 +89,64 @@ export default function Maintenance () {
       allowDeleting, allowUpdating
     } = editingOptions;
     
-    const commitChanges = ({ added, changed, deleted }) => {
+    const commitChanges = async ({ added, changed, deleted }) => {
       let tempData = [...data]
       if (added) {
         console.log(added)
-        const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
-        tempData = [...tempData, { id: startingAddedId, ...added }];
+        try{
+            const response = await fetch('/api/taches/ajouter', {
+              method: 'POST',
+              body: JSON.stringify(added)
+            })
+            const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
+            tempData = [...tempData, { id: startingAddedId, ...added }];
+        }catch(error){
+          console.log(error)
+        }
       }
       if (changed) {
         console.log(changed)
-        tempData = tempData.map(appointment => (
-          changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+        try{
+            const keys = Object.keys(changed)
+            const tacheId = Number.parseInt(keys[0])
+            const response1 = await fetch('/api/taches/'+tacheId)
+            const json1 = await response1.json()
+            const tempTacheData = json1.tache
+            
+            if (!tempTacheData) return;
+            let tempTache={...tempTacheData}
+            tempTache = {...tempTache, ...changed[tacheId]}
+
+            const response2 = await fetch(`/api/taches/editer/${tempUser.id}`, {
+              method: 'PATCH',
+              body: JSON.stringify(tempTache)
+            })
+            const json2 = await response2.json()
+            const updatedTache = json2.tache
+
+            tempData = tempData.map(appointment => (
+              changed[appointment.id] ? { ...appointment, ...updatedTache } : appointment));
+        } catch(error){
+          console.log(error)
+        }
       }
       if (deleted !== undefined) {
         console.log(deleted)
-        tempData = tempData.filter(appointment => appointment.id !== deleted);
+        try{
+            const response = await fetch(`/api/taches/supprimer/${deleted}`, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            })
+            const json = await response.json()
+            const { message } = json
+            console.log(message)
+            if(!message) {
+              return
+            }
+            tempData = tempData.filter(appointment => appointment.id !== deleted);
+        }catch(error){
+          console.log(error)
+        }
       }
       setData(tempData)
     }
@@ -184,9 +227,9 @@ export default function Maintenance () {
       }));
   
     const StyledRoom = styled(Room)(({ theme: { palette } }) => ({
-    [`&.${classes.icon}`]: {
-        color: palette.action.active,
-    },
+      [`&.${classes.icon}`]: {
+          color: palette.action.active,
+      },
     }));
 
     const StyledAppointmentTooltipCommandButton = styled(AppointmentTooltip.CommandButton)(() => ({
@@ -283,6 +326,18 @@ export default function Maintenance () {
       <div className={classNames(classes.nowIndicator, classes.line)} />
     </StyledDiv>
   );
+
+  useEffect(() => {
+    const loadTaches = async () => {
+        const response = await fetch('/api/taches')
+        const json = await response.json()
+        const { taches } = json
+        if (!taches) return;
+        console.log(taches)
+        setData(taches);
+    }
+    loadTaches()
+}, [])
 
     return(
         <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">

@@ -12,7 +12,7 @@
     "@devexpress/dx-react-core": "^4.0.5",
     "@devexpress/dx-react-scheduler": "^4.0.5",
     "@devexpress/dx-react-scheduler-material-ui": "^4.0.5",
-    "@prisma/client": "^5.1.0-dev.6",
+    "@prisma/client": "^5.3.0-dev.53",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.1",
-    "prisma": "^5.1.0-dev.6"
+    "prisma": "^5.3.0-dev.53"
   }
 }
