@@ -176,7 +176,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Rapport D’Interventions</span>
-                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
+                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiRaaportList.length}</span>
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
@@ -219,7 +219,7 @@ export default function Home ({params}:{params: {username:string }}) {
 
             {/* View Intervention Detail Modal */}
             <Modal
-                modalTitle="Supprimer l'utilisateur"
+                modalTitle="Details de l'Intervention"
                 isVisible={isDetailModal}
                 isDeleteModalVisible = {false}
                 isDetailIntervention={isDetailModal}
