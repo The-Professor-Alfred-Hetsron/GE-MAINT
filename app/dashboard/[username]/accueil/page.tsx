@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import NumberCards from '@/components/UIElements/NumberCards'
 import DefaultCalendar from '@/components/UIElements/DefaultCalendar'
 import ViewBtn from "@/components/UIElements/ViewBtn"
@@ -21,10 +21,10 @@ export default function Home ({params}:{params: {username:string }}) {
     const baseUrl = "/dashboard/" + username
     const router = useRouter()
 
-    const [ equipTotal, setEquipTotal ] = useState(10)
-    const [ subSysTotal, setSubSysTotal ] = useState(20)
-    const [ pieceTotal, setPieceTotal ] = useState(8)
-    const [ pannesTotal, setPannesTotal ] = useState(16)
+    const [ equipTotal, setEquipTotal ] = useState(0)
+    const [ subSysTotal, setSubSysTotal ] = useState(0)
+    const [ pieceTotal, setPieceTotal ] = useState(0)
+    const [ pannesTotal, setPannesTotal ] = useState(0)
 
     const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
     const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
@@ -65,6 +65,21 @@ export default function Home ({params}:{params: {username:string }}) {
         setSelectedInterven(0)
 
     }
+
+    useEffect(() => {
+        //recuperer les equipements
+        const loadEquipements = async () => {
+            const response = await fetch('/api/equipements')
+            const json = await response.json()
+            console.log(json)
+            const { equipements } = json
+            if (!equipements) return;
+            setEquipTotal(equipements.length)
+        }
+        loadEquipements()
+
+        
+    }, [])
 
     return(
         <div className="w-full h-full flex flex-col gap-8 justify-start items-center overflow-y-auto">
