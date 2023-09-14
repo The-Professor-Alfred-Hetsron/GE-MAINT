@@ -33,33 +33,44 @@ export const apiIntervenList = [
     }
 ]
 
-export const apiPanneCritiqueList = [
+export const apiRapportIntervenList = [
     {
-        nom: "Nom Panne1",
-        sousSysteme: "Nom Sous Système 1",
+        panne: "Nom Panne1",
+        sousSysteme: "Nom Sous Systeme1",
         equipement: "Nom Equipement",
-        description: "la description de la panne 1, voici ce qu’il faut faire",
-        gravite: 3
+        etatEquipementInitial: "Très Mal",
+        demanderPar: "Nom Prénom",
+        etat: "Rapport",
+        executant: "Nom Executant",
+        debutIntervention: "12.06.2023",
+        finIntervention: "12.06.2023",
+        etatEquipementFinal: "Fonctionnel",
+        observation:"La panne a été retablit"
     },
     {
-        nom: "Nom Panne2",
-        sousSysteme: "Nom Sous Système 1",
+        panne: "Nom Panne1",
+        sousSysteme: "Nom Sous Systeme1",
         equipement: "Nom Equipement",
-        description: "la description de la panne 1, voici ce qu’il faut faire",
-        gravite: 4
+        etatEquipementInitial: "Très Mal",
+        demanderPar: "Nom Prénom",
+        etat: "Rapport",
+        executant: "Nom Executant",
+        debutIntervention: "12.06.2023",
+        finIntervention: "12.06.2023",
+        etatEquipementFinal: "Fonctionnel",
+        observation:"La panne a été retablit"
     },
     {
-        nom: "Nom Panne1",
-        sousSysteme: "Nom Sous Système 3",
-        equipement: "Nom Equipement 2",
-        description: "la description de la panne 1, voici ce qu’il faut faire",
-        gravite: 4
-    },
-    {
-        nom: "Nom Panne1",
-        sousSysteme: "Nom Sous Système 4",
-        equipement: "Nom Equipement 1",
-        description: "la description de la panne 1, voici ce qu’il faut faire",
-        gravite: 3
+        panne: "Nom Panne1",
+        sousSysteme: "Nom Sous Systeme1",
+        equipement: "Nom Equipement",
+        etatEquipementInitial: "Très Mal",
+        demanderPar: "Nom Prénom",
+        etat: "Rapport",
+        executant: "Nom Executant",
+        debutIntervention: "12.06.2023",
+        finIntervention: "12.06.2023",
+        etatEquipementFinal: "Fonctionnel",
+        observation:"La panne a été retablit"
     }
 ]

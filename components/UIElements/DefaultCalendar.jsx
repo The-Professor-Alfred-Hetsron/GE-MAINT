@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Paper from '@mui/material/Paper';
 // import IconButton from '@mui/material/IconButton';
 // import MoreIcon from '@mui/icons-material/MoreVert';
@@ -74,7 +74,7 @@ function DefaultCalendar () {
       shadedAppointment: `${PREFIX}-shadedAppointment`,
     };
     
-    const [ data, setData ] = useState(maintenanceList)
+    const [ data, setData ] = useState([])
     const [ currentViewName, setCurrentViewName ] = useState('work-week')
     const [ currentDate, setCurrentDate ] = useState(actualDate?actualDate:'2018-06-27')
     const [addedAppointment, setAddedAppointment] = useState({});
@@ -90,22 +90,22 @@ function DefaultCalendar () {
     } = editingOptions;
     
     const commitChanges = ({ added, changed, deleted }) => {
-      let tempData = [...data]
-      if (added) {
-        console.log(added)
-        const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
-        tempData = [...tempData, { id: startingAddedId, ...added }];
-      }
-      if (changed) {
-        console.log(changed)
-        tempData = tempData.map(appointment => (
-          changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
-      }
-      if (deleted !== undefined) {
-        console.log(deleted)
-        tempData = tempData.filter(appointment => appointment.id !== deleted);
-      }
-      setData(tempData)
+      // let tempData = [...data]
+      // if (added) {
+      //   console.log(added)
+      //   const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
+      //   tempData = [...tempData, { id: startingAddedId, ...added }];
+      // }
+      // if (changed) {
+      //   console.log(changed)
+      //   tempData = tempData.map(appointment => (
+      //     changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+      // }
+      // if (deleted !== undefined) {
+      //   console.log(deleted)
+      //   tempData = tempData.filter(appointment => appointment.id !== deleted);
+      // }
+      // setData(tempData)
     }
 
     const onAddedAppointmentChange = useCallback((appointment) => {
@@ -283,6 +283,18 @@ function DefaultCalendar () {
       <div className={classNames(classes.nowIndicator, classes.line)} />
     </StyledDiv>
   );
+
+  useEffect(() => {
+      const loadTaches = async () => {
+          const response = await fetch('/api/taches')
+          const json = await response.json()
+          const { taches } = json
+          if (!taches) return;
+          console.log(taches)
+          setData(taches);
+      }
+      loadTaches()
+  }, [])
 
     return(
         <Paper className="w-full h-[500px]">

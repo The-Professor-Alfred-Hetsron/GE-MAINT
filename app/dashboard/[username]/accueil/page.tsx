@@ -7,17 +7,18 @@ import ViewBtn from "@/components/UIElements/ViewBtn"
 
 import {
     apiIntervenList,
-    apiPanneCritiqueList
+    apiRapportIntervenList
 } from "@/data/homePage"
-import { AiFillEye } from "react-icons/ai"
 import { useRouter } from 'next/navigation'
 import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionType from '@/types/intervention'
-import critiquePanneType from '@/types/critiquePanne'
+import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
+import Modal from '@/components/UIElements/Modal'
 
 export default function Home ({params}:{params: {username:string }}) {
 
-    const baseUrl = "/dashboard/" + decodeURI(params.username)
+    const username = decodeURI(params.username)
+    const baseUrl = "/dashboard/" + username
     const router = useRouter()
 
     const [ equipTotal, setEquipTotal ] = useState(10)
@@ -25,8 +26,12 @@ export default function Home ({params}:{params: {username:string }}) {
     const [ pieceTotal, setPieceTotal ] = useState(8)
     const [ pannesTotal, setPannesTotal ] = useState(16)
 
+    const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
+    const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
+
     const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>(apiIntervenList)
-    const [ apiCritiquePanneList, setApiCritiquePanneList ] = useState<Array<critiquePanneType>>(apiPanneCritiqueList)
+    const [ apiRaaportList, setApiRaaportList ] = useState<Array<InterventionType>>(apiRapportIntervenList)
+
 
     const totalList = [
         {
@@ -55,6 +60,12 @@ export default function Home ({params}:{params: {username:string }}) {
         }
     ]
 
+    const closeModal = () =>{
+        setDetailModalVisibility(false)
+        setSelectedInterven(0)
+
+    }
+
     return(
         <div className="w-full h-full flex flex-col gap-8 justify-start items-center overflow-y-auto">
             <div className='w-full flex flex-row 2xl:flex-col gap-4 justify-end items-start' style={{}}>
@@ -80,52 +91,6 @@ export default function Home ({params}:{params: {username:string }}) {
                     </div>
                     <DefaultCalendar/>
                 </div>
-            </div>
-
-            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
-                <div className="w-full justify-between items-center inline-flex">
-                    <div className='flex flex-row justify-start gap-4 items-center'>
-                        <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Alarmes</span>
-                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiCritiquePanneList.length}</span>
-                    </div>
-                    <ViewBtn
-                        viewText = "Voir Plus"
-                        href = {`${baseUrl}/equipements`}
-                    />
-                </div>
-                <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
-                    <thead className="w-full bg-white border-b border-slate-400">
-                        <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
-                            <td className="w-[150px]">N°</td>
-                            <td className="w-full">Nom</td>
-                            <td className="w-full">Sous Système</td>
-                            <td className="w-full capitalize">équipement</td>
-                            <td className="w-full">Description</td>
-                            <td className="w-[250px] text-center">Gravité</td>
-                            <td className="w-full text-right">Action</td>
-                        </tr>
-                    </thead>
-                    <tbody className="w-full h-[300px] overflow-auto">
-                    {
-                        apiCritiquePanneList.map((panne, index) => {
-                            return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
-                                <td className="w-[150px]">{index+1}</td>
-                                <td className="w-full">{panne.nom}</td>
-                                <td className="w-full">{panne.sousSysteme}</td>
-                                <td className="w-full">{panne.equipement}</td>
-                                <td className="w-full">{panne.description}</td>
-                                <td className="w-[250px] text-center">{panne.gravite}</td>
-                                <td className="w-full flex gap-1 justify-end items-start flex-wrap">
-                                    <button onClick={()=>{router.push(`${baseUrl}/equipements/${panne.equipement}/${panne.sousSysteme}/pannes/${panne.nom}`)}} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
-                                        <AiFillEye size={20}/>
-                                        <span>Détails</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        })
-                    }
-                    </tbody>
-                </table>
             </div>
 
             <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
@@ -170,41 +135,40 @@ export default function Home ({params}:{params: {username:string }}) {
             <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
-                        <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Panne Critiques</span>
-                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiCritiquePanneList.length}</span>
+                        <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Rapport D’Interventions</span>
+                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
-                        href = {`${baseUrl}/equipements`}
+                        href = {`${baseUrl}/interventions`}
                     />
                 </div>
-                <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
+                <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
                     <thead className="w-full bg-white border-b border-slate-400">
                         <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
                             <td className="w-[150px]">N°</td>
-                            <td className="w-full">Nom</td>
+                            <td className="w-full">Panne</td>
                             <td className="w-full">Sous Système</td>
-                            <td className="w-full capitalize">équipement</td>
-                            <td className="w-full">Description</td>
-                            <td className="w-[250px] text-center">Gravité</td>
-                            <td className="w-full text-right">Action</td>
+                            <td className="w-full text-center">Demandé par</td>
+                            <td className="w-full capitalize text-center">état de l’équipement</td>
+                            <td className="w-full capitalize text-center">Action</td>
                         </tr>
                     </thead>
                     <tbody className="w-full h-[300px] overflow-auto">
                     {
-                        apiCritiquePanneList.map((panne, index) => {
+                        apiRaaportList.map((intervention, index) => {
                             return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                 <td className="w-[150px]">{index+1}</td>
-                                <td className="w-full">{panne.nom}</td>
-                                <td className="w-full">{panne.sousSysteme}</td>
-                                <td className="w-full">{panne.equipement}</td>
-                                <td className="w-full">{panne.description}</td>
-                                <td className="w-[250px] text-center">{panne.gravite}</td>
+                                <td className="w-full">{intervention.panne}</td>
+                                <td className="w-full">{intervention.sousSysteme}</td>
+                                <td className="w-full text-center">{intervention.demanderPar}</td>
+                                <td className="w-full capitalize text-center">{intervention.etatEquipementInitial}</td>
                                 <td className="w-full flex gap-1 justify-end items-start flex-wrap">
-                                    <button onClick={()=>{router.push(`${baseUrl}/equipements/${panne.equipement}/${panne.sousSysteme}/pannes/${panne.nom}`)}} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
-                                        <AiFillEye size={20}/>
-                                        <span>Détails</span>
-                                    </button>
+                                    <InterventionActionBtn
+                                        state={intervention.etat}
+                                        viewIntervention={()=>{setDetailModalVisibility(true)
+                                                                setSelectedInterven(index)}}
+                                    />
                                 </td>
                             </tr>
                         })
@@ -212,6 +176,19 @@ export default function Home ({params}:{params: {username:string }}) {
                     </tbody>
                 </table>
             </div>
+
+            {/* View Intervention Detail Modal */}
+            <Modal
+                modalTitle="Supprimer l'utilisateur"
+                isVisible={isDetailModal}
+                isDeleteModalVisible = {false}
+                isDetailIntervention={isDetailModal}
+                index= {selectedInterven+1}
+                interventionInfo = {apiRaaportList[selectedInterven]}
+                username = {username}
+                modalWidth = {650}
+                closeModalAction = {closeModal}
+            />
         </div>
     )
 }
