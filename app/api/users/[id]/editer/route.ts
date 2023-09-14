@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import prismadb from '../../../../../lib/prismadb'
 
+export const dynamic = 'auto'
+export const dynamicParams = true
+export const revalidate = false
+export const fetchCache = 'auto'
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
+export const maxDuration = 5
+
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     console.log('patch')
     try {
