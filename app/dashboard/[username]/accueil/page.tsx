@@ -67,7 +67,6 @@ export default function Home ({params}:{params: {username:string }}) {
     }
 
     useEffect(() => {
-        //recuperer les equipements
         const loadEquipements = async () => {
             const response = await fetch('/api/equipements')
             const json = await response.json()
@@ -76,9 +75,35 @@ export default function Home ({params}:{params: {username:string }}) {
             if (!equipements) return;
             setEquipTotal(equipements.length)
         }
+        const loadSubsystems = async () => {
+            const response = await fetch('/api/equipements/sous-systeme')
+            const json = await response.json()
+            console.log(json)
+            const { sousSystemes } = json
+            if (!sousSystemes) return;
+            setSubSysTotal(sousSystemes.length)
+        }
+        const loadPieces = async () => {
+            const response = await fetch('/api/equipements/sous-systeme/pieces')
+            const json = await response.json()
+            console.log(json)
+            const { pieces } = json
+            if (!pieces) return;
+            setPieceTotal(pieces.length)
+        }
+        const loadPannes = async () => {
+            const response = await fetch('/api/equipements/sous-systeme/panne')
+            const json = await response.json()
+            console.log(json)
+            const { pannes } = json
+            if (!pannes) return;
+            setPannesTotal(pannes.length)
+        }
         loadEquipements()
+        loadSubsystems()
+        loadPieces()
+        loadPannes()
 
-        
     }, [])
 
     return(

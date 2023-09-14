@@ -11,9 +11,9 @@ export const maxDuration = 5
 
 export async function GET(req: Request) {
     try {
-      const pieces = await prismadb.piece.findMany();
+      const pannes = await prismadb.panne.findMany();
 
-      return NextResponse.json({ pieces: pieces }, { status: 200 });
+      return NextResponse.json({ pannes: pannes }, { status: 200 });
 
     } catch (error) {
       console.log(error);
