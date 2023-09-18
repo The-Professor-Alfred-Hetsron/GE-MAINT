@@ -1,11 +1,10 @@
 interface PieceType {
     nom: string,
-    marque: string,
-    numSerie: string,
+    marque_fabricant: string,
+    numero_serie: string,
     modele: string,
-    localisation: string,
-    qteStock: number,
-    qteMin: number,
+    stock: number,
+    minimum_stock: number,
     description: string,
     image: string | ArrayBuffer | undefined
 }

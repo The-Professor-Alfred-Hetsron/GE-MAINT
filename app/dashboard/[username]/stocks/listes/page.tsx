@@ -27,7 +27,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
     const router = useRouter()
     const username = decodeURI(params.username)
     
-    const [ apiStockList, setApiStockList ] = useState<Array<StockType>>(apiStockDataList)
+    const [ apiStockList, setApiStockList ] = useState<Array<StockType>>([])
     const [ displayStockList, setDisplayStockList ] = useState<Array<StockType>>(apiStockList)
 
     const [ isAddModalVisibile, setAddModalVisibility ] = useState<boolean>(false)
@@ -115,12 +115,11 @@ export default function StockLists ({params}:{params: {username: string }}) {
             let tempList = [...apiStockList]
             const tempPiece = {
                 nom: nomPiece,
-                marque: marquePiece,
+                marque_fabricant: marquePiece,
                 modele: modelePiece,
-                numSerie: numSeriePiece,
-                localisation: localisationPiece,
-                qteStock: qteStockPiece,
-                qteMin: qteMinPiece,
+                numero_serie: numSeriePiece,
+                stock: qteStockPiece,
+                minimum_stock: qteMinPiece,
                 description: descriptionPiece,
                 image: imagePiece
             }
@@ -164,6 +163,59 @@ export default function StockLists ({params}:{params: {username: string }}) {
     useEffect(()=>{
         setDisplayStockList(apiStockList)
     },[apiStockList])
+
+    useEffect(() => {
+        const generateStockList = async () => {
+            const sysreq = await fetch('/api/equipements')
+            const json = await sysreq.json()
+            
+            const { equipements } = json
+            if (!equipements) return
+            
+            if(equipements.length > 0) {
+                const equipList: StockType[] = []
+
+                for(let equipement of equipements){
+                    console.log(equipement)
+                    
+                    const subsysreq = await fetch(`/api/equipements/${equipement.id}/sous-systemes`)
+                    const subsysjson = await subsysreq.json()
+
+                    const { sousSystemes } = subsysjson
+
+                    if(!sousSystemes) return
+
+                    if(sousSystemes.length > 0) {
+                        for (let sousSystem of sousSystemes) {
+                            const syst: StockType = {
+                                nomEquipement: equipement.nom,
+                                nomSousSysteme: sousSystem.nom,
+                                listePieces: []
+                            }
+
+                            const piecesreq = await fetch(`/api/equipements/sous-systeme/${sousSystem.id}/pieces`)
+                            const piecesjson = await piecesreq.json()
+
+                            const { pieces } = piecesjson
+
+                            if(!pieces) return
+                            
+                            
+                            if(pieces.length > 0){
+                                syst.listePieces = pieces
+                            }
+
+                            equipList.push(syst)
+                        }
+                    }
+                }
+                setApiStockList(equipList)
+                console.log(equipList)
+            }
+            return
+        }
+        generateStockList()
+    }, [])
 
     useEffect(()=> {
         if(equipName!=="" && subSysName!=="" &&
@@ -209,7 +261,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
                                                                 sysPieceInfo = {piece}
                                                                 routeToDetails = {()=> routeToPiece(stock.nomEquipement, stock.nomSousSysteme, piece.nom)}
                                                                 deleteAction = {()=>{setSelectedPiece({stockIndex:index, pieceIndex:i, pieceName:piece.nom})
-                                                                                        setDelPieceModalVisibility(true)}}
+                                                                setDelPieceModalVisibility(true)}}
                                                             />
                                                 })
                                             }
@@ -226,7 +278,14 @@ export default function StockLists ({params}:{params: {username: string }}) {
                     modalTitle="Supprimer la Pieèce de Rechange"
                     isVisible={isDelPieceModalVisibile}
                     isDeleteModalVisible = {isDelPieceModalVisibile}
-                    deleteText = {<span>Vous êtes sur le point de supprimer la pièce de rechange <span className='font-bold'>{selectedPiece.pieceName}</span> du sous système <span className='font-bold'>{apiStockList[selectedPiece.stockIndex].nomSousSysteme}</span>. Voulez-vous poursuivre ?</span>}
+                    deleteText = {<span>
+                        Vous êtes sur le point de supprimer la pièce de rechange
+                        <span className='font-bold'>{selectedPiece.pieceName}</span>
+                        du sous système
+                        <span className='font-bold'>{`apiStockList[selectedPiece.stockIndex].nomSousSysteme`}</span>
+                        . Voulez-vous poursuivre ?
+                        </span>
+                    }
                     modalWidth = {600}
                     closeModalAction = {closeModal}
                     deleteAction = {deletePiece}
