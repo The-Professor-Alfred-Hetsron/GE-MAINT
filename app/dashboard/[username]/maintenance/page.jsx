@@ -36,6 +36,7 @@ import {
     maintenanceList,
     taskNatureList
 } from '@/data/maintenancePage'
+import { useRouter } from "next/navigation";
 
 export default function Maintenance () {
 
@@ -73,7 +74,7 @@ export default function Maintenance () {
       appointment: `${PREFIX}-appointment`,
       shadedAppointment: `${PREFIX}-shadedAppointment`,
     };
-    
+    const router = useRouter()
     const [data, setData] = useState([])
     const [currentViewName, setCurrentViewName] = useState('work-week')
     const [currentDate, setCurrentDate] = useState(actualDate?actualDate:'2018-06-27')
@@ -130,25 +131,39 @@ export default function Maintenance () {
           console.log(error)
         }
       }
-      if (deleted !== undefined) {
-        console.log(deleted)
+      if (deleted != undefined) {
         try{
+            const dataToDelete = data[deleted]
+            console.log(deleted)
+            //const id = Number.parseInt(data[deleted].prismaId)
+            //console.log(id)
             const response = await fetch(`/api/taches/supprimer/${deleted}`, {
                 method: 'DELETE',
                 body: JSON.stringify({})
             })
             const json = await response.json()
+
+            const { error } = json()
+
+            if(error){
+              console.log(error)
+              return
+            }
             const { message } = json
             console.log(message)
             if(!message) {
               return
             }
             tempData = tempData.filter(appointment => appointment.id !== deleted);
+            setData(tempData)
+            router.refresh()
         }catch(error){
           console.log(error)
+          router.refresh()
         }
       }
       setData(tempData)
+      router.refresh()
     }
 
     const onAddedAppointmentChange = useCallback((appointment) => {
@@ -333,6 +348,12 @@ export default function Maintenance () {
         const json = await response.json()
         const { taches } = json
         if (!taches) return;
+        console.log(taches)
+        if (taches.length > 0){
+          taches.forEach((tache) => {
+            tache.prismaId = tache.id
+          })
+        }
         console.log(taches)
         setData(taches);
     }

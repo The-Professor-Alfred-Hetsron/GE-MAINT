@@ -262,6 +262,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
                                                                 routeToDetails = {()=> routeToPiece(stock.nomEquipement, stock.nomSousSysteme, piece.nom)}
                                                                 deleteAction = {()=>{setSelectedPiece({stockIndex:index, pieceIndex:i, pieceName:piece.nom})
                                                                 setDelPieceModalVisibility(true)}}
+                                                                href=""
                                                             />
                                                 })
                                             }
