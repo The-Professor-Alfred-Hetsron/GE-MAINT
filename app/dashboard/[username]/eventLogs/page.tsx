@@ -3,12 +3,12 @@ import { useState } from "react"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
 import ViewBtn from "@/components/UIElements/ViewBtn"
 
-export default function Alarmes ({params}:{params: {username:string}}) {
+export default function EventLogs ({params}:{params: {username:string}}) {
     const baseUrl = "/dashboard/" + decodeURI(params.username)
 
     const [ apiAlarmList, setApiAlarmList ] = useState([])
     return(
-        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex overflow-y-auto">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Alarmes</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiAlarmList.length}</span>

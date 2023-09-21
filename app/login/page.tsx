@@ -8,6 +8,7 @@ import InputField from '../../components/UIElements/FormElments/InputField'
 import { useAppDispatch } from "@/redux/hooks";
 import { login } from "@/redux/features/authentication/authenticatedUserSlice";
 import RoundBar from "@/components/spiners/RoundBar";
+import {projectName} from '@/constants/config'
 
 export default function Login () {
     const dispatch = useAppDispatch()
@@ -58,9 +59,9 @@ export default function Login () {
         </div>
 
         <div className="w-full h-full flex flex-col justify-center items-center absolute top-0 gap-14 z-10">
-            <span className=" text-center text-sky-400 text-[81.07px] font-semibold leading-[104.23px] tracking-wide">TYA MAINT</span>
+            <span className=" text-center text-sky-400 text-[81.07px] font-semibold leading-[104.23px] tracking-wide">{projectName}</span>
 
-            <div className="w-3/5 bg-stone-50 rounded-[32px] shadow border border-indigo-50 flex justify-center items-start gap-4">
+            <div className="w-3/5 bg-stone-50 rounded-[32px] shadow drop-shadow-lg border border-indigo-50 flex justify-center items-start gap-4">
                 <div className="w-1/2 h-full flex flex-col justify-evenly items-center text-center p-8 bg-[#E8F2F8] rounded-tl-[32px] rounded-bl-[32px]">
                     <span className="text-sky-700 text-[18px] font-normal">PORT AUTONOME DE KRIBI</span>
                     <span className="text-sky-500 text-[18px] font-normal">PORT AUTHORITY OF KRIBI</span>

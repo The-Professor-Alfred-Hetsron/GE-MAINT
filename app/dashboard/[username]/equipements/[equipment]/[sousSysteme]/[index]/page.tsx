@@ -72,7 +72,6 @@ export default function Equipment ({params}:{params: {username: string, equipmen
     const [ marqueSubSys, setMarqueSubSys ] = useState<string>(apiSubSystemDetails.marque_fabricant)
     const [ modeleSubSys, setModeleSubSys ] = useState<string>(apiSubSystemDetails.modele)
     const [ numSerieSubSys, setNumSerieSubSys ] = useState<string>(apiSubSystemDetails.numero_serie)
-    const [ localisationSubSys, setLocalisationSubSys ] = useState<string>("")
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>(apiSubSystemDetails.description)
     const [file, setFile] = useState<File | null>(null);
     // Sub System Information End
@@ -96,7 +95,6 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         setMarqueSubSys(apiSubSystemDetails.marque_fabricant)
         setModeleSubSys(apiSubSystemDetails.modele)
         setNumSerieSubSys(apiSubSystemDetails.numero_serie)
-        setLocalisationSubSys("")
         setDescriptionSubSys(apiSubSystemDetails.description)
     }
     const initialiseAddPieceParams = () => {
@@ -106,8 +104,6 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         setMarqueSubSys("")
         setModeleSubSys("")
         setNumSerieSubSys("")
-        setLocalisationSubSys("")
-        setDescriptionSubSys("")
 
         setQteStockPiece(0)
         setQteMinPiece(0)
@@ -164,16 +160,17 @@ export default function Equipment ({params}:{params: {username: string, equipmen
         router.push(`/dashboard/${username}/equipements/${equipmentName}`)
     }
 
-    const updateSubSys = async (index: number) => {
+    const updateSubSys = async () => {
         let tempSubSysName = apiSubSystemDetails.nom
         if(isUpdateFormValid){
             try {
                 const tempSubSys = {
                     nom: nomSubSys,
-                    marque_fabricant: marqueSubSys,
                     numero_serie: numSerieSubSys,
-                    modele: modeleSubSys,
+                    marque_fabricant: marqueSubSys,
+                    image:imageSubSys,
                     description: descriptionSubSys,
+                    modele: modeleSubSys,
                 }
                 console.log("Updating SubSystem From the Database through API calls")
                 const response = await fetch('/api/equipements/sous-systeme/editer/'+params.index, {
@@ -186,14 +183,15 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                     closeModal()
                     return
                 }
+                dispatch(addAlert({type: 'SUCCESS', message: 'Mise à jour du Sous Système avec Succès'}))
                 setApiSubSystemDetails(sousSysteme)
                 closeModal()
                 if(tempSubSysName !== tempSubSys.nom){
-                    router.push(`/dashboard/${username}/equipements/${equipmentName}/${sousSysteme.nom.replace(" ", '-')}/${sousSysteme.id}`)
+                    router.push(`/dashboard/${username}/equipements/${equipmentName}/${sousSysteme.nom}/${sousSysteme.id}`)
                 }
             } catch (error: any) {
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                    dispatch(addAlert({type: 'FAILURE', message: 'echec de la Mise à jour du sous système'}))
                 }, DISPLAYTIMEOUT)
             }
         }
@@ -251,11 +249,11 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 }
                 setApiPieceList([...displayPieceList, piece])
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Piece ajoutée'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Piece ajoutée avec Succès'}))
                 }, DISPLAYTIMEOUT)
             } catch (error: any) {
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de la création de la pièce"}))
                 }, DISPLAYTIMEOUT)
             }
             closeModal() 
@@ -290,9 +288,15 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 closeModal()
                 return;
             }
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'Piece supprimé avec Succès'}))
+            }, DISPLAYTIMEOUT)
         }
         catch(error){
             console.log(error)
+            setTimeout(() => {
+                dispatch(addAlert({type: 'FAILURE', message: "Echec de la suppression de la pièce"}))
+            }, DISPLAYTIMEOUT)
         }
         let tempList = [...apiPieceList]
         tempList.splice(selectedPiece,1)
@@ -325,11 +329,11 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 console.log(panne)
                 setApiPanneList([...displayPanneList, panne])
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'panne enregistrée'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne enregistrée avec Succès'}))
                 }, DISPLAYTIMEOUT)
             } catch (error: any) {
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec de la création de la panne'}))
                 }, DISPLAYTIMEOUT)
             }
             
@@ -368,11 +372,11 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 }, DISPLAYTIMEOUT)
             }
             setTimeout(() => {
-                dispatch(addAlert({type: 'SUCCESS', message: 'panne suprimée avec succes'}))
+                dispatch(addAlert({type: 'SUCCESS', message: 'Panne suprimée avec succes'}))
             }, DISPLAYTIMEOUT)
         } catch (error: any) {
             setTimeout(() => {
-                dispatch(addAlert({type: 'FAILURE', message: error}))
+                dispatch(addAlert({type: 'FAILURE', message: 'Echec de la suppression de la panne'}))
             }, DISPLAYTIMEOUT)
         }
         tempList.splice(selectedPiece,1)
@@ -394,7 +398,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                     return
                 }
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'sous systeme chargé'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Sous Systeme chargé'}))
                 }, DISPLAYTIMEOUT)
                 setIsLoadingSubSystem(false)
                 return
@@ -442,7 +446,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 }
                 setApiPanneList(pannes.reverse())
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'pannes du sous systeme chargées'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne du sous systeme chargées'}))
                 }, DISPLAYTIMEOUT)
                 setIsLoadingSubSystemPannes(false)
                 return
@@ -483,12 +487,12 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 setAddPieceValidity(true)
             }
         }
-    }, [isUpdateSubSysModal, isAddPieceModal, nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, localisationSubSys, descriptionSubSys, previewImageSubSys,qteStockPiece,qteMinPiece])
+    }, [isUpdateSubSysModal, isAddPieceModal, nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, descriptionSubSys, previewImageSubSys,qteStockPiece,qteMinPiece])
     
     return(
-        <div className="w-full bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full overflow-y-auto bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
-                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-2xl font-semibold leading-[52.11px]">{equipmentName.replace("-"," ")+ '-'} {apiSubSystemDetails.nom}</Link>
+                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-2xl font-semibold leading-[52.11px]">Équipement</Link>
                 <span className="text-zinc-800 text-2xl font-semibold leading-[52.11px]"> - Sous Systèmes</span>
             </div>
             <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
@@ -541,7 +545,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                         
                     </div>
 
-                    <div className="flex w-full h-[210px] gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
+                    <div className="flex w-full h-[300px] gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
                         { isLoadingSubSystemPieces ?
                             <RoundBar />
                         :
@@ -636,7 +640,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Modifier"
-                addNewAction = {() => updateSubSys(params.index)}
+                addNewAction = {() => updateSubSys()}
             >
                 <div className="w-full flex flex-row justify-center gap-4">
                     <div className="w-full flex flex-col justify-start gap-4">
@@ -668,7 +672,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
 
             {/* Add Piece Modal */}
             <Modal 
-                modalTitle="Nouvelle Pièce de Rechange"
+                modalTitle="Nouvelle Pièce"
                 isVisible={isAddPieceModal}
                 isDeleteModalVisible = {false}
                 modalWidth = {'80%'}
@@ -710,7 +714,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
 
             {/* Delete Piece Modal */}
             <Modal
-                modalTitle="Supprimer la Pièece de Rechange"
+                modalTitle="Supprimer la Pièece"
                 isVisible={isDelPieceModal}
                 isDeleteModalVisible = {isDelPieceModal}
                 deleteText = {<span>Vous êtes sur le point de supprimer la pièece <span className='font-bold'>{displayPieceList[selectedPiece]?.nom}</span> du sous système <span className='font-bold'>{apiSubSystemDetails.nom}</span>. Voulez-vous poursuivre ?</span>}
@@ -723,6 +727,7 @@ export default function Equipment ({params}:{params: {username: string, equipmen
             <Modal 
                 modalTitle="Nouvelle Panne"
                 isVisible={isAddPanneModal}
+                isAddStock={true}
                 isDeleteModalVisible = {false}
                 modalWidth = {'70%'}
                 closeModalAction = {closeModal}

@@ -36,7 +36,7 @@ import {
     maintenanceList,
     taskNatureList
 } from '@/data/maintenancePage'
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Maintenance () {
 
@@ -75,6 +75,7 @@ export default function Maintenance () {
       shadedAppointment: `${PREFIX}-shadedAppointment`,
     };
     const router = useRouter()
+    const pathname = usePathname()
     const [data, setData] = useState([])
     const [currentViewName, setCurrentViewName] = useState('work-week')
     const [currentDate, setCurrentDate] = useState(actualDate?actualDate:'2018-06-27')
@@ -99,8 +100,10 @@ export default function Maintenance () {
               method: 'POST',
               body: JSON.stringify(added)
             })
-            const startingAddedId = tempData.length > 0 ? tempData[tempData.length - 1].id + 1 : 0;
-            tempData = [...tempData, { id: startingAddedId, ...added }];
+            const json = await response.json();
+            const { tache } = json
+            if (!tache) return;
+            tempData = [...tempData, { id: tache.id, ...tache }];
         }catch(error){
           console.log(error)
         }
@@ -110,15 +113,17 @@ export default function Maintenance () {
         try{
             const keys = Object.keys(changed)
             const tacheId = Number.parseInt(keys[0])
+            // console.log(tacheId)
             const response1 = await fetch('/api/taches/'+tacheId)
             const json1 = await response1.json()
+            // console.log(json1.tache)
             const tempTacheData = json1.tache
             
             if (!tempTacheData) return;
             let tempTache={...tempTacheData}
             tempTache = {...tempTache, ...changed[tacheId]}
-
-            const response2 = await fetch(`/api/taches/editer/${tempUser.id}`, {
+            // console.log(tempTache)
+            const response2 = await fetch(`/api/taches/editer/${tempTache.id}`, {
               method: 'PATCH',
               body: JSON.stringify(tempTache)
             })
@@ -126,14 +131,13 @@ export default function Maintenance () {
             const updatedTache = json2.tache
 
             tempData = tempData.map(appointment => (
-              changed[appointment.id] ? { ...appointment, ...updatedTache } : appointment));
+                changed[appointment.id] ? { ...appointment, ...updatedTache } : appointment));
         } catch(error){
           console.log(error)
         }
       }
       if (deleted != undefined) {
         try{
-            const dataToDelete = data[deleted]
             console.log(deleted)
             //const id = Number.parseInt(data[deleted].prismaId)
             //console.log(id)
@@ -143,27 +147,19 @@ export default function Maintenance () {
             })
             const json = await response.json()
 
-            const { error } = json()
-
-            if(error){
-              console.log(error)
-              return
-            }
             const { message } = json
             console.log(message)
             if(!message) {
               return
             }
             tempData = tempData.filter(appointment => appointment.id !== deleted);
-            setData(tempData)
-            router.refresh()
         }catch(error){
           console.log(error)
-          router.refresh()
+          router.push(pathname)
         }
       }
       setData(tempData)
-      router.refresh()
+      router.push(pathname)
     }
 
     const onAddedAppointmentChange = useCallback((appointment) => {
@@ -361,7 +357,7 @@ export default function Maintenance () {
 }, [])
 
     return(
-        <div className="w-full h-full sticky bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full py-2 px-4 overflow-y-auto sticky bg-white rounded-2xl shadow drop-shadow-lg flex-col justify-start items-center gap-2 flex">
             {/* <EditingOptionsSelector
                 options={editingOptions}
                 onOptionsChange={handleEditingOptionsChange}
@@ -393,15 +389,15 @@ export default function Maintenance () {
                     name="work-week"
                     displayName="Jour de Travail"
                     timeTableCellComponent={TimeTableCell}
-                    excludedDays={[0, 6]}
-                    startDayHour={7}
-                    endDayHour={16}
+                    // excludedDays={[0, 6]}
+                    startDayHour={0}
+                    endDayHour={24}
                 />
                 
                 <DayView
                   displayName="Toute la Journée"
-                  startDayHour={7}
-                  endDayHour={16}
+                  startDayHour={0}
+                  endDayHour={24}
                 />
                 <Toolbar />
                 <ViewSwitcher />

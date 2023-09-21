@@ -297,7 +297,7 @@ function DefaultCalendar () {
   }, [])
 
     return(
-        <Paper className="w-full h-[500px]">
+        <Paper className="h-[500px]">
             <Scheduler
             data={data}
             >
@@ -316,15 +316,15 @@ function DefaultCalendar () {
                 name="work-week"
                 displayName="Jour de Travail"
                 timeTableCellComponent={TimeTableCell}
-                excludedDays={[0, 6]}
-                startDayHour={7}
-                endDayHour={16}
+                // excludedDays={[0, 6]}
+                startDayHour={0}
+                endDayHour={24}
             />
             
             <DayView
                 displayName="Toute la Journée"
-                startDayHour={7}
-                endDayHour={16}
+                startDayHour={0}
+                endDayHour={24}
             />
             <Toolbar />
             <ViewSwitcher />

@@ -9,17 +9,16 @@ import {
     apiIntervenList,
     apiRapportIntervenList
 } from "@/data/homePage"
-import { useRouter } from 'next/navigation'
-import InterventionState from "@/components/UIElements/InterventionState"
+// import { useRouter } from 'next/navigation'
+// import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionType from '@/types/intervention'
-import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
+// import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
 import Modal from '@/components/UIElements/Modal'
 
 export default function Home ({params}:{params: {username:string }}) {
 
     const username = decodeURI(params.username)
     const baseUrl = "/dashboard/" + username
-    const router = useRouter()
 
     const [ equipTotal, setEquipTotal ] = useState(0)
     const [ subSysTotal, setSubSysTotal ] = useState(0)
@@ -107,7 +106,7 @@ export default function Home ({params}:{params: {username:string }}) {
     }, [])
 
     return(
-        <div className="w-full h-full flex flex-col gap-8 justify-start items-center overflow-y-auto">
+        <div className="w-full h-full py-2 flex flex-col gap-8 justify-start items-center overflow-y-auto">
             <div className='w-full flex flex-row 2xl:flex-col gap-4 justify-end items-start' style={{}}>
                 <div className='w-[1000px] 2xl:w-full z-10 flex flex-auto flex-row flex-wrap gap-4'>
                     {
@@ -133,7 +132,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 </div>
             </div>
 
-            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
+            {/* <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Demande D’Interventions</span>
@@ -215,7 +214,7 @@ export default function Home ({params}:{params: {username:string }}) {
                     }
                     </tbody>
                 </table>
-            </div>
+            </div> */}
 
             {/* View Intervention Detail Modal */}
             <Modal

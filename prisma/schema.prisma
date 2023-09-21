@@ -66,7 +66,7 @@ model Transaction {
   quantite         Int      @default(1)
   date_transaction DateTime @default(now())
   type_transaction String
-  piece    Piece @relation(fields: [piece_id], references: [id])
+  piece            Piece    @relation(fields: [piece_id], references: [id])
   piece_id Int
 }
 
@@ -78,7 +78,15 @@ model Panne {
   soussysteme    SousSysteme    @relation(fields: [soussysteme_id], references: [id])
   soussysteme_id Int
   interventions  Intervention[]
+  protocol       Protocol[]
   statut         String
+}
+
+model Protocol {
+  id             Int            @id @default(autoincrement())
+  description    String
+  panne          Panne          @relation(fields: [panne_id], references: [id])
+  panne_id       Int
 }
 
 model Intervention {
@@ -104,4 +112,10 @@ model Tache {
   endDate        DateTime    @default(now())
   exDate         DateTime?
   rRule          String?     
+}
+
+model Log {
+  id             Int         @id @default(autoincrement())
+  description    String
+  date           DateTime    @default(now())
 }

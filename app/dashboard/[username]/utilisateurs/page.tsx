@@ -225,6 +225,7 @@ export default function Users () {
                 modalTitle="Ajouter un Utilisateur"
                 isVisible={isAddModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Ajouter"
@@ -256,6 +257,7 @@ export default function Users () {
                 modalTitle="Modifier un Utilisateur"
                 isVisible={isUpdateModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Modifier"

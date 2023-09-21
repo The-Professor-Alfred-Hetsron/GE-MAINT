@@ -15,8 +15,6 @@ import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 import SubSystemType from "@/types/subSystem"
 import EquipmentType from "@/types/equipment"
 import InputSearchField from "@/components/UIElements/FormElments/InputSearchField"
-// import { subSysList, apiEquipDetails } from '@/data/equipmentDetailPage'
-// import axios from "axios"
 import upload from "@/helpers/upload"
 
 export default function Equipment ({params}:{params: {username:string,  equipment: string }}) {
@@ -160,7 +158,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
             const { equipement } = json
             setApiEquipmentDetails(equipement)
             if(tempEquipName !== apiEquipmentDetails.nom){
-                router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom.replace(' ','-')}`)
+                router.push(`/dashboard/${params.username}/equipements/${apiEquipmentDetails.nom}`)
             }
             closeModal()
             setFile(null)
@@ -268,7 +266,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     }, [nomSubSys, marqueSubSys, modeleSubSys, numSerieSubSys, descriptionSubSys, previewImageSubSys])
 
     return(
-        <div className="w-full sticky bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full overflow-y-auto sticky bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Catalogue d’équipements</span>
             </div>

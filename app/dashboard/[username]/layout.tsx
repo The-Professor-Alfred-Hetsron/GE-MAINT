@@ -19,9 +19,9 @@ export default function DashboardLayout(
     const [ isNavVisible, setNavVisibility ] = useState(true)
 
     return (
-        <div className="w-screen h-screen bg-stone-50 flex justify-center items-center overflow-auto">
+        <div className="w-screen h-screen bg-stone-50 flex justify-center items-center">
             {isNavVisible && <NavBar username={decodeURI(params.username)} navToogler={setNavVisibility}/>}
-            <div className={`lg:w-full h-full fixed top-0 right-0 flex flex-col gap-2 p-4 bg-stone-50 justify-start items-center overflow-y-auto ${isNavVisible?'w-[calc(100%-320px)]': 'w-full'}`}>
+            <div className={`lg:w-full h-screen fixed top-0 right-0 flex flex-col gap-2 p-4 bg-stone-50 justify-start items-center ${isNavVisible?'w-[calc(100%-320px)]': 'w-full'}`}>
                 <Header username={decodeURI(params.username)} role={userType} navStatus={isNavVisible} navToogler={setNavVisibility}/>
                 {children}
             </div>

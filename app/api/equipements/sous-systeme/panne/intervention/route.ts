@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import prismadb from '../../../../../../lib/prismadb'
+import prismadb from '@/lib/prismadb'
 
 export const dynamic = 'auto'
 export const dynamicParams = true
@@ -12,9 +12,9 @@ export const maxDuration = 5
 //fake to change
 export async function GET(req: Request) {
     try {
-      const sousSystemes = await prismadb.sousSysteme.findMany();
+      const interventions = await prismadb.intervention.findMany();
 
-      return NextResponse.json({ sousSystemes: sousSystemes }, { status: 200 });
+      return NextResponse.json({ interventions: interventions }, { status: 200 });
 
     } catch (error) {
       console.log(error);

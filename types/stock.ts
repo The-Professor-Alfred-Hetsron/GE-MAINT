@@ -1,4 +1,5 @@
 interface PieceType {
+    id?:number,
     nom: string,
     marque_fabricant: string,
     numero_serie: string,
@@ -10,7 +11,9 @@ interface PieceType {
 }
 
 export default interface StockType {
+    equipId:number,
     nomEquipement: string,
     nomSousSysteme: string,
+    subSysId:number,
     listePieces: Array<PieceType>
 }

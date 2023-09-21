@@ -9,29 +9,31 @@ export const runtime = 'nodejs'
 export const preferredRegion = 'auto'
 export const maxDuration = 5
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
       const id = params.id
-      const piece = await prismadb.piece.findUnique({
+      const json = await req.json();
+      console.log(json);
+      const protocol = await prismadb.protocol.findUnique({
         where: {
           id: Number.parseInt(id),
         },
       });
 
-      if (!piece){
-        return NextResponse.json({ error: "piece introuvable" }, { status: 404 });
+      if (!protocol){
+        return NextResponse.json({ error: "aucun Protocol trouvé" }, { status: 401 });
       }
-      const transactions = await prismadb.transaction.findMany({
+
+      const updated = await prismadb.protocol.update({
         where: {
-          piece_id: Number.parseInt(id),
+          id: Number.parseInt(id),
         },
+        data: {
+          description: json.description || protocol.description,
+        }
       });
 
-      if (!transactions){
-        return NextResponse.json({ error: "aucune transaction trouvee" }, { status: 404 });
-      }
-
-      return NextResponse.json({ transactions: transactions }, { status: 200 });
+      return NextResponse.json({ protocol: updated }, { status: 200 });
 
     } catch (error) {
       console.log(error);

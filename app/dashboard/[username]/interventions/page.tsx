@@ -19,10 +19,18 @@ import {
     apiUserList
 } from '@/data/interventionData'
 
+import { useAppDispatch } from "@/redux/hooks"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
+
+import {translateDateTime} from "@/helpers/hooks"
+
+
 import { useState, useEffect } from "react"
 
 export default function Interventions ({params}:{params: {username:string}}) {
     const username = decodeURI(params.username)
+    const dispatch = useAppDispatch()
     const actualDate = `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`
 
     const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>(apiInterventions)
@@ -40,6 +48,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
     const [ isValidateModal, setValidateModalVisibility ] = useState<boolean>(false)
     const [ isReportModal, setReportModalVisibility ] = useState<boolean>(false)
     const [ toogleExecutantType, executantTypeToogler ] = useState<boolean>(false)
+    
     // Intervention Information start
     const [ panne, setPanne ] = useState<string>("")
     const [ subSys, setSubSys ] = useState<string>("")
@@ -174,8 +183,35 @@ export default function Interventions ({params}:{params: {username:string}}) {
         }
     },[panne,subSys,equip,etatInitial,demanderPar])
 
+    useEffect(()=>{
+        const loadInterventions = async() => {
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/intervention')
+                const json = await response.json()
+                const { interventions } = json
+                if(!interventions){
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+
+                // setApiInterventionList(tempIntervenList)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec Succès'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error: any) {
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Erreur de Chargement des Interventions"}))
+                }, DISPLAYTIMEOUT)
+                return
+            }
+        }
+        // loadInterventions()
+    },[dispatch])
+
     return(
-        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full overflow-y-auto bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Interventions</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
@@ -188,8 +224,8 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 </div>
 
                 {/* Liste des interventions ci-dessous */}
-                <div className="w-full flex flex-col gap-4 justify-start items-start flex-wrap">
-                    <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
+                <div className="w-full h-full flex flex-col gap-4 justify-start items-start flex-wrap">
+                    <table className="w-full h-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
                         <thead className="w-full bg-white border-b border-slate-400">
                             <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
                                 <td className="w-[150px]">N°</td>
@@ -297,23 +333,23 @@ export default function Interventions ({params}:{params: {username:string}}) {
                         </span>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Panne: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].panne}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.panne}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Sous Système: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].sousSysteme}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.sousSysteme}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose capitalize">équipement: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].equipement}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.equipement}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose capitalize">état de l’équipement: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].etatEquipementInitial}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.etatEquipementInitial}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Demandé par: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].demanderPar}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.demanderPar}</span>
                         </div>
                     </div>
                     <div className="w-full flex flex-col justify-start gap-4">
@@ -352,42 +388,42 @@ export default function Interventions ({params}:{params: {username:string}}) {
                         </span>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Panne: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].panne}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.panne}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Sous Système: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].sousSysteme}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.sousSysteme}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose capitalize">équipement: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].equipement}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.equipement}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose capitalize">état de l’équipement: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].etatEquipementInitial}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.etatEquipementInitial}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Demandé par: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].demanderPar}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.demanderPar}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Executant: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].executant}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.executant}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Début d’intervention: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].debutIntervention}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.debutIntervention}</span>
                         </div>
                         <div className="justify-start items-center gap-[4px] inline-flex">
                             <span className="text-black text-[18px] font-normal leading-loose">Fin d’intervention: </span>
-                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven].finIntervention}</span>
+                            <span className="text-black text-[20px] font-semibold">{apiInterventionList[selectedInterven]?.finIntervention}</span>
                         </div>
                     </div>
                     <div className="w-full flex flex-col justify-start gap-4">
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Détails sur le rapport
                         </span>
-                        <TextAreaField label="Description de l'état Final de l'équipement" setNewValue={setEtatFinal} />
+                        <TextAreaField label="Actions effectuées" setNewValue={setEtatFinal} />
                         <TextAreaField label="Autres Observations" setNewValue={setObservation} />
                     </div>
                 </div>

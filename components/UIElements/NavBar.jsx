@@ -11,6 +11,7 @@ import { LuClipboardCopy } from "react-icons/lu";
 import { RiAlarmWarningLine } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { TbLogout2 } from "react-icons/tb";
+import {projectName} from '@/constants/config'
 
 function NavBar(props) {
   const pathname = usePathname()
@@ -27,7 +28,7 @@ function NavBar(props) {
       href: `${baseUrl}/equipements`,
     },
     {
-      name: "Maintenance",
+      name: "Planning",
       icon: <FiRotateCcw size={24}/>,
       href: `${baseUrl}/maintenance`,
     },
@@ -42,11 +43,11 @@ function NavBar(props) {
       href: `${baseUrl}/stocks/listes`,
       href2: `${baseUrl}/stocks/transactions`
     },
-    {
-      name: "Logs",
-      icon: <RiAlarmWarningLine size={24}/>,
-      href: `${baseUrl}/alarmes`,
-    },
+    // {
+    //   name: "Logs",
+    //   icon: <RiAlarmWarningLine size={24}/>,
+    //   href: `${baseUrl}/eventLogs`,
+    // },
     {
       name: "Utilisateurs",
       icon: <HiOutlineUserGroup size={24}/>,
@@ -66,7 +67,7 @@ function NavBar(props) {
       
       <nav className='w-[320px] h-full fixed left-0 top-0 rounded-tr-2xl rounded-br overflow-y-auto p-4 bg-sky-700 shadow backdrop-blur-[20px] flex-col justify-center items-center animate__animated animate__fadeInLeft'>
         <div className='w-full pb-1 border-b-2 border-sky-500 justify-center items-center inline-flex'>
-          <span className='w-full text-center text-white text-[60px] font-semibold'>TYA MAINT</span>
+          <span className='w-full text-center text-white text-[60px] font-semibold'>{projectName}</span>
         </div>
         <div className='w-full py-2 flex-col justify-center items-center gap-2.5 inline-flex'>
         {

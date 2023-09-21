@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from 'next/link'
+import {projectName} from '@/constants/config'
 
 export default function Home() {
   return (
@@ -7,8 +8,8 @@ export default function Home() {
 
       <div className="bg-[#E8F2F8] w-3/5 h-full flex rounded-br-[100px] flex-col justify-center items-center py-10">
         <div className="p-8 h-full flex flex-col justify-evenly items-start">
-          <span className="text-sky-400 text-[400%] font-semibold w-full">TYA MAINT</span>
-          <span className="text-[350%] font-semibold">Gestion de Suivi et Maintenance des Groupes électrogenes</span>
+          <span className="text-sky-400 text-[400%] font-semibold w-full">{projectName}</span>
+          <span className="text-[350%] font-semibold">Gestion de la Maintenance et du Suivi</span>
           <span className="text-[24px] font-normal">Service d’Exploitation et Maintenance des Réseaux Utilitaires</span>
           <Link href="/login" className="h-[30px] px-4 py-[24px] bg-amber-400 rounded-[32px] justify-center items-center inline-flex text-white text-[20px] font-normal leading-9 hover:scale-110">Se Connecter</Link>
         </div>
@@ -25,7 +26,7 @@ export default function Home() {
         </div>
 
         <div className="h-full w-full flex justify-center relative items-center">
-          <Image className="rounded-[62.25px] absolute left-[-100px]" width="700" height="647" src="/assets/img/index-generator.png" alt="Index Generator"/>
+          <Image className="rounded-[62.25px] absolute left-[-80px] aspect-square" width="550" height="550" src="/assets/img/indexImg.png" alt="Index Generator"/>
         </div>
       </div>
     </div>

@@ -5,9 +5,10 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 import { ReduxProvider } from '../components'
 import Alerts from '@/components/Alerts'
+import {projectName} from '@/constants/config'
 
 export const metadata: Metadata = {
-  title: 'TYA MAINT',
+  title: projectName,
   description: 'Gestion de Suivi et Maintenance des Groupes électrogenes pour le Service d’Exploitation et Maintenance des Réseaux Utilitaires du PAK',
 }
 

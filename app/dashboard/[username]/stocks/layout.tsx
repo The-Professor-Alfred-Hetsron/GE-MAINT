@@ -18,7 +18,7 @@ export default function DashboardLayout(
 
     const tabLinks = [
         {
-            name:"Liste des Pièces de Rechange",
+            name:"Liste des Pièces",
             href: `/dashboard/${username}/stocks/listes`,
             tabId: "listes"
         },
@@ -30,7 +30,7 @@ export default function DashboardLayout(
     ]
 
     return (
-        <div className="w-full h-full flex-col gap-2 flex justify-start items-center">
+        <div className="w-full h-screen overflow-y-auto p-2 flex-col gap-2 flex justify-start items-center">
             {/* Le tab bar est ci-dessous */}
             <div className="w-full p-1 bg-white rounded-xl shadow backdrop-blur-[20px] justify-between items-center gap-2 flex">
                 {
@@ -49,9 +49,7 @@ export default function DashboardLayout(
             </div>
 
             {/* Le Corps des stocks sont ci-dessous */}
-            <div className="w-full h-full flex justify-center items-center">
-                {children}
-            </div>
+            {children}
         </div>
     )
 }

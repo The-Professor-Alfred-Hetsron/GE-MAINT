@@ -7,11 +7,11 @@ function TransactionState(props) {
 
   return (
     <>
-        {type === "Depôt" ?<span className='w-[130px] p-2 bg-green-100 rounded-[100px] justify-center items-center gap-4 flex text-green-500 text-base font-bold leading-normal tracking-tight'>
-            Depôt
+        {type === "TRANSACTION-AJOUT" ?<span className='w-[130px] p-2 bg-green-100 rounded-[100px] justify-center items-center gap-4 flex text-green-500 text-base font-bold leading-normal tracking-tight'>
+            Entrée
         </span>: null}
-        {type === "Retrait" ?<span className='w-[130px] p-2 bg-yellow-50 rounded-[100px] justify-center items-center gap-4 flex text-amber-400 text-base font-bold leading-normal tracking-tight'>
-            Retrait
+        {type === "TRANSACTION-RETRAIT" ?<span className='w-[130px] p-2 bg-yellow-50 rounded-[100px] justify-center items-center gap-4 flex text-amber-400 text-base font-bold leading-normal tracking-tight'>
+            Sortie
         </span>: null}
     </>
   )

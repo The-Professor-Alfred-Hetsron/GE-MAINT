@@ -15,6 +15,7 @@ import { useState, useEffect } from "react"
 import { RiDeleteBin6Line } from "react-icons/ri"
 import { FaRegEdit } from "react-icons/fa"
 import PanneType from "@/types/panne"
+import ProtocolType from "@/types/protocol"
 
 import {
     tempApiPannedetails,
@@ -24,8 +25,10 @@ import { addAlert } from "@/redux/features/alerts/alertsSlice"
 import { DISPLAYTIMEOUT } from "@/constants/time"
 import { useAppDispatch } from "@/redux/hooks"
 
-export default function Panne ({params}:{params: {username: string, equipment:string, sousSysteme: string, panne: number }}) {
+export default function Panne ({params}:{params: {username: string, equipment:string, sousSysteme: string, index:number, panne: number }}) {
     const subSysName = decodeURI(params.sousSysteme)
+    const subSysIndex = params.index
+    const panneId = params.panne
     const equipmentName = decodeURI(params.equipment)
     const username = decodeURI(params.username)
     const router = useRouter()
@@ -38,8 +41,8 @@ export default function Panne ({params}:{params: {username: string, equipment:st
         nom: ''
     })
 
-    const [ apiProtocolList, setApiProtocolList ] = useState<Array<{description:string}>>(tempApiProtocolList)
-    const [ displayProtocolList, setDisplayProtocolList ] = useState<Array<{description:string}>>(apiProtocolList)
+    const [ apiProtocolList, setApiProtocolList ] = useState<Array<ProtocolType>>(tempApiProtocolList)
+    const [ displayProtocolList, setDisplayProtocolList ] = useState<Array<ProtocolType>>(apiProtocolList)
     
     // Panne Information Start
     const [ nomPanne, setNomPanne ] = useState<string>("")
@@ -146,7 +149,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 }
                 setApiPanneDetails(panne)
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne mise a jour'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne mise à jour reussi'}))
                 }, DISPLAYTIMEOUT)
                 if(tempPanneName !== tempPanne.nom){
                     router.back()
@@ -175,32 +178,96 @@ export default function Panne ({params}:{params: {username: string, equipment:st
         }
     }
 
-    const addProtocol = () => {
+    const addProtocol = async () => {
         if(isProtoFormValid){
             const tempProto = {
-                description: descriptionProtocol
+                description: descriptionProtocol,
+                panne_id:panneId,
             }
-            setApiProtocolList([...apiProtocolList, tempProto])
-            closeModal()
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/protocol/ajouter', {
+                    method: 'POST',
+                    body: JSON.stringify(tempProto)
+                });
+                const json = await response.json()
+                const { protocol } = json
+                if(!protocol){
+                    closeModal()
+                    return
+                }
+                closeModal()
+                setApiProtocolList([...apiProtocolList, protocol])
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Protocol ajouté avec succes'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec de la Création du Protocol'}))
+                }, DISPLAYTIMEOUT)
+            }
         }
     }
 
-    const updateProtocol = () => {
+    const updateProtocol = async () => {
         if(isProtoFormValid){
-            const tempProto = {
-                description: descriptionProtocol
+            try {
+                let tempProtoList = [...apiProtocolList]
+
+                const response = await fetch('/api/equipements/sous-systeme/panne/protocol/editer/'+tempProtoList[selectedProtocol].id, {
+                    method: 'PATCH',
+                    body: JSON.stringify({description: descriptionProtocol})
+                });
+                const json = await response.json()
+                const { protocol } = json
+                if(!protocol){
+                    closeModal()
+                    return
+                }
+
+                closeModal()
+                tempProtoList = tempProtoList.map(proto => (
+                    (proto.id === protocol.id) ? { ...proto, ...protocol } : proto));
+                setApiProtocolList(tempProtoList)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Mise à jour du Protocol avec succes'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec de la Mise à jour du Protocol'}))
+                }, DISPLAYTIMEOUT)
             }
-            let tempProtoList = [...apiProtocolList]
-            tempProtoList[selectedProtocol]["description"] = tempProto.description
-            setApiProtocolList(tempProtoList)
             closeModal()
         }
     }
     
-    const deleteProtocol = () => {
-        let tempList = [...apiProtocolList]
-        tempList.splice(selectedProtocol,1)
-        setApiProtocolList(tempList)
+    const deleteProtocol = async () => {
+        try {
+            let tempProtoList = [...apiProtocolList]
+
+            const response = await fetch('/api/equipements/sous-systeme/panne/protocol/supprimer/'+tempProtoList[selectedProtocol].id, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            });
+            const json = await response.json()
+            const { message } = json
+            if(!message){
+                closeModal()
+                return
+            }
+            tempProtoList.splice(selectedProtocol,1)
+            closeModal()
+            setApiProtocolList(tempProtoList)
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'Protocol Supprimé avec succes'}))
+            }, DISPLAYTIMEOUT)
+        } catch (error) {
+            console.log(error)
+            setTimeout(() => {
+                dispatch(addAlert({type: 'FAILURE', message: 'Echec de la Suppression du Protocol'}))
+            }, DISPLAYTIMEOUT)
+        }
         closeModal()
     }
 
@@ -218,17 +285,42 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 }
                 setApiPanneDetails(panne)
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne loaded'}))
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Panne chargée avec Succès'}))
                 }, DISPLAYTIMEOUT)
             } catch (error: any) {
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: error}))
+                    dispatch(addAlert({type: 'FAILURE', message: "Erreur de Chargement de la Panne"}))
+                }, DISPLAYTIMEOUT)
+                return
+            }
+        }
+        const loadProtocols = async ()=>{
+            try {
+                const response = await fetch(`/api/equipements/sous-systeme/panne/${panneId}/protocols`)
+                const json = await response.json();
+                const { protocols } = json
+                if (!protocols){
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                };
+                console.log(protocols)
+                setApiProtocolList(protocols)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Protocols chargées avec Succès'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Erreur de Chargement des Protocols"}))
                 }, DISPLAYTIMEOUT)
                 return
             }
         }
         loadPanne()
-    },[dispatch, params.panne])
+        loadProtocols()
+    },[dispatch, params.panne, panneId])
 
     useEffect(()=>{
         setDisplayProtocolList(apiProtocolList)
@@ -250,10 +342,10 @@ export default function Panne ({params}:{params: {username: string, equipment:st
     
 
     return(
-        <div className="w-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full overflow-y-auto bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center inline-flex gap-1">
-                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">{apiPanneDetails.nom}</Link>
-                <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}`} className="text-[#0B5DA7] text-[24px] font-semibold uppercase"> - {subSysName}</Link>
+                <Link href={`/dashboard/${username}/equipements/${equipmentName}`} className="text-[#165081] text-[24px] font-semibold uppercase">Équipement</Link>
+                <Link href={`/dashboard/${username}/equipements/${equipmentName}/${subSysName}/${subSysIndex}`} className="text-[#0B5DA7] text-[24px] font-semibold uppercase"> - {subSysName}</Link>
                 <span className="text-zinc-800 text-[24px] font-semibold uppercase"> - Pannes</span>
             </div>
 
@@ -278,7 +370,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 </div>
 
                 {/* Liste des protocoles preventifs ci-dessous */}
-                <div className="w-full flex flex-col">
+                <div className="w-full h-full flex flex-col">
                     <div className="w-full pb-2 border-b border-slate-300 justify-start items-center gap-2.5 inline-flex">
                         <div className="w-[410px] gap-2 flex flex-row justify-start items-center">
                             <span className="text-black text-[24px] font-normal">Protocols Préventif </span>
@@ -290,8 +382,8 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                         </div>
                     </div>
 
-                    <div className="inline-flex gap-4 py-2 justify-start items-start flex-wrap overflow-auto">
-                        <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
+                    <div className="w-full h-full inline-flex gap-4 pt-2 justify-start items-start flex-wrap overflow-auto">
+                        <table className="w-full h-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start inline-flex">
                             <thead className="w-full bg-white border-b border-slate-400">
                                 <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
                                     <td className="w-[150px]">N°</td>
@@ -299,7 +391,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                                     <td className="w-full text-right">Action</td>
                                 </tr>
                             </thead>
-                            <tbody className="w-full h-[400px] overflow-auto">
+                            <tbody className="w-full overflow-auto">
                             {
                                 displayProtocolList.map((protocole, index) => {
                                     return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
@@ -343,6 +435,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 modalTitle="Modifier la Panne"
                 isVisible={isUpdatePanneModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Modifier"
@@ -365,6 +458,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 modalTitle="Nouveau Protocol"
                 isVisible={isAddProtocolModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Ajouter"
@@ -385,6 +479,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                 modalTitle={`Modifier le Protocol N° ${selectedProtocol+1}`}
                 isVisible={isUpdateProtoModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Modifier"
@@ -395,7 +490,7 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Caractéristiques
                         </span>
-                        <TextAreaField label="Description du Protocol" defaultValue={apiProtocolList[selectedProtocol].description} setNewValue={setDescriptionProtocol} />
+                        <TextAreaField label="Description du Protocol" defaultValue={apiProtocolList[selectedProtocol]?.description} setNewValue={setDescriptionProtocol} />
                     </div>
                 </div>
             </Modal>

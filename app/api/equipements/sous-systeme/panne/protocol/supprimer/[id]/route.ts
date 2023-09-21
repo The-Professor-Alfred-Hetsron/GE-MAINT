@@ -12,22 +12,22 @@ export const maxDuration = 5
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     try {
         const id = params.id
-        const panne = await prismadb.panne.findUnique({
+        const protocol = await prismadb.protocol.findUnique({
             where: {
                 id: Number.parseInt(id)
             }
         });
-        if (!panne){
-            return NextResponse.json({ message: "panne innexistante" }, { status: 200 });
+        if (!protocol){
+            return NextResponse.json({ message: "Ce Protocole N'existe Pas" }, { status: 200 });
         }
-        //supprimer la panne
-        await prismadb.panne.delete({
+        //supprimer la protocol
+        await prismadb.protocol.delete({
             where: {
                 id: Number.parseInt(id),
             },
         });
-      return NextResponse.json({ message: "panne supprimee avec success" }, { status: 200 });
+        return NextResponse.json({ message: "Protocol supprimé avec success" }, { status: 200 });
     } catch (error) {
-      return NextResponse.json({ error: 'internal server error' }, { status: 500 })
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 }
