@@ -291,7 +291,7 @@ export default function StockLists ({params}:{params: {username: string }}) {
             return
         }
         generateStockList()
-    }, [])
+    }, [dispatch])
 
     useEffect(()=> {
         if(equipName!=="" && subSysName!=="" &&

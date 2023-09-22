@@ -86,10 +86,14 @@ export default function StockTransaction ({params}:{params: {username: string }}
                         setApiTransactionList(tempArray)
                         setDisplayTransList(tempArray)
                     });
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Transactions chargées avec succes'}))
+                    }, DISPLAYTIMEOUT)
+                }else{
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Aucune Transactions Enregistrées'}))
+                    }, DISPLAYTIMEOUT)
                 }
-                setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Transactions chargées avec succes'}))
-                }, DISPLAYTIMEOUT)
             } catch (error) {
                 console.log(error)
                 setTimeout(() => {

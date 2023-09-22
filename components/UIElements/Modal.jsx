@@ -75,7 +75,7 @@ function Modal(props) {
             
             {/* modal Intervention Detail Container */}
             {isDetailIntervention &&
-              <form className="py-5 px-6 z-50 bg-stone-50 rounded-2xl shadow backdrop-blur-[20px] flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
+              <form className="py-5 px-6 z-50 bg-stone-50 rounded-2xl drop-shadow-md shadow flex flex-col gap-2 justify-center items-center" style={{width:props.modalWidth}} onSubmit={(e)=>(e.preventDefault())}>
                 
                 {/* modal header */} 
                 <div className='w-full  text-[26px] font-semibold leading-10 text-black flex flex-row justify-between items-center'>
@@ -141,7 +141,7 @@ function Modal(props) {
                   <div className='w-full flex gap-1 justify-end items-start flex-wrap'>
                     <InterventionActionBtn
                         state={interventionInfo.etat}
-                        viewIntervention={()=>{router.push(`/dashboard/${props.username}/equipements/${interventionInfo.equipement}/${interventionInfo.sousSysteme}/pannes/${interventionInfo.panne}`)}}
+                        viewIntervention={()=>{router.push(`/dashboard/${props.username}/equipements/${interventionInfo.equipementId}/${interventionInfo.sousSysteme}/${interventionInfo.sousSystemeId}/pannes/${interventionInfo.panneId}`)}}
                         validateIntervention={()=>props.validateIntervention()}
                         reportIntervention={()=>{props.reportIntervention()}}
                         detailPlaceholder = "Consulter les protocols"

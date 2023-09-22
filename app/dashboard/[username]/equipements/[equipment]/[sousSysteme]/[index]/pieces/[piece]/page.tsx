@@ -231,12 +231,13 @@ export default function Piece ({params}:{params: {username: string, equipment:st
 
     const saveRemoveStock = async () => {
         if(isStockValid){
-            const stockCheck = (apiPieceDetails.stock - quantity) < 0
-            if(stockCheck) {
+            const stockNullCheck = ((apiPieceDetails.stock - quantity) < 0) || ((apiPieceDetails.stock - quantity) === 0)
+            if(stockNullCheck) {
                 closeModal()
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'WARNING', message: 'La valeur à retirer depasse la quantité totale de la pièce'}))
+                    dispatch(addAlert({type: 'WARNING', message: 'La valeur à retirer depasse la quantité totale de la pièce disponible, cette transaction ne peut se faire'}))
                 }, DISPLAYTIMEOUT)
+                alert("La valeur à retirer depasse la quantité totale de la pièce disponible, cette transaction ne peut se faire")
                 return;
             }
             const minCheck = (apiPieceDetails.stock - quantity) <= apiPieceDetails.minimum_stock
@@ -244,6 +245,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 setTimeout(() => {
                     dispatch(addAlert({type: 'WARNING', message: 'Cette Pièce est en dessous de la quantité minimale, pensez a faire un depôt en stock'}))
                 }, 5000)
+                alert("Cette Pièce est en dessous de la quantité minimale, pensez a faire un depôt en stock")
             }
             try {
                 const response = await fetch('/api/equipements/sous-systeme/pieces/editer/'+params.piece, {
@@ -254,6 +256,28 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 const { piece } = json 
                 if (piece){
                     setApiPieceDetails(piece)
+                    const response = await fetch('/api/equipements/sous-systeme/pieces/transactions/creer/', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            type_transaction: 'TRANSACTION-RETRAIT',
+                            quantite: quantity,
+                            piece_id: apiPieceDetails.id
+                        })
+                    })
+                    const json = await response.json()
+                    const { transaction } = json
+                    if(!transaction) {
+                        setQuantity(0)
+                        closeModal()
+                        setTimeout(() => {
+                            dispatch(addAlert({type: 'FAILURE', message: json.error.message}))
+                        }, DISPLAYTIMEOUT)
+                        return
+                    }
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Transaction Enregistrée'}))
+                    }, DISPLAYTIMEOUT)
+                    console.log('transaction saved')
                     setTimeout(() => {
                         dispatch(addAlert({type: 'SUCCESS', message: 'Pièce mise à jour avec succès'}))
                     }, DISPLAYTIMEOUT)
@@ -265,39 +289,9 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                 }
             } catch (error: any) {
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: "Echec de la mis à jour"}))
-                }, DISPLAYTIMEOUT)
-                console.log(error.message)
-            }
-            //save the transaction
-            try {
-                const response = await fetch('/api/equipements/sous-systeme/pieces/transactions/creer/', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        type_transaction: 'TRANSACTION-RETRAIT',
-                        quantite: quantity,
-                        piece_id: apiPieceDetails.id
-                    })
-                })
-                const json = await response.json()
-                const { transaction } = json
-                if(!transaction) {
-                    setQuantity(0)
-                    closeModal()
-                    setTimeout(() => {
-                        dispatch(addAlert({type: 'FAILURE', message: json.error.message}))
-                    }, DISPLAYTIMEOUT)
-                    return
-                }
-                setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Transaction Enregistrée'}))
-                }, DISPLAYTIMEOUT)
-                console.log('transaction saved')
-            } catch (error: any) {
-                setTimeout(() => {
                     dispatch(addAlert({type: 'FAILURE', message: 'Echec de la Transaction'}))
                 }, DISPLAYTIMEOUT)
-                console.log(error)
+                console.log(error.message)
             }
             closeModal()
         }

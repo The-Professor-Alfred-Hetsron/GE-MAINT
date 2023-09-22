@@ -92,12 +92,13 @@ model Protocol {
 model Intervention {
   id                 Int      @id @default(autoincrement())
   etat_initial       String
-  etat_final         String
-  executant          String
+  demander_par       String
   statut             String
-  debut_intervention DateTime
-  fin_intervention   DateTime
-  observation        String
+  executant          String?
+  debut_intervention String?
+  fin_intervention   String?
+  etat_final         String?
+  observation        String?
   panne              Panne    @relation(fields: [panne_id], references: [id])
   panne_id           Int
 }

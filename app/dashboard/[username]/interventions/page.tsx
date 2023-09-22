@@ -11,36 +11,35 @@ import TextAreaField from "@/components/UIElements/FormElments/TextAreaField"
 import Modal from "@/components/UIElements/Modal"
 
 import InterventionType from '@/types/intervention'
-import {
-    apiInterventions,
-    apiEquipmentList,
-    apiSubSystemList,
-    apiPanneList,
-    apiUserList
-} from '@/data/interventionData'
 
 import { useAppDispatch } from "@/redux/hooks"
 import { addAlert } from "@/redux/features/alerts/alertsSlice"
 import { DISPLAYTIMEOUT } from "@/constants/time"
 
-import {translateDateTime} from "@/helpers/hooks"
-
-
 import { useState, useEffect } from "react"
+import EquipmentType from "@/types/equipment"
+import SubSystemType from "@/types/subSystem"
+import PanneType from "@/types/panne"
 
 export default function Interventions ({params}:{params: {username:string}}) {
     const username = decodeURI(params.username)
     const dispatch = useAppDispatch()
     const actualDate = `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`
 
-    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>(apiInterventions)
+    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>([])
     const [ displayIntervenList, setDisplayIntervenList] = useState<Array<InterventionType>>(apiInterventionList)
 
     // APi Equipment, Sub system, Panne and User List Start
-    const [ apiEquipNameList, setApiEquipNameList ] = useState<Array<string>>(apiEquipmentList)
-    const [ apiSubSysNameList, setApiSubNameSysList ] = useState<Array<string>>(apiSubSystemList)
-    const [ apiPanneNameList, setApiPanneNameList ] = useState<Array<string>>(apiPanneList)
-    const [ apiUserNamesList, setApiUserNamesList ] = useState<Array<string>>(apiUserList)
+    const [ apiEquipNames, setApiEquipNames ] = useState<Array<string>>([])
+    const [ apiEquipIdList, setApiEquipIdList ] = useState<Array<number>>([])
+
+    const [ apiSubSysNames, setApiSubSysNames ] = useState<Array<string>>([])
+    const [ apiSubSysIdList, setApiSubSysIdList ] = useState<Array<number>>([])
+
+    const [ apiPanneNames, setApiPanneNames ] = useState<Array<string>>([])
+    const [ apiPanneIdList, setApiPanneIdList ] = useState<Array<number>>([])
+
+    const [ apiUserNames, setApiUserNames ] = useState<Array<string>>([])
     // APi Equipment, Sub system, Panne and User List End
 
     const [ isAddModal, setAddModalVisibility ] = useState<boolean>(false)
@@ -54,10 +53,10 @@ export default function Interventions ({params}:{params: {username:string}}) {
     const [ subSys, setSubSys ] = useState<string>("")
     const [ equip, setEquip ] = useState<string>("")
     const [ etatInitial, setEtatInitial ] = useState<string>("")
-    const [ demanderPar, setDemanderPar ] = useState<string>("")
+    const [ demanderPar, setDemanderPar ] = useState<string>(username)
 
     const [ executant, setExecutant ] = useState<string>("")
-    const [ startDate, setStartDate ] = useState<string>("")
+    const [ startDate, setStartDate ] = useState<string>(actualDate)
     const [ endDate, setEndDate ] = useState<string>("")
     
     const [ etatFinal, setEtatFinal ] = useState<string>("")
@@ -73,12 +72,18 @@ export default function Interventions ({params}:{params: {username:string}}) {
         setPanne("")
         setSubSys("")
         setEquip("")
+
+        setApiSubSysIdList([])
+        setApiSubSysNames([])
+        setApiPanneIdList([])
+        setApiPanneNames([])
+        
         setEtatInitial("")
-        setDemanderPar("")
+        setDemanderPar(username)
         setFormValidity(false)
 
         setExecutant("")
-        setStartDate("")
+        setStartDate(actualDate)
         setEndDate("")
         setApproveFormValidity(false)
 
@@ -120,42 +125,238 @@ export default function Interventions ({params}:{params: {username:string}}) {
         }
     }
 
-    const demandIntervention = () => {
+    const demandIntervention = async () => {
+        // console.log(isFormValid)
+        // console.log(`${panne} ${subSys} ${equip} ${etatInitial} ${demanderPar}`)
         if(isFormValid){
-            const tempIntervention = {
-                panne: panne,
-                sousSysteme: subSys,
-                equipement: equip,
-                etatEquipementInitial: etatInitial,
-                demanderPar: demanderPar,
-                etat: "En Attente"
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/intervention/nouvelle', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        panne_id:apiPanneIdList[apiPanneNames.indexOf(panne)],
+                        etat_initial:etatInitial,
+                        demander_par:demanderPar,
+                        statut: "En Attente"
+                    })
+                });
+                const json = await response.json()
+                const { intervention } = json
+                if(!intervention){
+                    closeModal()
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi de la demande d'intervention"}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                const tempData = {
+                    id:intervention.id,
+                    panneId:intervention.panne_id,
+                    panne: panne,
+                    sousSystemeId:apiSubSysIdList[apiSubSysNames.indexOf(subSys)],
+                    sousSysteme: subSys,
+                    equipementId:apiEquipIdList[apiEquipNames.indexOf(equip)],
+                    equipement: equip,
+                    etatEquipementInitial: intervention.etat_initial,
+                    demanderPar: intervention.demander_par,
+                    etat:intervention.statut
+                }
+                setApiInterventionList([tempData, ...apiInterventionList])
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: "Demande d'intervention envoyée avec succes"}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi de la demande d'intervention"}))
+                }, DISPLAYTIMEOUT)
             }
-            setApiInterventionList([...apiInterventionList,tempIntervention])
-            closeModal()
+
         }
     }
 
-    const validateIntervention = () => {
+    const validateIntervention = async () => {
+        // console.log(isApproveFormValid)
         if(isApproveFormValid){
-            let tempList = [...apiInterventionList]
-            tempList[selectedInterven]["executant"] = executant
-            tempList[selectedInterven]["debutIntervention"] = startDate
-            tempList[selectedInterven]["finIntervention"] = endDate
-            tempList[selectedInterven]["etat"] = "Validé"
-            setApiInterventionList(tempList)
-            closeModal()
+            try {
+                let tempList = [...apiInterventionList]
+                const response = await fetch('/api/equipements/sous-systeme/panne/intervention/editer/'+tempList[selectedInterven].id, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        executant:executant,
+                        debut_intervention:startDate,
+                        fin_intervention:endDate,
+                        etat_final:"",
+                        observation:"",
+                        statut: "Validé",
+                    })
+                });
+                const json = await response.json()
+                const { intervention } = json
+                if(!intervention){
+                    closeModal()
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi de la validation de l'intervention"}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                tempList[selectedInterven]["executant"] = intervention.executant
+                tempList[selectedInterven]["debutIntervention"] = intervention.debut_intervention
+                tempList[selectedInterven]["finIntervention"] = intervention.fin_intervention
+                tempList[selectedInterven]["etat"] = intervention.statut
+                setApiInterventionList(tempList)
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: "Intervention validé avec succes, en attente d'un rapport"}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi de la validation de l'intervention"}))
+                }, DISPLAYTIMEOUT)
+                closeModal()
+            }
         }
     }
 
-    const reportIntervention = () => {
+    const reportIntervention = async() => {
+        console.log(isReportFormValid)
         if(isReportFormValid){
-            let tempList = [...apiInterventionList]
-            tempList[selectedInterven]["etatEquipementFinal"] = etatFinal
-            tempList[selectedInterven]["observation"] = observation
-            tempList[selectedInterven]["etat"] = "Rapport"
-            setApiInterventionList(tempList)
-            closeModal()
+            try {
+                let tempList = [...apiInterventionList]
+                const response = await fetch('/api/equipements/sous-systeme/panne/intervention/editer/'+tempList[selectedInterven].id, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        executant:tempList[selectedInterven].executant,
+                        debut_intervention:tempList[selectedInterven].debutIntervention,
+                        fin_intervention:tempList[selectedInterven].finIntervention,
+                        etat_final:etatFinal,
+                        observation:observation,
+                        statut: "Rapport",
+                    })
+                });
+                const json = await response.json()
+                const { intervention } = json
+                if(!intervention){
+                    closeModal()
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi du rapport de l'intervention"}))
+                    }, DISPLAYTIMEOUT)
+                    return
+                }
+                tempList[selectedInterven]["etatEquipementFinal"] = intervention.etat_final
+                tempList[selectedInterven]["observation"] = intervention.observation
+                tempList[selectedInterven]["etat"] = intervention.statut
+                setApiInterventionList(tempList)
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: "Rapport de l'intervention envoyé avec succès"}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de l'envoi du rapport de l'intervention"}))
+                }, DISPLAYTIMEOUT)
+                closeModal()
+            }
         }
+    }
+
+    const initialiseEquipList = (equipements:Array<EquipmentType>) => {
+        console.log(equipements)
+        const tempIds = equipements.map((equip:EquipmentType) => {
+            return equip.id
+        });
+        // console.log(tempIds)
+        setApiEquipIdList(tempIds)
+        const tempNames = equipements.map((equip:EquipmentType) => {
+            return equip.nom
+        });
+        // console.log(tempNames)
+        setApiEquipNames(tempNames)
+    }
+
+    const initialiseSubsysList = async (equip:string) =>{
+        console.log(equip)
+        if(equip!=""){
+            setEquip(equip)
+            const tempId = apiEquipIdList[apiEquipNames.indexOf(equip)]
+            console.log(tempId)
+            try {
+                if(tempId != undefined){
+                    const subsysreq = await fetch(`/api/equipements/${tempId}/sous-systemes`)
+                    const subsysjson = await subsysreq.json()
+                    const { sousSystemes } = subsysjson
+                    if(!sousSystemes) return
+                    if(sousSystemes.length>0){
+                        const tempIds =  sousSystemes.map((sub:SubSystemType) => {
+                            return sub.id
+                        });
+                        console.log(tempIds)
+                        setApiSubSysIdList(tempIds)
+                        const tempNames = sousSystemes.map((sub:SubSystemType) => {
+                            return sub.nom
+                        });
+                        setApiSubSysNames(tempNames)
+                        console.log(tempNames)
+
+                        setApiPanneIdList([])
+                        setApiPanneNames([])
+                        setSubSys("")
+                        setPanne("")
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const initialisePanneList = async (subSys:string) =>{
+        console.log(subSys)
+        if(subSys!==""){
+            setSubSys(subSys)
+            const tempId = apiSubSysIdList[apiSubSysNames.indexOf(subSys)]
+            console.log(tempId)
+            try {
+                if(tempId != undefined){
+                    const pannereq = await fetch(`/api/equipements/sous-systeme/${tempId}/pannes/listes`)
+                    const pannejson = await pannereq.json()
+                    const { pannes } = pannejson
+                    console.log(pannes)
+                    if(!pannes) return
+                    if(pannes.length>0){
+                        const tempIds =  pannes.map((panne:PanneType) => {
+                            return panne.id
+                        });
+                        console.log(tempIds)
+                        setApiPanneIdList(tempIds)
+                        const tempNames = pannes.map((panne:PanneType) => {
+                            return panne.nom
+                        });
+                        console.log(tempNames)
+                        setApiPanneNames(tempNames)
+                        setPanne("")
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const loadUsers = async () => {
+        const response = await fetch('/api/users')
+        const json = await response.json()
+        const { users } = json
+        if (!users) return;
+        // console.log(users)
+        const tempNames = users.map((user:PanneType) => {
+            return user.nom
+        });
+        // console.log(tempNames)
+        setApiUserNames(tempNames);
     }
 
     useEffect(()=>{
@@ -189,25 +390,78 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 const response = await fetch('/api/equipements/sous-systeme/panne/intervention')
                 const json = await response.json()
                 const { interventions } = json
-                if(!interventions){
+                if (!interventions) return
+                console.log(interventions)
+                loadUsers()
+
+                const eqreq = await fetch('/api/equipements')
+                const json1 = await eqreq.json()
+                const { equipements } = json1
+                if (!equipements){
                     setTimeout(() => {
-                        dispatch(addAlert({type: 'FAILURE', message: json.error}))
+                        dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des Equipements'}))
                     }, DISPLAYTIMEOUT)
                     return
                 }
+                initialiseEquipList(equipements)
 
-                // setApiInterventionList(tempIntervenList)
+                if(interventions.length > 0){
+                    const tempArray:InterventionType[] = []
+                    interventions.forEach(async(interven:any) => {
+                        const response1 = await fetch('/api/equipements/sous-systeme/panne/'+interven.panne_id)
+                        const json1 = await response1.json();
+                        const { panne } = json1
+                        if (!panne) return;
+
+                        const response2 = await fetch("/api/equipements/sous-systeme/"+panne.soussysteme_id)
+                        const json2 = await response2.json()
+                        const { sousSysteme } = json2
+                        if (!sousSysteme) return;
+
+                        const response3 = await fetch('/api/equipements/'+sousSysteme.equipement_id)
+                        const json3 = await response3.json()
+                        const { equipement } = json3
+                        if (!equipement) return;
+                        
+                        const intervenObj: InterventionType = {
+                            id:interven.id,
+                            panneId:panne.id,
+                            panne: panne.nom,
+                            sousSystemeId:sousSysteme.id,
+                            sousSysteme: sousSysteme.nom,
+                            equipementId:equipement.id,
+                            equipement: equipement.nom,
+                            etatEquipementInitial: interven.etat_initial,
+                            demanderPar: interven.demander_par,
+                            executant: interven.executant?interven.executant:"",
+                            debutIntervention: interven.debut_intervention?interven.debut_intervention:"",
+                            finIntervention: interven.fin_intervention?interven.fin_intervention:"",
+                            etatEquipementFinal: interven.etat_final?interven.etat_final:"",
+                            observation: interven.observation?interven.observation:"",
+                            etat: interven.statut
+                        }
+                        tempArray.splice(0,0,intervenObj)
+                        console.log(tempArray)
+                        setApiInterventionList(tempArray)
+                        setDisplayIntervenList(tempArray)
+                    });
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec succes'}))
+                    }, DISPLAYTIMEOUT)
+                }else{
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Aucune Interventions Enregistrées'}))
+                    }, DISPLAYTIMEOUT)
+                }
+            } catch (error) {
+                console.log(error)
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec Succès'}))
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des Interventions'}))
                 }, DISPLAYTIMEOUT)
-            } catch (error: any) {
-                setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: "Erreur de Chargement des Interventions"}))
-                }, DISPLAYTIMEOUT)
-                return
             }
         }
-        // loadInterventions()
+
+        loadInterventions()
     },[dispatch])
 
     return(
@@ -266,7 +520,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
 
             {/* View Intervention Detail Modal */}
             <Modal
-                modalTitle="Supprimer l'utilisateur"
+                modalTitle="Détail de l'intervention"
                 isVisible={isDetailModal}
                 isDeleteModalVisible = {false}
                 isDetailIntervention={isDetailModal}
@@ -287,6 +541,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 isVisible={isAddModal}
                 isDeleteModalVisible = {false}
                 modalWidth = {'80%'}
+                isAddStock={true}
                 closeModalAction = {closeModal}
                 addBtnLabel="Envoyer"
                 addNewAction = {demandIntervention}
@@ -296,15 +551,15 @@ export default function Interventions ({params}:{params: {username:string}}) {
                         <span className="border-b border-slate-300 capitalize justify-center items-center text-black text-[20px] font-normal">
                             équipement
                         </span>
-                        <DropDownField label="" optionList={apiEquipNameList.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'équipement" setNewValue={setEquip} />
+                        <DropDownField label="" optionList={apiEquipNames} placeholder="Selectionner l'équipement" setNewValue={initialiseSubsysList} />
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Sous Système
                         </span>
-                        <DropDownField label="" optionList={apiSubSysNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner le sous Système' setNewValue={setSubSys} />
+                        <DropDownField label="" optionList={apiSubSysNames} placeholder='Selectionner le sous Système' setNewValue={initialisePanneList} />
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
                             Panne
                         </span>
-                        <DropDownField label="" optionList={apiPanneNameList.map((name,index)=>{ return name+(index+1)})} placeholder='Selectionner la panne à intervenir' setNewValue={setPanne} />
+                        <DropDownField label="" optionList={apiPanneNames} placeholder='Selectionner la panne à intervenir' setNewValue={setPanne} />
                     </div>
                     <div className="w-full flex flex-col justify-start gap-4">
                         <span className="border-b border-slate-300 justify-center items-center text-black text-[20px] font-normal">
@@ -321,6 +576,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 modalTitle="Valider L’intervention"
                 isVisible={isValidateModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Valider"
@@ -357,7 +613,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                             Détails sur la validation
                         </span>
                         {!toogleExecutantType?
-                            <DropDownField label="" optionList={apiUserNamesList?.map((name,index)=>{ return name+(index+1)})} placeholder="Selectionner l'executant de l'intervention" setNewValue={setExecutant} />
+                            <DropDownField label="" optionList={apiUserNames} placeholder="Selectionner l'executant de l'intervention" setNewValue={setExecutant} />
                         :
                             <InputField label="Executant" setNewValue={setExecutant} />
                         }
@@ -376,6 +632,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 modalTitle="Faire un Rapport sur L’intervention"
                 isVisible={isReportModal}
                 isDeleteModalVisible = {false}
+                isAddStock={true}
                 modalWidth = {'80%'}
                 closeModalAction = {closeModal}
                 addBtnLabel="Valider"
