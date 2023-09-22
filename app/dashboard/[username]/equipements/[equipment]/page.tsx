@@ -329,7 +329,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
                         </div>
                     </div>
 
-                    <div className="flex w-full h-[210px] gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
+                    <div className="flex w-full h-[300px] gap-4 py-2 justify-start items-start flex-wrap overflow-y-auto">
                         {
                             displaySubSysList.map((system, index) => {
                                 return <SubsysPieceCard

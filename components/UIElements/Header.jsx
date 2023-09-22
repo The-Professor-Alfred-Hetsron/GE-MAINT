@@ -7,7 +7,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { FiMenu, FiX } from "react-icons/fi";
 
 function Header(props) {
-  const username = props.username? props.username.replace("-", " ") : "Nom Prenom"
+  const username = props.username? props.username : "Nom Prenom"
   const userInitials = `${username.toUpperCase().split(" ")[0][0]} ${username.toUpperCase().split(" ")[username.toUpperCase().split(" ").length-1][0]}`
 
 
@@ -22,11 +22,7 @@ function Header(props) {
                   : <FiMenu size={32}/>
               }
             </button>
-            <Image className="rounded-[62.25px]" width="60" height="60" src="/assets/img/svgPAKLogo.svg" alt="Logo PAK"/>
-            <div className="w-full flex flex-col h-full justify-evenly">
-              <span className="w-full text-sky-700 text-[18px] font-normal">PORT AUTONOME DE KRIBI</span>
-              <span className="w-full text-sky-500 text-[18px] font-normal">PORT AUTHORITY OF KRIBI</span>
-            </div>
+            <Image className="" width="300" height="100" src="/assets/img/pakLogo2.png" alt="Logo PAK"/>
           </div>
 
           <div className='w-full flex flex-row gap-2 justify-end items-center'>

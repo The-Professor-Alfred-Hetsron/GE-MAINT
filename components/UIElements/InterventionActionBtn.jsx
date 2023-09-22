@@ -8,6 +8,7 @@ import { BsClipboardCheck } from "react-icons/bs";
 
 function InterventionActionBtn(props) {
     const state = props.state
+    const adminRole = props.adminRole?props.adminRole:"Responsable"
 
   return (
     <>
@@ -16,7 +17,7 @@ function InterventionActionBtn(props) {
             {props.detailPlaceholder?<span>{props.detailPlaceholder}</span>:<span>Détails</span>}
         </button>
 
-        {state === "En Attente" ?
+        {state === "En Attente" && adminRole === "Responsable" ?
         <button onClick={()=>props.validateIntervention()} className="py-1 px-2 bg-white rounded-[100px] text-[#34A853] border border-green-600 justify-center items-center gap-1 inline-flex hover:bg-[#34A853] hover:text-white">
             <BsClipboardCheck size={16}/>
             <span>Valider</span>

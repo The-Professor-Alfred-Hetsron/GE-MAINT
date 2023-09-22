@@ -20,6 +20,8 @@ export default function Users () {
         "Responsable"
     ]
 
+    const [ userRole, setUserRole ] = useState<string|null>("Responsable")
+
     const [ apiUserList, setApiUserList ] = useState<Array<UserType>>([])
     const [ displayUserList, setDisplayUserList ] = useState<Array<UserType>>(apiUserList)
 
@@ -151,6 +153,7 @@ export default function Users () {
             setApiUserList(users);
         }
         loadUsers()
+        setUserRole(localStorage.getItem('role'))
     }, [])
     
     useEffect(()=>{
@@ -165,7 +168,7 @@ export default function Users () {
     },[nom,email,matricule,role])
 
     return(
-        <div className="w-full h-full bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Utilisateurs</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiUserList.length}</span>
@@ -174,12 +177,12 @@ export default function Users () {
             <div className="w-full h-full p-2 bg-white rounded-2xl border border-slate-300 flex-col justify-start items-center gap-2.5 inline-flex">
                 <div className="w-full justify-between items-center gap-4 inline-flex">
                     <InputSearchField setNewSearchValue={sortUserList} placeholder="Rechercher un utilisateur: nom, email, matricule, role"/>
-                    <AddBtn width={550} placeholder="ajouter un utilisateur" addFunction={()=>{setAddModalVisibility(true)}}/>
+                    {userRole === "Responsable" && <AddBtn width={550} placeholder="ajouter un utilisateur" addFunction={()=>{setAddModalVisibility(true)}}/>}
                 </div>
 
                 {/* Liste des Utilisateurs ci-dessous */}
-                <div className="w-full flex flex-col gap-4 justify-start items-start flex-wrap">
-                    <table className="w-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
+                <div className="w-full h-full flex flex-col gap-4 justify-start items-start flex-wrap">
+                    <table className="w-full h-full p-2 rounded-2xl border border-slate-400 flex-col justify-start items-start flex overflow-x-auto">
                         <thead className="w-full bg-white border-b border-slate-400">
                             <tr className="w-full p-2 flex gap-1 text-black text-lg font-bold leading-7 tracking-tight">
                                 <td className="w-[150px]">N°</td>
@@ -187,7 +190,7 @@ export default function Users () {
                                 <td className="w-full capitalize">Email</td>
                                 <td className="w-full capitalize">Matricule</td>
                                 <td className="w-full capitalize text-center">Role</td>
-                                <td className="w-full text-right">Action</td>
+                                {userRole === "Responsable" && <td className="w-full text-right">Action</td>}
                             </tr>
                         </thead>
                         <tbody className="w-full overflow-y-auto">
@@ -199,7 +202,7 @@ export default function Users () {
                                     <td className="w-full">{user.email}</td>
                                     <td className="w-full">{user.matricule}</td>
                                     <td className="w-full flex justify-center items-center"><UserRole role={user.role}/></td>
-                                    <td className="w-full flex flex-row gap-1 justify-end items-center flex-wrap">
+                                   {userRole === "Responsable" && <td className="w-full flex flex-row gap-1 justify-end items-center flex-wrap">
                                         <button onClick={()=>{setSelectedUser(index)
                                                                 initialiseUpdateParams(index)
                                                                 setUpdateModalVisibility(true)}} className="py-1 px-2 bg-white rounded-[100px] text-[#149FDA] border border-sky-500 justify-center items-center gap-1 inline-flex hover:bg-[#149FDA] hover:text-white">
@@ -211,7 +214,7 @@ export default function Users () {
                                             <RiDeleteBin6Line size={20}/>
                                             <span>Supprimer</span>
                                         </button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             })
                         }

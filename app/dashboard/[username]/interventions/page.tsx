@@ -29,6 +29,8 @@ export default function Interventions ({params}:{params: {username:string}}) {
     const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>([])
     const [ displayIntervenList, setDisplayIntervenList] = useState<Array<InterventionType>>(apiInterventionList)
 
+    const [ userRole, setUserRole ] = useState<string|null>("Responsable")
+
     // APi Equipment, Sub system, Panne and User List Start
     const [ apiEquipNames, setApiEquipNames ] = useState<Array<string>>([])
     const [ apiEquipIdList, setApiEquipIdList ] = useState<Array<number>>([])
@@ -460,12 +462,12 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 }, DISPLAYTIMEOUT)
             }
         }
-
+        setUserRole(localStorage.getItem('role'))
         loadInterventions()
     },[dispatch])
 
     return(
-        <div className="w-full h-full overflow-y-auto bg-white rounded-2xl shadow backdrop-blur-[20px] p-2 flex-col justify-start items-center gap-2 flex">
+        <div className="w-full h-full overflow-y-auto bg-white rounded-2xl shadow drop-shadow-md p-2 flex-col justify-start items-center gap-2 flex">
             <div className="w-full justify-start items-center gap-4 inline-flex">
                 <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Interventions</span>
                 <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
@@ -502,6 +504,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                                     <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                         <InterventionActionBtn
                                             state={intervention.etat}
+                                            adminRole= {userRole}
                                             viewIntervention={()=>{setSelectedInterven(index)
                                                                     setDetailModalVisibility(true)}}
                                             validateIntervention={()=>{setSelectedInterven(index)

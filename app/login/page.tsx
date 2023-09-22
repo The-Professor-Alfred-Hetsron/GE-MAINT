@@ -35,9 +35,10 @@ export default function Login () {
                 const json = await res.json()
                 const { user } = json
                 if (user !== undefined){
-                    console.log(user)
+                    // console.log(user)
                     dispatch(login(user))
                     if(name && email && matricule){
+                        localStorage.setItem('role',user.role)
                         router.push(`/dashboard/${name}/accueil`)
                     }
                 }

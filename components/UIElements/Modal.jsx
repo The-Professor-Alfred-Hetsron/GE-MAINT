@@ -18,12 +18,15 @@ function Modal(props) {
   const [ isDeleteModalVisible, setDeleteModalVisibility ] = useState(props.isDeleteModalVisible? props.isDeleteModalVisible: false)
   const [ interventionInfo, setInterventionInfo ] = useState(props.interventionInfo?props.interventionInfo:null)
 
+  const [ userRole, setUserRole ] = useState("Responsable")
+
 
   useEffect(()=> {
     setModalVisibility(props.isVisible? props.isVisible: false)
     setDetailIntervention(props.isDetailIntervention?props.isDetailIntervention:false)
     setDeleteModalVisibility(props.isDeleteModalVisible? props.isDeleteModalVisible: false)
     setInterventionInfo(props.interventionInfo?props.interventionInfo:null)
+    setUserRole(localStorage.getItem('role'))
   }, [props])
 
   return createPortal(
@@ -146,6 +149,7 @@ function Modal(props) {
                         reportIntervention={()=>{props.reportIntervention()}}
                         detailPlaceholder = "Consulter les protocols"
                         reportPlaceholder = "Faire le Rapport"
+                        adminRole= {userRole}
                     />
                   </div>
                 </div>
