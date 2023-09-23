@@ -377,7 +377,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                                 <span className="text-black text-[20px] font-semibold">{apiPieceDetails.description}</span>
                             </div>
                         </div>
-                        <div className="w-full pr-2 flex flex-wrap gap-2 justify-start items-center">
+                        {apiPieceDetails.nom !== "" && <div className="w-full pr-2 flex flex-wrap gap-2 justify-start items-center">
                             <DeleteBtn deleteAction={()=>{setDelModalvisibility(true)}}/>
                             <UpdateBtn updateAction={()=>{initialiseUpdateParams()
                                                             setUpdateModalVisibility(true)}}/>
@@ -389,7 +389,7 @@ export default function Piece ({params}:{params: {username: string, equipment:st
                                 <AiOutlineMinus size={20}/>
                                 <span className='text-[16px] font-semibold'>Retirer du Stock</span>
                             </button>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>

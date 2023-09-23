@@ -196,7 +196,7 @@ export default function Home ({params}:{params: {username:string }}) {
                         })
                     }
                 </div>
-                <div className='w-full h-[600px] z-10 p-2 flex flex-col items-start justify-end bg-white rounded-2xl border border-slate-300'>
+                <div className='w-full h-[600px] z-10 p-2 shadow drop-shadow-md flex flex-col items-start justify-end bg-white rounded-2xl border border-slate-300'>
                     <div className='w-full pr-6 border-b border-slate-300 pb-2 items-center flex flex-row justify-between'>
                         <span className='text-zinc-800 text-2xl font-semibold uppercase'>
                             Calendrier de Maintenance
@@ -210,7 +210,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 </div>
             </div>
 
-            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
+            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 shadow drop-shadow-md">
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Demande D’Interventions</span>
@@ -258,7 +258,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 </table>
             </div>
 
-            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
+            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300 shadow drop-shadow-md">
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Rapport D’Interventions</span>

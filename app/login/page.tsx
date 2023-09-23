@@ -37,7 +37,8 @@ export default function Login () {
                 })
                 const json = await res.json()
                 const { user } = json
-                if (user !== undefined){
+                console.log(user)
+                if (user != undefined){
                     // console.log(user)
                     dispatch(login(user))
                     if(name && email && matricule){

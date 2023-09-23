@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "migrate:dev": "npx dotenv -e .env -- prisma migrate dev",
+    "db:push": "npx dotenv -e .env -- prisma db push",
+    "migrate:reset": "npx dotenv -e .env -- prisma migrate reset",
+    "db:seed": "npx dotenv -e .env -- prisma db seed",
+    "prisma:generate": "npx dotenv -e .env -- prisma generate",
+    "prisma:studio": "npx dotenv -e .env -- prisma studio",
+    "production:build": "npx prisma generate && npx prisma migrate deploy && next build"
   },
   "dependencies": {
     "@devexpress/dx-react-core": "^4.0.5",
@@ -36,6 +42,7 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.1",
+    "dotenv-cli": "^7.3.0",
     "prisma": "^5.3.0-dev.53"
   }
 }
