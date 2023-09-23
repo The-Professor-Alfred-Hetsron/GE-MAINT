@@ -10,8 +10,11 @@ import UserRole from "@/components/UIElements/UserRole"
 import { useState, useEffect } from "react"
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa"
-
 import UserType from "@/types/user"
+
+import { useAppDispatch } from "@/redux/hooks"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
 
 export default function Users () {
 
@@ -19,6 +22,7 @@ export default function Users () {
         "Personnel",
         "Responsable"
     ]
+    const dispatch = useAppDispatch()
 
     const [ userRole, setUserRole ] = useState<string|null>("Responsable")
 
@@ -91,15 +95,25 @@ export default function Users () {
                 matricule: matricule,
                 role: role
             }
-            const response = await fetch('/api/users/inscription', {
-                method: 'POST',
-                body: JSON.stringify(tempUser)
-            })
-            const json = await response.json()
-            const { user } = json
-            if(!user) return;
-            setApiUserList([...apiUserList, user])
-            closeModal()
+            try {
+                const response = await fetch('/api/users/inscription', {
+                    method: 'POST',
+                    body: JSON.stringify(tempUser)
+                })
+                const json = await response.json()
+                const { user } = json
+                if(!user) return;
+                setApiUserList([...apiUserList, user])
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Utilisateur ajouté avec succès'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "l'Utilisateur n'a pas pu être ajouté, verifier votre connexion"}))
+                }, DISPLAYTIMEOUT)
+            }
         }
     }
 
@@ -112,35 +126,55 @@ export default function Users () {
                 matricule: matricule,
                 role: role
             }
-            const response = await fetch(`/api/users/${tempUser.id}/editer`, {
-                method: 'PATCH',
-                body: JSON.stringify(tempUser)
-            })
-            const json = await response.json()
-            const { user } = json
-            if (!user) closeModal()
-            let tempUserList = [...apiUserList]
-            tempUserList[selectedUser] = user
-            setApiUserList(tempUserList)
-            closeModal()
+            try {
+                const response = await fetch(`/api/users/${tempUser.id}/editer`, {
+                    method: 'PATCH',
+                    body: JSON.stringify(tempUser)
+                })
+                const json = await response.json()
+                const { user } = json
+                if (!user) closeModal()
+                let tempUserList = [...apiUserList]
+                tempUserList[selectedUser] = user
+                setApiUserList(tempUserList)
+                closeModal()
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: "Mise à jour de l'utilisateur réussi"}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de la mise à jour de l'utilisateur, verifier votre Connexion"}))
+                }, DISPLAYTIMEOUT)
+            }
         }
     }
 
     const deleteUser = async () => {
-        const response = await fetch('/api/users/supprimer/'+apiUserList[selectedUser].id, {
-            method: 'DELETE',
-            body: JSON.stringify({})
-        })
-        const json = await response.json()
-        const { message } = json
-        console.log(json)
-        if(!message) {
+        try {
+            const response = await fetch('/api/users/supprimer/'+apiUserList[selectedUser].id, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            })
+            const json = await response.json()
+            const { message } = json
+            console.log(json)
+            if(!message) {
+                closeModal()
+            }
+            let tempList = [...apiUserList]
+            tempList.splice(selectedUser, 1)
+            setApiUserList(tempList)
             closeModal()
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: "Utilisateur supprimé avec succès"}))
+            }, DISPLAYTIMEOUT)
+        } catch (error) {
+            console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec de la suppression de l'utilisateur, verifier votre Connexion"}))
+                }, DISPLAYTIMEOUT)
         }
-        let tempList = [...apiUserList]
-        tempList.splice(selectedUser, 1)
-        setApiUserList(tempList)
-        closeModal()
     }
 
     useEffect(() => {
@@ -148,13 +182,21 @@ export default function Users () {
             const response = await fetch('/api/users')
             const json = await response.json()
             const { users } = json
-            if (!users) return;
+            if (!users){
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des utilisateur, verifier votre Connexion'}))
+                }, DISPLAYTIMEOUT)
+                return
+            };
             console.log(users)
             setApiUserList(users);
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'Chargement des utilisateur avec succès'}))
+            }, DISPLAYTIMEOUT)
         }
         loadUsers()
         setUserRole(localStorage.getItem('role'))
-    }, [])
+    }, [dispatch])
     
     useEffect(()=>{
         setDisplayUserList(apiUserList)

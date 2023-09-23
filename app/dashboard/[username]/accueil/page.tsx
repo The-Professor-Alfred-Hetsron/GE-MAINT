@@ -11,6 +11,7 @@ import Modal from '@/components/UIElements/Modal'
 import { useAppDispatch } from "@/redux/hooks"
 import { addAlert } from "@/redux/features/alerts/alertsSlice"
 import { DISPLAYTIMEOUT } from "@/constants/time"
+
 import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
 import InterventionState from '@/components/UIElements/InterventionState'
 
@@ -69,36 +70,36 @@ export default function Home ({params}:{params: {username:string }}) {
 
     useEffect(() => {
         const loadEquipements = async () => {
-            const response = await fetch('/api/equipements')
+            const response = await fetch('/api/equipements/count')
             const json = await response.json()
-            console.log(json)
-            const { equipements } = json
-            if (!equipements) return;
-            setEquipTotal(equipements.length)
+            // console.log(json)
+            const { count } = json
+            if (!count) return;
+            setEquipTotal(count)
         }
         const loadSubsystems = async () => {
-            const response = await fetch('/api/equipements/sous-systeme')
+            const response = await fetch('/api/equipements/sous-systeme/count')
             const json = await response.json()
-            console.log(json)
-            const { sousSystemes } = json
-            if (!sousSystemes) return;
-            setSubSysTotal(sousSystemes.length)
+            // console.log(json)
+            const { count } = json
+            if (!count) return;
+            setSubSysTotal(count)
         }
         const loadPieces = async () => {
-            const response = await fetch('/api/equipements/sous-systeme/pieces')
+            const response = await fetch('/api/equipements/sous-systeme/pieces/count')
             const json = await response.json()
-            console.log(json)
-            const { pieces } = json
-            if (!pieces) return;
-            setPieceTotal(pieces.length)
+            // console.log(json)
+            const { count } = json
+            if (!count) return;
+            setPieceTotal(count)
         }
         const loadPannes = async () => {
-            const response = await fetch('/api/equipements/sous-systeme/panne')
+            const response = await fetch('/api/equipements/sous-systeme/panne/count')
             const json = await response.json()
             console.log(json)
-            const { pannes } = json
-            if (!pannes) return;
-            setPannesTotal(pannes.length)
+            const { count } = json
+            if (!count) return;
+            setPannesTotal(count)
         }
         loadEquipements()
         loadSubsystems()
@@ -172,7 +173,7 @@ export default function Home ({params}:{params: {username:string }}) {
             } catch (error) {
                 console.log(error)
                 setTimeout(() => {
-                    dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des Interventions'}))
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des Interventions, verifier votre Connexion'}))
                 }, DISPLAYTIMEOUT)
             }
         }
@@ -181,9 +182,9 @@ export default function Home ({params}:{params: {username:string }}) {
     },[dispatch])
 
     return(
-        <div className="w-full h-full py-2 flex flex-col gap-8 justify-start items-center overflow-y-auto">
-            <div className='w-full flex flex-row 2xl:flex-col gap-4 justify-end items-start' style={{}}>
-                <div className='w-[1000px] 2xl:w-full z-10 flex flex-auto flex-row flex-wrap gap-4'>
+        <div className="w-full h-full p-2 flex flex-col gap-8 justify-start items-center overflow-y-auto">
+            <div className='w-full flex flex-col gap-4 justify-end items-start' style={{}}>
+                <div className='w-full z-10 flex flex-auto flex-row flex-wrap gap-4'>
                     {
                         totalList.map((total, index) => {
                             return  <NumberCards

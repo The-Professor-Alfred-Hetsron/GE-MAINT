@@ -10,6 +10,9 @@ import { login } from "@/redux/features/authentication/authenticatedUserSlice";
 import RoundBar from "@/components/spiners/RoundBar";
 import {projectName} from '@/constants/config'
 
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
+
 export default function Login () {
     const dispatch = useAppDispatch()
     const [name, setName] = useState("")
@@ -39,14 +42,23 @@ export default function Login () {
                     dispatch(login(user))
                     if(name && email && matricule){
                         localStorage.setItem('role',user.role)
+                        setTimeout(() => {
+                            dispatch(addAlert({type: 'SUCCESS', message: `Connexion établi avec succes, Bienvenue ${user.nom}`}))
+                        }, DISPLAYTIMEOUT)
                         router.push(`/dashboard/${name}/accueil`)
                     }
                 }
                 else{
                     setError(json.error)
+                    setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec de Connexion, veulliez verifier votre connexion'}))
+                }, DISPLAYTIMEOUT)
                 }
             } catch (error) {
                 console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec de Connexion, veulliez verifier votre connexion'}))
+                }, DISPLAYTIMEOUT)
             }
             setLoading(false)
         }
@@ -64,8 +76,7 @@ export default function Login () {
 
             <div className="w-3/5 bg-stone-50 rounded-[32px] shadow drop-shadow-lg border border-indigo-50 flex justify-center items-start gap-4">
                 <div className="w-1/2 h-full flex flex-col justify-evenly items-center text-center p-8 bg-[#E8F2F8] rounded-tl-[32px] rounded-bl-[32px]">
-                    <span className="text-sky-700 text-[18px] font-normal">PORT AUTONOME DE KRIBI</span>
-                    <span className="text-sky-500 text-[18px] font-normal">PORT AUTHORITY OF KRIBI</span>
+                    <Image className="" width="300" height="100" src="/assets/img/pakLogo2.png" alt="Logo PAK"/>
                     <span className="text-center text-black text-[24px] font-normal uppercase">Service d’Exploitation et Maintenance des Réseaux Utilitaires</span>
                     <Image src="/assets/img/login3DEngineer.png" alt="login3DImage" width="200" height="400"/>
                 </div>

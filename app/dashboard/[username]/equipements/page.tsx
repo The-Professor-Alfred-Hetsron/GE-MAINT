@@ -11,10 +11,11 @@ import { BsUpload } from "react-icons/bs";
 
 import { useState, useEffect } from "react";
 import EquipmentType from '@/types/equipment'
-import { tempEquipList } from '@/data/equipmentPage'
 import upload from '@/helpers/upload'
 
-// import IFile from '@/types/ImageFile'
+import { useAppDispatch } from "@/redux/hooks"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
 
 interface tempEquipmentType {
     id: number;
@@ -25,6 +26,7 @@ interface tempEquipmentType {
 }
 
 export default function Equipments () {
+    const dispatch = useAppDispatch()
 
     const [ apiEquipList, setApiEquipList ] = useState<Array<tempEquipmentType>>([])
     const [ displayEquipList, setDisplayEquipList ] = useState<Array<tempEquipmentType>>(apiEquipList)
@@ -88,20 +90,31 @@ export default function Equipments () {
     }
 
     const deleteEquipment = async (index: number) => {
-        const response = await fetch('/api/equipements/supprimer/'+index, {
-            method: 'DELETE',
-            body: JSON.stringify({})
-        });
-        const json = await response.json()
-        const { message } = json
-        if (!message){
+        try {
+            const response = await fetch('/api/equipements/supprimer/'+index, {
+                method: 'DELETE',
+                body: JSON.stringify({})
+            });
+            const json = await response.json()
+            const { message } = json
+            if (!message){
+                closeModal()
+                return;
+            }
+            let tempApiEquipList = [...apiEquipList]
+            tempApiEquipList.splice(selectedEquipment,1)
+            setApiEquipList(tempApiEquipList)
             closeModal()
-            return;
+            setTimeout(() => {
+                dispatch(addAlert({type: 'SUCCESS', message: 'Equipement supprimé avec succes'}))
+            }, DISPLAYTIMEOUT)
+        } catch (error) {
+            console.log(error)
+            setTimeout(() => {
+                dispatch(addAlert({type: 'FAILURE', message: "Echec de la suppression de l'équipement, verifiez votre connexion"}))
+            }, DISPLAYTIMEOUT)
+            closeModal()
         }
-        let tempApiEquipList = [...apiEquipList]
-        tempApiEquipList.splice(selectedEquipment,1)
-        setApiEquipList(tempApiEquipList)
-        closeModal()
     }
 
     const sortEquipList = (value: string) => {
@@ -170,15 +183,25 @@ export default function Equipments () {
     useEffect(() => {
         //recuperer les equipements
         const loadEquipements = async () => {
-            const response = await fetch('/api/equipements')
-            const json = await response.json()
-            console.log(json)
-            const { equipements } = json
-            if (!equipements) return;
-            setApiEquipList(equipements)
+            try {
+                const response = await fetch('/api/equipements')
+                const json = await response.json()
+                console.log(json)
+                const { equipements } = json
+                if (!equipements) return;
+                setApiEquipList(equipements)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'SUCCESS', message: 'Equipements chargés avec succes'}))
+                }, DISPLAYTIMEOUT)
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: "Echec du chargement des équipements, verifiez votre connexion"}))
+                }, DISPLAYTIMEOUT)
+            }
         }
         loadEquipements()
-    }, [])
+    }, [dispatch])
     useEffect(()=> {
         setDisplayEquipList(apiEquipList)
     }, [apiEquipList])
