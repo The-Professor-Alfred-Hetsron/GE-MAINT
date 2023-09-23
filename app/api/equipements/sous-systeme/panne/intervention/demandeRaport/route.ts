@@ -12,12 +12,19 @@ export const maxDuration = 5
 //fake to change
 export async function GET(req: Request) {
     try {
-      const sousSystemes = await prismadb.sousSysteme.findMany();
+      const interventions = await prismadb.intervention.findMany({
+        where:{
+            OR: [
+                { statut: "En Attente" },
+                { statut: "Rapport" },
+            ],
+        }
+      });
 
-      return NextResponse.json({ sousSystemes: sousSystemes }, { status: 200 });
+      return NextResponse.json({ interventions: interventions }, { status: 200 });
 
     } catch (error) {
       console.log(error);
-      return NextResponse.json({ error: 'internal server error' }, { status: 500 })
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 }

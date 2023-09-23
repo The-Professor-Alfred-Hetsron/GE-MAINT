@@ -393,7 +393,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                 const json = await response.json()
                 const { interventions } = json
                 if (!interventions) return
-                console.log(interventions)
+                // console.log(interventions)
                 loadUsers()
 
                 const eqreq = await fetch('/api/equipements')
@@ -409,7 +409,8 @@ export default function Interventions ({params}:{params: {username:string}}) {
 
                 if(interventions.length > 0){
                     const tempArray:InterventionType[] = []
-                    interventions.forEach(async(interven:any) => {
+                    for (let i = 0; i < interventions.length; i++) {
+                        const interven = interventions[i];
                         const response1 = await fetch('/api/equipements/sous-systeme/panne/'+interven.panne_id)
                         const json1 = await response1.json();
                         const { panne } = json1
@@ -443,10 +444,10 @@ export default function Interventions ({params}:{params: {username:string}}) {
                             etat: interven.statut
                         }
                         tempArray.splice(0,0,intervenObj)
-                        console.log(tempArray)
+                        // console.log(tempArray)
                         setApiInterventionList(tempArray)
                         setDisplayIntervenList(tempArray)
-                    });
+                    }
                     setTimeout(() => {
                         dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec succes'}))
                     }, DISPLAYTIMEOUT)
@@ -488,7 +489,7 @@ export default function Interventions ({params}:{params: {username:string}}) {
                                 <td className="w-full">Panne</td>
                                 <td className="w-full text-center">Demandé par</td>
                                 <td className="w-full capitalize text-center">état de l’équipement</td>
-                                <td className="w-full capitalize text-center">état</td>
+                                <td className="w-full capitalize text-center">Statut</td>
                                 <td className="w-full text-center">Action</td>
                             </tr>
                         </thead>

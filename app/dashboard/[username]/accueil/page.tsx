@@ -5,20 +5,22 @@ import NumberCards from '@/components/UIElements/NumberCards'
 import DefaultCalendar from '@/components/UIElements/DefaultCalendar'
 import ViewBtn from "@/components/UIElements/ViewBtn"
 
-import {
-    apiIntervenList,
-    apiRapportIntervenList
-} from "@/data/homePage"
-// import { useRouter } from 'next/navigation'
-// import InterventionState from "@/components/UIElements/InterventionState"
 import InterventionType from '@/types/intervention'
-// import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
 import Modal from '@/components/UIElements/Modal'
+
+import { useAppDispatch } from "@/redux/hooks"
+import { addAlert } from "@/redux/features/alerts/alertsSlice"
+import { DISPLAYTIMEOUT } from "@/constants/time"
+import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
+import InterventionState from '@/components/UIElements/InterventionState'
 
 export default function Home ({params}:{params: {username:string }}) {
 
     const username = decodeURI(params.username)
+    const dispatch = useAppDispatch()
     const baseUrl = "/dashboard/" + username
+
+    const [ userRole, setUserRole ] = useState<string|null>("Responsable")
 
     const [ equipTotal, setEquipTotal ] = useState(0)
     const [ subSysTotal, setSubSysTotal ] = useState(0)
@@ -28,8 +30,8 @@ export default function Home ({params}:{params: {username:string }}) {
     const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
     const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
 
-    const [ apiInterventionList, setApiInterventionList ] = useState<Array<InterventionType>>(apiIntervenList)
-    const [ apiRaaportList, setApiRaaportList ] = useState<Array<InterventionType>>(apiRapportIntervenList)
+    const [ apiDemandList, setApiDemandList ] = useState<Array<InterventionType>>([])
+    const [ apiRaportList, setApiRaportList ] = useState<Array<InterventionType>>([])
 
 
     const totalList = [
@@ -105,6 +107,79 @@ export default function Home ({params}:{params: {username:string }}) {
 
     }, [])
 
+    useEffect(()=>{
+        const loadInterventions = async() => {
+            try {
+                const response = await fetch('/api/equipements/sous-systeme/panne/intervention/demandeRaport')
+                const json = await response.json()
+                const { interventions } = json
+                if (!interventions) return
+                // console.log(interventions.length)
+
+                if(interventions.length > 0){
+                    const tempArray:InterventionType[] = []
+                    for (let i = 0; i < interventions.length; i++) {
+                        const interven = interventions[i];
+                        const response1 = await fetch('/api/equipements/sous-systeme/panne/'+interven.panne_id)
+                        const json1 = await response1.json();
+                        const { panne } = json1
+                        if (!panne) return;
+
+                        const response2 = await fetch("/api/equipements/sous-systeme/"+panne.soussysteme_id)
+                        const json2 = await response2.json()
+                        const { sousSysteme } = json2
+                        if (!sousSysteme) return;
+
+                        const response3 = await fetch('/api/equipements/'+sousSysteme.equipement_id)
+                        const json3 = await response3.json()
+                        const { equipement } = json3
+                        if (!equipement) return;
+                        
+                        const intervenObj: InterventionType = {
+                            id:interven.id,
+                            panneId:panne.id,
+                            panne: panne.nom,
+                            sousSystemeId:sousSysteme.id,
+                            sousSysteme: sousSysteme.nom,
+                            equipementId:equipement.id,
+                            equipement: equipement.nom,
+                            etatEquipementInitial: interven.etat_initial,
+                            demanderPar: interven.demander_par,
+                            executant: interven.executant?interven.executant:"",
+                            debutIntervention: interven.debut_intervention?interven.debut_intervention:"",
+                            finIntervention: interven.fin_intervention?interven.fin_intervention:"",
+                            etatEquipementFinal: interven.etat_final?interven.etat_final:"",
+                            observation: interven.observation?interven.observation:"",
+                            etat: interven.statut
+                        }
+                        tempArray.splice(0,0,intervenObj)
+                        // console.log(tempArray)
+                    }
+                    setApiDemandList(tempArray.filter((int:InterventionType)=>{
+                        return int.etat === "En Attente"
+                    }))
+                    setApiRaportList(tempArray.filter((int:InterventionType)=>{
+                        return int.etat === "Rapport"
+                    }))
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec succes'}))
+                    }, DISPLAYTIMEOUT)
+                }else{
+                    setTimeout(() => {
+                        dispatch(addAlert({type: 'SUCCESS', message: 'Aucune Interventions Enregistrées'}))
+                    }, DISPLAYTIMEOUT)
+                }
+            } catch (error) {
+                console.log(error)
+                setTimeout(() => {
+                    dispatch(addAlert({type: 'FAILURE', message: 'Echec du chargement des Interventions'}))
+                }, DISPLAYTIMEOUT)
+            }
+        }
+        loadInterventions()
+        setUserRole(localStorage.getItem('role'))
+    },[dispatch])
+
     return(
         <div className="w-full h-full py-2 flex flex-col gap-8 justify-start items-center overflow-y-auto">
             <div className='w-full flex flex-row 2xl:flex-col gap-4 justify-end items-start' style={{}}>
@@ -132,11 +207,11 @@ export default function Home ({params}:{params: {username:string }}) {
                 </div>
             </div>
 
-            {/* <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
+            <div className="w-full p-2 bg-white rounded-2xl border border-slate-300">
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Demande D’Interventions</span>
-                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiInterventionList.length}</span>
+                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiDemandList.length}</span>
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
@@ -151,12 +226,13 @@ export default function Home ({params}:{params: {username:string }}) {
                             <td className="w-full">Sous Système</td>
                             <td className="w-full text-center">Demandé par</td>
                             <td className="w-full capitalize text-center">état de l’équipement</td>
-                            <td className="w-full capitalize text-center">état</td>
+                            <td className="w-full capitalize text-center">Statut</td>
+                            <td className="w-full capitalize text-center">Action</td>
                         </tr>
                     </thead>
-                    <tbody className="w-full h-[300px] overflow-auto">
+                    <tbody className="w-full h-[200px] overflow-auto">
                     {
-                        apiInterventionList.map((intervention, index) => {
+                        apiDemandList.map((intervention, index) => {
                             return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                 <td className="w-[150px]">{index+1}</td>
                                 <td className="w-full">{intervention.panne}</td>
@@ -164,6 +240,14 @@ export default function Home ({params}:{params: {username:string }}) {
                                 <td className="w-full text-center">{intervention.demanderPar}</td>
                                 <td className="w-full capitalize text-center">{intervention.etatEquipementInitial}</td>
                                 <td className="w-full flex justify-center items-center text-center"><InterventionState state={intervention.etat}/></td>
+                                <td className="w-full flex gap-1 justify-end items-start flex-wrap">
+                                    <InterventionActionBtn
+                                        state={intervention.etat}
+                                        adminRole= "Personnel"
+                                        viewIntervention={()=>{setDetailModalVisibility(true)
+                                                                setSelectedInterven(index)}}
+                                    />
+                                </td>
                             </tr>
                         })
                     }
@@ -175,7 +259,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 <div className="w-full justify-between items-center inline-flex">
                     <div className='flex flex-row justify-start gap-4 items-center'>
                         <span className="text-zinc-800 text-2xl font-semibold uppercase leading-[52.11px]">Rapport D’Interventions</span>
-                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiRaaportList.length}</span>
+                        <span className="w-10 h-10 p-5 bg-sky-500 rounded-[100px] justify-center items-center inline-flex text-white text-base font-semibold">{apiRaportList.length}</span>
                     </div>
                     <ViewBtn
                         viewText = "Voir Plus"
@@ -190,21 +274,24 @@ export default function Home ({params}:{params: {username:string }}) {
                             <td className="w-full">Sous Système</td>
                             <td className="w-full text-center">Demandé par</td>
                             <td className="w-full capitalize text-center">état de l’équipement</td>
+                            <td className="w-full capitalize text-center">Statut</td>
                             <td className="w-full capitalize text-center">Action</td>
                         </tr>
                     </thead>
-                    <tbody className="w-full h-[300px] overflow-auto">
+                    <tbody className="w-full h-[200px] overflow-auto">
                     {
-                        apiRaaportList.map((intervention, index) => {
+                        apiRaportList.map((intervention, index) => {
                             return <tr key={index} className="w-full p-2 flex gap-1 text-black text-lg font-medium leading-7 tracking-tight odd:bg-white even:bg-indigo-50">
                                 <td className="w-[150px]">{index+1}</td>
                                 <td className="w-full">{intervention.panne}</td>
                                 <td className="w-full">{intervention.sousSysteme}</td>
                                 <td className="w-full text-center">{intervention.demanderPar}</td>
                                 <td className="w-full capitalize text-center">{intervention.etatEquipementInitial}</td>
+                                <td className="w-full flex justify-center items-center text-center"><InterventionState state={intervention.etat}/></td>
                                 <td className="w-full flex gap-1 justify-end items-start flex-wrap">
                                     <InterventionActionBtn
                                         state={intervention.etat}
+                                        adminRole= {userRole}
                                         viewIntervention={()=>{setDetailModalVisibility(true)
                                                                 setSelectedInterven(index)}}
                                     />
@@ -214,7 +301,7 @@ export default function Home ({params}:{params: {username:string }}) {
                     }
                     </tbody>
                 </table>
-            </div> */}
+            </div>
 
             {/* View Intervention Detail Modal */}
             <Modal
@@ -223,7 +310,7 @@ export default function Home ({params}:{params: {username:string }}) {
                 isDeleteModalVisible = {false}
                 isDetailIntervention={isDetailModal}
                 index= {selectedInterven+1}
-                interventionInfo = {apiRaaportList[selectedInterven]}
+                interventionInfo = {apiRaportList[selectedInterven]}
                 username = {username}
                 modalWidth = {650}
                 closeModalAction = {closeModal}
