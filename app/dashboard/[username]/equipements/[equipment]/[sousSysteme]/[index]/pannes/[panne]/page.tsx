@@ -362,11 +362,11 @@ export default function Panne ({params}:{params: {username: string, equipment:st
                             <span className="text-black text-[20px] font-semibold">{apiPanneDetails.description}</span>
                         </div>
                     </div>
-                    <div className="w-full pr-2 flex flex-row gap-3 justify-start">
+                    {apiPanneDetails.nom !== "" && <div className="w-full pr-2 flex flex-row gap-3 justify-start">
                         <DeleteBtn deleteAction={()=>{setDelPanneModalVisibility(true)}}/>
                         <UpdateBtn updateAction={()=>{initialiseUpdateParams()
                                                         setUpdatePanneModalVisibility(true)}}/>
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Liste des protocoles preventifs ci-dessous */}

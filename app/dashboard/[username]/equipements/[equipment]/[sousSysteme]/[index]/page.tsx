@@ -522,11 +522,11 @@ export default function Equipment ({params}:{params: {username: string, equipmen
                                 <span className="text-black text-[20px] font-semibold">{apiSubSystemDetails.description}</span>
                             </div>
                         </div>
-                        <div className="w-full flex flex-row gap-3 justify-start items-start">
+                        {apiSubSystemDetails.nom !== "" && <div className="w-full flex flex-row gap-3 justify-start items-start">
                             <DeleteBtn deleteAction={()=>{setDelSubSysModalVisibility(true)}}/>
                             <UpdateBtn updateAction={()=>{setUpdateSubSysModalVisibility(true)
                                                             initialiseUpdateParams()}}/>
-                        </div>
+                        </div>}
                     </div>
                 </div>)}
 
