@@ -14,11 +14,13 @@ import { DISPLAYTIMEOUT } from "@/constants/time"
 
 import InterventionActionBtn from '@/components/UIElements/InterventionActionBtn'
 import InterventionState from '@/components/UIElements/InterventionState'
+import { useRouter } from 'next/navigation'
 
 export default function Home ({params}:{params: {username:string }}) {
 
     const username = decodeURI(params.username)
     const dispatch = useAppDispatch()
+    const router = useRouter()
     const baseUrl = "/dashboard/" + username
 
     const [ userRole, setUserRole ] = useState<string|null>("Responsable")
@@ -29,7 +31,7 @@ export default function Home ({params}:{params: {username:string }}) {
     const [ pannesTotal, setPannesTotal ] = useState(0)
 
     const [ isDetailModal, setDetailModalVisibility ] = useState<boolean>(false)
-    const [ selectedInterven, setSelectedInterven ] = useState<number>(0)
+    const [ selectedInterven, setSelectedInterven ] = useState<{index:number, status:string}>({index:0, status:""})
 
     const [ apiDemandList, setApiDemandList ] = useState<Array<InterventionType>>([])
     const [ apiRaportList, setApiRaportList ] = useState<Array<InterventionType>>([])
@@ -64,7 +66,7 @@ export default function Home ({params}:{params: {username:string }}) {
 
     const closeModal = () =>{
         setDetailModalVisibility(false)
-        setSelectedInterven(0)
+        setSelectedInterven({index:0, status:""})
 
     }
 
@@ -246,7 +248,7 @@ export default function Home ({params}:{params: {username:string }}) {
                                         state={intervention.etat}
                                         adminRole= "Personnel"
                                         viewIntervention={()=>{setDetailModalVisibility(true)
-                                                                setSelectedInterven(index)}}
+                                                                setSelectedInterven({index:index, status:intervention.etat})}}
                                     />
                                 </td>
                             </tr>
@@ -294,7 +296,7 @@ export default function Home ({params}:{params: {username:string }}) {
                                         state={intervention.etat}
                                         adminRole= {userRole}
                                         viewIntervention={()=>{setDetailModalVisibility(true)
-                                                                setSelectedInterven(index)}}
+                                                                setSelectedInterven({index:index, status:intervention.etat})}}
                                     />
                                 </td>
                             </tr>
@@ -310,8 +312,9 @@ export default function Home ({params}:{params: {username:string }}) {
                 isVisible={isDetailModal}
                 isDeleteModalVisible = {false}
                 isDetailIntervention={isDetailModal}
-                index= {selectedInterven+1}
-                interventionInfo = {apiRaportList[selectedInterven]}
+                index= {selectedInterven.index+1}
+                interventionInfo = {selectedInterven.status==="Rapport"?apiRaportList[selectedInterven.index]:apiDemandList[selectedInterven.index]}
+                validateIntervention={()=>{router.push(`${baseUrl}/interventions`)}}
                 username = {username}
                 modalWidth = {650}
                 closeModalAction = {closeModal}

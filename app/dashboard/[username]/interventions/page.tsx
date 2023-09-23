@@ -445,9 +445,9 @@ export default function Interventions ({params}:{params: {username:string}}) {
                         }
                         tempArray.splice(0,0,intervenObj)
                         // console.log(tempArray)
-                        setApiInterventionList(tempArray)
-                        setDisplayIntervenList(tempArray)
                     }
+                    setApiInterventionList(tempArray)
+                    setDisplayIntervenList(tempArray)
                     setTimeout(() => {
                         dispatch(addAlert({type: 'SUCCESS', message: 'Interventions chargées avec succes'}))
                     }, DISPLAYTIMEOUT)
