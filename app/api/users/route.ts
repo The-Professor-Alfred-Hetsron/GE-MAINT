@@ -1,41 +1,22 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import prismadb from '../../../lib/prismadb'
+import { NextResponse } from 'next/server'
+import prismadb from '@/lib/prismadb'
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log("================================")
-    console.log("Register")
-    console.log("================================")
+export const dynamic = 'auto'
+export const dynamicParams = true
+export const revalidate = false
+export const fetchCache = 'auto'
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
+export const maxDuration = 5
 
-    if (req.method !== 'POST') {
-      return res.status(405).end();
-    }
-  
+export async function GET(req: Request) {
     try {
-      const { nom, email, matricule } = req.body;
-  
-      const isExistingUser = await prismadb.user.findUnique({
-        where: {
-          email: email,
-        },
-      });
-  
-      if (isExistingUser) {
-        return res.status(422).json({ error: 'Email taken' });
-      }
-  
-      const user = await prismadb.user.create({
-        data: {
-          email,
-          nom,
-          matricule
-        },
-      });
-  
-      return res.status(200).json(user);
+      const users = await prismadb.user.findMany();
+
+      return NextResponse.json({ users: users }, { status: 200 });
+
     } catch (error) {
       console.log(error);
-      return res.status(400).end();
+      return NextResponse.json({ error: 'internal server error' }, { status: 500 })
     }
 }
-  
-export default handler

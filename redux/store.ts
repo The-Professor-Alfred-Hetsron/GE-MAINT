@@ -1,14 +1,14 @@
 'use client'
 
 import { configureStore } from '@reduxjs/toolkit'
-import ActiveDashboardPageReducer from '@/redux/features/dashboard/activePageSlice'
-import sidebarExtendionReducer from '@/redux/features/dashboard/sidebarSlice'
+import authenticationUserReducer from '@/redux/features/authentication/authenticatedUserSlice'
+import alertsReducer from '@/redux/features/alerts/alertsSlice'
 
 export const store = configureStore({
   reducer: {
-    ActiveDashboardPage: ActiveDashboardPageReducer,
-    sidebarExtended: sidebarExtendionReducer
-  },
+    authentication: authenticationUserReducer,
+    alerts: alertsReducer
+  }
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

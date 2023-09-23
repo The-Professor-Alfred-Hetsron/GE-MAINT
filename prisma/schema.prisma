@@ -23,9 +23,10 @@ model Equipement {
   code             String        @unique
   nom              String
   marque_fabricant String
+  image            String        @default("")
   description      String
-  localistation    String
-  numero_serie     String
+  localisation     String
+  numero_serie     String        @unique
   modele           String
   etat             String
   SousSysteme      SousSysteme[]
@@ -34,8 +35,9 @@ model Equipement {
 model SousSysteme {
   id               Int        @id @default(autoincrement())
   nom              String
-  numero_serie     String
+  numero_serie     String     @unique
   marque_fabricant String
+  image            String     @default("")
   description      String
   modele           String
   equipement       Equipement @relation(fields: [equipement_id], references: [id])
@@ -47,8 +49,9 @@ model SousSysteme {
 model Piece {
   id               Int           @id @default(autoincrement())
   nom              String
-  numero_serie     String
+  numero_serie     String        @unique
   marque_fabricant String
+  image            String        @default("")
   description      String
   modele           String
   stock            Int
@@ -61,10 +64,9 @@ model Piece {
 model Transaction {
   id               Int      @id @default(autoincrement())
   quantite         Int      @default(1)
-  date_transaction DateTime
+  date_transaction DateTime @default(now())
   type_transaction String
-
-  piece    Piece @relation(fields: [piece_id], references: [id])
+  piece            Piece    @relation(fields: [piece_id], references: [id])
   piece_id Int
 }
 
@@ -76,16 +78,45 @@ model Panne {
   soussysteme    SousSysteme    @relation(fields: [soussysteme_id], references: [id])
   soussysteme_id Int
   interventions  Intervention[]
+  protocol       Protocol[]
+  statut         String
+}
+
+model Protocol {
+  id             Int            @id @default(autoincrement())
+  description    String
+  panne          Panne          @relation(fields: [panne_id], references: [id])
+  panne_id       Int
 }
 
 model Intervention {
   id                 Int      @id @default(autoincrement())
   etat_initial       String
-  etat_final         String
-  executant          String
-  debut_intervention DateTime
-  fin_intervention   DateTime
-  observation        String
+  demander_par       String
+  statut             String
+  executant          String?
+  debut_intervention String?
+  fin_intervention   String?
+  etat_final         String?
+  observation        String?
   panne              Panne    @relation(fields: [panne_id], references: [id])
   panne_id           Int
+}
+
+model Tache {
+  id             Int         @id @default(autoincrement())
+  title          String      
+  notes          String?     
+  objetDeTache   Int         @default(1)
+  allDay         Boolean     @default(false)
+  startDate      DateTime    @default(now())
+  endDate        DateTime    @default(now())
+  exDate         DateTime?
+  rRule          String?     
+}
+
+model Log {
+  id             Int         @id @default(autoincrement())
+  description    String
+  date           DateTime    @default(now())
 }

@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.inputBox {
+    position: relative;
+    width: 100%;
+  }
+  
+  .inputBox input {
+    padding: 15px 20px;
+    outline: none;
+    background: transparent;
+    border-radius: 5px;
+    color: black;
+    border: 1px solid#0B5DA7;
+    font-size: 1em;
+    width: 100%;
+  }
+  
+  .inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 15px 20px;
+    pointer-events: none;
+    font-size: 16px;
+    transition: 0.4s cubic-bezier(0.05, 0.81, 0, 0.93);
+    color: #0B5DA7;
+    letter-spacing: 0.1em;
+  }
+
+  .inputBox input:focus, .inputBox input:valid{
+    border: 1px solid#4285F4;
+  }
+  
+  .inputBox input:focus ~ span,
+  .inputBox input:valid ~ span {
+    font-size: 16px;
+    transform: translateX(14px) translateY(-7.5px);
+    padding: 0 5px;
+    border-radius: 2px;
+    background: #F9F9F9;
+    letter-spacing: 0em;
+    color: #4285F4;
+  }
+  
+  /* custom-dropdown */
+  .inputBox .custom-dropdown {
+    padding: 15px 20px;
+    outline: none;
+    background: transparent;
+    border-radius: 5px;
+    color: black;
+    border: 1px solid#0B5DA7;
+    font-size: 1em;
+    width: 100%;
+  }
+
+  .inputBox .custom-dropdown:focus{
+    border: 1px solid#4285F4;
+  }
+
+  .inputBox .custom-dropdown:focus ~ span,
+  .inputBox .custom-dropdown:valid ~ span {
+    font-size: 16px;
+    transform: translateX(14px) translateY(-7.5px);
+    padding: 0 5px;
+    border-radius: 2px;
+    background: #F9F9F9;
+    letter-spacing: 0em;
+    color: #4285F4;
+  }
+  
+  
