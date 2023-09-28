@@ -8,8 +8,8 @@ function InputField(props) {
 
     const handleChange = (value) => {
       if(value!=inputValue){
-          setInputValue(value.trim())
-          props.setNewValue(value.trim())
+          setInputValue(value)
+          props.setNewValue(value)
       }
     }
 

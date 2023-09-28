@@ -63,7 +63,7 @@ export default function Equipment ({params}:{params: {username:string,  equipmen
     const [ modeleSubSys, setModeleSubSys ] = useState<string>("")
     const [ numSerieSubSys, setNumSerieSubSys ] = useState<string>("")
     const [ descriptionSubSys, setDescriptionSubSys ] = useState<string>("")
-    const [file, setFile] = useState<File | null>(null);
+    const [ file, setFile ] = useState<File | null>(null);
     // Sub System Information End
     
     const [ isFormValid, setFormValidity ] = useState<boolean>(false)
